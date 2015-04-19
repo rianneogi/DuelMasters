@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C1D99935-FBA3-4A92-8CEF-B88DE7C949DB}</ProjectGuid>
+    <RootNamespace>DuelMastersGame</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files %28x86%29\Libraries\luabind-0.9.1;C:\Program Files %28x86%29\Lua\5.1\include;C:\Program Files %28x86%29\Libraries\SFML-2.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Lua\5.1\lib;C:\Program Files %28x86%29\Libraries\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua51.lib;lua5.1.lib;sfml-audio-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-window-d.lib;sfml-graphics-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="BattleZone.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="Choice.cpp" />
+    <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="Duel.cpp" />
+    <ClCompile Include="DuelInterface.cpp" />
+    <ClCompile Include="FileFunctions.cpp" />
+    <ClCompile Include="Graveyard.cpp" />
+    <ClCompile Include="Hand.cpp" />
+    <ClCompile Include="LuaFunctions.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ManaZone.cpp" />
+    <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MessageManager.cpp" />
+    <ClCompile Include="Modifier.cpp" />
+    <ClCompile Include="ShieldZone.cpp" />
+    <ClCompile Include="Zone.cpp" />
+    <ClCompile Include="ZoneList.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Arrow.h" />
+    <ClInclude Include="BattleZone.h" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="Choice.h" />
+    <ClInclude Include="Constants.h" />
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="Duel.h" />
+    <ClInclude Include="DuelInterface.h" />
+    <ClInclude Include="FileFunctions.h" />
+    <ClInclude Include="Graveyard.h" />
+    <ClInclude Include="Hand.h" />
+    <ClInclude Include="LuaFunctions.h" />
+    <ClInclude Include="ManaZone.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageManager.h" />
+    <ClInclude Include="Modifier.h" />
+    <ClInclude Include="ShieldZone.h" />
+    <ClInclude Include="Zone.h" />
+    <ClInclude Include="ZoneList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\Lua\BaseSet.lua" />
+    <None Include="..\Debug\Lua\Common.lua" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
