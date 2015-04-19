@@ -246,11 +246,6 @@ Checks.CreatureInYourDeck = function(cid,sid)
 	end
 end
 
-Actions.Destroy = function(cid,sid)
-	destroyCard(sid)
-	setChoiceActive(0)
-end
-
 Actions.SkipChoice = function(cid)
     setChoiceActive(0)
 end

@@ -145,5 +145,8 @@
     <None Include="..\Debug\Lua\Common.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
+    <None Include="Lua\Cards.lua">
+      <Filter>Source Files\Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>
