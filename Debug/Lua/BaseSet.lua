@@ -54,7 +54,7 @@ Cards["Aqua Sniper"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-
+        
 	end
 }
 
@@ -183,6 +183,16 @@ Cards["Aura Blast"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
+		local owner = getCardOwner(id)
+		local size = getZoneSize(owner,ZONE_BATTLE)-1
+		for i=0,size,1 do
+			createModifier(getCardAt(owner,ZONE_BATTLE,i),3,"Cards","Aura Blast","Modifier")
+		end
+	end,
+
+	Modifier = function(cid,mid)
+        Abils.PowerAttacker(cid,2000)
+		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -252,7 +262,7 @@ Cards["Bolshack Dragon"] = {
 
 	HandleMessage = function(id)
 		if(getMessageType()=="get creaturepower") then
-			if(getMessageInt("creature")==id) then
+			if(getMessageInt("creature")==id and getAttacker()==id) then
 				local count = 0
 				local owner = getCardOwner(id)
 				local size = getZoneSize(owner,ZONE_GRAVEYARD)-1
@@ -315,6 +325,7 @@ Cards["Brain Serum"] = {
 
     OnCast = function(id)
         drawCards(getCardOwner(id),2)
+        Actions.EndSpell(id)
     end
 }
 
@@ -333,7 +344,7 @@ Cards["Brawler Zyler"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(2000)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -390,10 +401,10 @@ Cards["Burning Power"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-		createChoice("Burning Power: Choose creature",1)
+		createChoice("Burning Power: Choose creature",0,id)
 		choicePushSelect(3,"Cards","Burning Power","Select")
 		choicePushValid(2,"Choice","InYourBattle")
-		choicePushSkip(3,"Cards","Burning Power","Skip")
+		--choicePushButton1(2,"Actions","SkipChoice")
 	end,
 
 	Select = function(cid,sid)
@@ -401,19 +412,9 @@ Cards["Burning Power"] = {
 		Actions.EndChoiceSpell(cid)
 	end,
 
-	Skip = function(cid)
-		Actions.EndChoiceSpell(cid)
-	end,
-
 	Modifier = function(cid,mid)
-		if(getMessageType()=="get creaturepower") then
-			if(getMessageInt("creature")==cid and getAttacker()==cid) then
-				setMessageInt("power",getMessageInt("power")+2000)
-			end
-		end
-		if(getMessageType()=="pre endturn") then
-			destroyModifier(cid,mid)
-		end
+		Abils.PowerAttacker(cid,2000)
+		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -489,7 +490,29 @@ Cards["Creeping Plague"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 1,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+		local owner = getCardOwner(id)
+		local size = getZoneSize(owner,ZONE_BATTLE)-1
+		for i=0,size,1 do
+			createModifier(getCardAt(owner,ZONE_BATTLE,i),3,"Cards","Creeping Plague","Modifier1")
+		end
+	end,
+
+	Modifier1 = function(cid,mid)
+        if(getMessageType()=="creatureblock") then
+            if(getMessageInt("attacker")==cid) then
+                createModifier(cid,3,"Cards","Creeping Plague","Modifier2")
+            end
+        end
+		Abils.destroyModAtEOT(cid,mid)
+	end,
+
+    Modifier2 = function(cid,mid)
+        Abils.Slayer(cid)
+        Abils.destroyModAtEOT(cid,mid)
+    end
 }
 
 Cards["Crimson Hammer"] = {
@@ -501,9 +524,9 @@ Cards["Crimson Hammer"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        createChoice("Crimson Hammer: Choose an opponent's creature",1,id)
+        createChoice("Crimson Hammer: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Crimson Hammer","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(3,"Cards","Crimson Hammer","Valid")
 	end,
 
@@ -517,7 +540,7 @@ Cards["Crimson Hammer"] = {
 
     Select = function(cid,sid)
         destroyCard(sid)
-        EndChoiceSpell(cid)
+        Actions.EndChoiceSpell(cid)
     end
 }
 
@@ -530,9 +553,9 @@ Cards["Crystal Memory"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-	    createChoice("Crystal Memory: Choose a card in your deck",1,id)
+	    createChoice("Crystal Memory: Choose a card in your deck",0,id)
 	    choicePushSelect(3,"Cards","Crystal Memory","Select")
-        choicePushSkip(2,"Actions","SkipChoice")
+        --choicePushButton1(2,"Actions","SkipChoice")
 	    choicePushValid(2,"Checks","InYourDeck")
 	end,
 
@@ -616,15 +639,15 @@ Cards["Death Smoke"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-	    createChoice("Death Smoke: Choose an opponent's creature",1,id)
+	    createChoice("Death Smoke: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Death Smoke","Select")
-        choicePushSkip(2,"Actions","SkipChoice")
+        --choicePushButton1(2,"Actions","SkipChoice")
 	    choicePushValid(2,"Checks","UntappedInOppBattle")
 	end,
 
 	Select = function(cid,sid)
 		destroyCard(sid)
-        setChoiceActive(0)
+        Actions.EndChoiceSpell(cid)
 	end
 }
 
@@ -643,7 +666,7 @@ Cards["Deathblade Beetle"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(4000)
+		Abils.PowerAttacker(id,4000)
 	end
 }
 
@@ -693,9 +716,9 @@ Cards["Dimension Gate"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-	    createChoice("Dimension Gate: Choose a creature in your deck",1,id)
+	    createChoice("Dimension Gate: Choose a creature in your deck",0,id)
 	    choicePushSelect(3,"Cards","Dimension Gate","Select")
-        choicePushSkip(2,"Actions","SkipChoice")
+        --choicePushButton1(2,"Actions","SkipChoice")
 	    choicePushValid(2,"Checks","CreatureInYourDeck")
 	end,
 
@@ -720,7 +743,7 @@ Cards["Dome Shell"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(2000)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -861,7 +884,7 @@ Cards["Fire Sweeper Burning Hellion"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(2000)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -999,7 +1022,7 @@ Cards["Golden Wing Striker"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(2000)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -1288,7 +1311,24 @@ Cards["Magma Gazer"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_FIRE,
 	cost = 3,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+		createChoice("Magma Gazer: Choose creature",0,id)
+		choicePushSelect(3,"Cards","Magma Gazer","Select")
+		choicePushValid(2,"Choice","InYourBattle")
+	end,
+
+	Select = function(cid,sid)
+		createModifier(sid,3,"Cards","Magma Gazer","Modifier")
+		Actions.EndChoiceSpell(cid)
+	end,
+
+	Modifier = function(cid,mid)
+		Abils.PowerAttacker(cid,4000)
+        Abils.Breaker(cid,2)
+		Abils.destroyModAtEOT(cid,mid)
+	end
 }
 
 Cards["Marine Flower"] = {
@@ -1345,7 +1385,7 @@ Cards["Meteosaur"] = {
 	HandleMessage = function(id)
         createChoice("Meteosaur: Choose an opponent's creature",1,id)
 	    choicePushSelect(3,"Cards","Meteosaur","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushSelect(3,"Cards","Meteosaur","Valid")
 	end,
 
@@ -1380,7 +1420,7 @@ Cards["Miele, Vizier of Lightning"] = {
 	HandleMessage = function(id)
         createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id)
 	    choicePushSelect(3,"Cards","Miele, Vizier of Lightning","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","UntappedInOppBattle")
 	end,
 
@@ -1427,9 +1467,9 @@ Cards["Natural Snare"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        createChoice("Natural Snare: Choose an opponent's creature",1,id)
+        createChoice("Natural Snare: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Natural Snare","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","InYourHand")
 	end,
 
@@ -1569,7 +1609,7 @@ Cards["Poisonous Mushroom"] = {
             if(getMessageInt("card")==id) then
 			    createChoice("Poisonous Mushroom: Choose a card in your hand",1,id)
 			    choicePushSelect(3,"Cards","Poisonous Mushroom","Select")
-                choicePushSkip(2,"Actions","SkipChoice")
+                choicePushButton1(2,"Actions","SkipChoice")
 			    choicePushValid(2,"Checks","InYourHand")
             end
 		end
@@ -1600,7 +1640,7 @@ Cards["Rayla, Truth Enforcer"] = {
             if(getMessageInt("card")==id) then
 			    createChoice("Rayla, Truth Enforcer: Choose a spell in your deck",1,id)
 			    choicePushSelect(3,"Cards","Rayla, Truth Enforcer","Select")
-                choicePushSkip(2,"Actions","SkipChoice")
+                choicePushButton1(2,"Actions","SkipChoice")
 			    choicePushValid(2,"Checks","SpellInYourDeck")
             end
 		end
@@ -1683,7 +1723,7 @@ Cards["Roaring Great-Horn"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(2000)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -1702,6 +1742,26 @@ Cards["Rothus, the Traveler"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+		if(getMessageType()=="post cardmove") then
+			if(getMessageInt("card")==id) then
+				createChoice("Rothus, the Traveler: Select creature to destroy",0,id)
+				choicePushSelect(3,"Cards","Rothus, the Traveler","Select1")
+				choicePushValid(2,"Checks","InYourBattle")
+			end
+		end
+	end,
+
+	Select1 = function(cid,sid)
+		destroyCard(sid)
+		setChoiceActive(0)
+        createChoice("Rothus, the Traveler: Select creature to destroy",0,cid)
+		choicePushSelect(3,"Cards","Rothus, the Traveler","Select2")
+		choicePushValid(2,"Checks","InOppBattle")
+	end,
+
+    Select2 = function(cid,sid)
+		destroyCard(sid)
+		setChoiceActive(0)
 	end
 }
 
@@ -1864,9 +1924,9 @@ Cards["Solar Ray"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        createChoice("Solar Ray: Choose an opponent's creature",1,id)
+        createChoice("Solar Ray: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Solar Ray","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","UntappedInOppBattle")
 	end,
 
@@ -1885,10 +1945,10 @@ Cards["Sonic Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-		createChoice("Sonic Wing: Choose creature",1)
+		createChoice("Sonic Wing: Choose creature",0,id)
 		choicePushSelect(3,"Cards","Sonic Wing","Select")
+        --choicePushButton1(3,"Cards","Sonic Wing","Skip")
 		choicePushValid(2,"Choice","InYourBattle")
-		choicePushSkip(3,"Cards","Sonic Wing","Skip")
 	end,
 
 	Select = function(cid,sid)
@@ -1923,13 +1983,13 @@ Cards["Spiral Gate"] = {
     OnCast = function(id)
         createChoice("Spiral Gate: Choose a creature",0,id)
 	    choicePushSelect(3,"Cards","Spiral Gate","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","InBattle")
 	end,
 
     Select = function(cid,sid)
-        moveCard(cid,ZONE_HAND)
-        setChoiceActive(0)
+        moveCard(sid,ZONE_HAND)
+        Actions.EndChoiceSpell(cid)
     end
 }
 
@@ -2016,7 +2076,7 @@ Cards["Stonesaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(id)
+		Abils.PowerAttacker(id,id)
 	end
 }
 
@@ -2053,7 +2113,7 @@ Cards["Super Explosive Volcanodon"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(4000)
+		Abils.PowerAttacker(id,4000)
 	end
 }
 
@@ -2121,7 +2181,26 @@ Cards["Teleportation"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_WATER,
 	cost = 5,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+        createChoice("Teleportation: Choose a creature",0,id)
+	    choicePushSelect(3,"Cards","Teleportation","Select1")
+		choicePushValid(2,"Checks","InBattle")
+	end,
+
+    Select1 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        setChoiceActive(0)
+        createChoice("Teleportation: Choose a creature",0,id)
+	    choicePushSelect(3,"Cards","Teleportation","Select2")
+		choicePushValid(2,"Checks","InBattle")
+    end,
+
+    Select2 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        Actions.EndChoiceSpell(cid)
+    end
 }
 
 Cards["Terror Pit"] = {
@@ -2130,7 +2209,19 @@ Cards["Terror Pit"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 6,
-	shieldtrigger = 1
+	shieldtrigger = 1,
+
+    OnCast = function(id)
+	    createChoice("Terror Pit: Choose an opponent's creature",0,id)
+	    choicePushSelect(3,"Cards","Terror Pit","Select")
+        --choicePushButton1(2,"Actions","SkipChoice")
+	    choicePushValid(2,"Checks","InOppBattle")
+	end,
+
+	Select = function(cid,sid)
+		destroyCard(sid)
+        Actions.EndChoiceSpell(cid)
+	end
 }
 
 Cards["Thorny Mandra"] = {
@@ -2152,7 +2243,7 @@ Cards["Thorny Mandra"] = {
             if(getMessageInt("card")==id) then
 			    createChoice("Thorny Mandra: Select card in graveyard",1,id)
 			    choicePushSelect(3,"Cards","Thorny Mandra","Select")
-                choicePushSkip(2,"Actions","SkipChoice")
+                choicePushButton1(2,"Actions","SkipChoice")
 			    choicePushValid(2,"Checks","InYourGraveyard")
             end
 		end
@@ -2191,9 +2282,9 @@ Cards["Tornado Flame"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        createChoice("Tornado Flame: Choose an opponent's creature",1,id)
+        createChoice("Tornado Flame: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Tornado Flame","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(3,"Cards","Tornado Flame","Valid")
 	end,
 
@@ -2207,7 +2298,7 @@ Cards["Tornado Flame"] = {
 
     Select = function(cid,sid)
         destroyCard(sid)
-        EndChoiceSpell(cid)
+        Actions.EndChoiceSpell(cid)
     end
 }
 
@@ -2308,7 +2399,7 @@ Cards["Unicorn Fish"] = {
 	HandleMessage = function(id)
         createChoice("Unicorn Fish: Choose a creature",1,id)
 	    choicePushSelect(3,"Cards","Unicorn Fish","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","InBattle")
 	end,
 
@@ -2386,13 +2477,13 @@ Cards["Virtual Tripwire"] = {
     OnCast = function(id)
         createChoice("Virtual Tripwire: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Virtual Tripwire","Select")
-        choicePushSkip(2,"Actions","ChoiceSkip")
+        --choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushValid(2,"Checks","UntappedInOppBattle")
 	end,
 
     Select = function(cid,sid)
         tapCard(cid)
-        EndChoiceSpell(cid)
+        Actions.EndChoiceSpell(cid)
     end
 }
 

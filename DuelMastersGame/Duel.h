@@ -85,6 +85,8 @@ public:
 	void battle(int att, int def);
 	Card* getCard(int player, int zone, int id);
 
+	void drawCards(int player, int count);
+
 	int getCreaturePower(int uid);
 	int getCreatureBreaker(int uid);
 	int getCreatureCanAttack(int uid);

@@ -31,8 +31,18 @@ end
 
 Abils.PowerAttacker = function(id, power)
 	if(getMessageType()=="get creaturepower") then
-		if(getAttacker()==id) then
+		if(getMessageInt("creature")==id and getAttacker()==id) then
 			setMessageInt("power",getMessageInt("power")+power)
+		end
+	end
+end
+
+Abils.Breaker = function(id,breakercount)
+    if(getMessageType()=="get creaturebreaker") then
+		if(getMessageType("creature")==id) then
+            if(getMessageInt("breaker") < breakercount) then
+			    setMessageInt("breaker",breakercount)
+            end
 		end
 	end
 end
@@ -150,6 +160,12 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
 	end
 end
 
+Abils.destroyModAtEOT = function(cid,mid)
+    if(getMessageType()=="pre endturn") then
+		destroyModifier(cid,mid)
+	end
+end
+
 Checks.InYourMana = function(cid,sid)
 	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA) then
 		return 1
@@ -256,5 +272,5 @@ Actions.EndChoiceSpell = function(cid)
 end
 
 Actions.EndSpell = function(id)
-    moveCard(cid,ZONE_GRAVEYARD)
+    moveCard(id,ZONE_GRAVEYARD)
 end

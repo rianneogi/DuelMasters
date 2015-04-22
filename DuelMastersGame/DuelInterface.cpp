@@ -66,8 +66,12 @@ void DuelInterface::render(sf::RenderWindow& window)
 	}
 
 	//draw endturn
-	window.draw(endturnbutton);
-	window.draw(endturntext);
+	if (!duel.isChoiceActive)
+	{
+		endturntext.setString("End Turn");
+		window.draw(endturnbutton);
+		window.draw(endturntext);
+	}
 
 	//draw cancel button
 	if (duel.winner != -1)
@@ -79,10 +83,24 @@ void DuelInterface::render(sf::RenderWindow& window)
 	{
 		infotext.setString(duel.choice.infotext);
 		window.draw(infotext);
-		if (duel.choice.canskip == 1)
+		if (duel.choice.buttoncount >= 1)
 		{
+			if (duel.choice.buttoncount >= 2)
+			{
+				canceltext.setString("Yes");
+			}
+			else
+			{
+				canceltext.setString("Skip");
+			}
 			window.draw(cancelbutton);
 			window.draw(canceltext);
+		}
+		if (duel.choice.buttoncount >= 2)
+		{
+			endturntext.setString("No");
+			window.draw(endturnbutton);
+			window.draw(endturntext);
 		}
 	}
 	else if (duel.attackphase == PHASE_BLOCK)
@@ -197,10 +215,16 @@ void DuelInterface::handleEvent(sf::Event event)
 		{
 			if (duel.isChoiceActive)
 			{
-				if (checkCollision(cancelbutton.getGlobalBounds(), MouseX, MouseY)) //skip choice
+				if (checkCollision(cancelbutton.getGlobalBounds(), MouseX, MouseY)) //button1 press
 				{
 					//choice.callskip(duel.choiceCard);
-					Message msg("choiceskip");
+					Message msg("choicebutton1");
+					duel.handleInterfaceInput(msg);
+				}
+				if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY)) //button2 press
+				{
+					//choice.callskip(duel.choiceCard);
+					Message msg("choicebutton2");
 					duel.handleInterfaceInput(msg);
 				}
 				for (vector<Card*>::iterator i = duel.CardList.begin(); i != duel.CardList.end(); i++)

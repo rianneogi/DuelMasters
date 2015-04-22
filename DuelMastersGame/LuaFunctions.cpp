@@ -58,12 +58,22 @@ static int choicePushSelect(lua_State* L)
 	return 0;
 }
 
-static int choicePushSkip(lua_State* L)
+static int choicePushButton1(lua_State* L)
 {
 	int count = lua_tointeger(L, 1);
 	for (int i = 2; i <= count + 1; i++)
 	{
-		ActiveDuel->duel.choice.pushskip(lua_tostring(L, i));
+		ActiveDuel->duel.choice.pushbutton1(lua_tostring(L, i));
+	}
+	return 0;
+}
+
+static int choicePushButton2(lua_State* L)
+{
+	int count = lua_tointeger(L, 1);
+	for (int i = 2; i <= count + 1; i++)
+	{
+		ActiveDuel->duel.choice.pushbutton2(lua_tostring(L, i));
 	}
 	return 0;
 }
@@ -127,12 +137,7 @@ static int drawCards(lua_State* L)
 {
 	int player = lua_tointeger(L, 1);
 	int count = lua_tointeger(L, 2);
-	for (int i = 0; i < count; i++)
-	{
-		Message msg("carddraw");
-		msg.addValue("player", player);
-		ActiveDuel->duel.MsgMngr.sendMessage(msg);
-	}
+	ActiveDuel->duel.drawCards(player, count);
 	return 0;
 }
 
@@ -184,6 +189,12 @@ static int getTurn(lua_State* L)
 	return 1;
 }
 
+static int getCardName(lua_State* L)
+{
+	lua_pushstring(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Name.c_str());
+	return 1;
+}
+
 static int getCardZone(lua_State* L)
 {
 	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Zone);
@@ -199,6 +210,12 @@ static int getCardCiv(lua_State* L)
 static int getCardType(lua_State* L)
 {
 	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Type);
+	return 1;
+}
+
+static int getCardRace(lua_State* L)
+{
+	lua_pushstring(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Race.c_str());
 	return 1;
 }
 
@@ -251,7 +268,8 @@ void registerLua(lua_State* L)
 
 	lua_register(L, "createChoice", createChoice);
 	lua_register(L, "choicePushSelect", choicePushSelect);
-	lua_register(L, "choicePushSkip", choicePushSkip);
+	lua_register(L, "choicePushButton1", choicePushButton1);
+	lua_register(L, "choicePushButton2", choicePushButton2);
 	lua_register(L, "choicePushValid", choicePushValid);
 	lua_register(L, "setChoiceActive", setChoiceActive);
 
@@ -266,9 +284,11 @@ void registerLua(lua_State* L)
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getZoneSize", getZoneSize);
 	lua_register(L, "getTurn", getTurn);
+	lua_register(L, "getCardName", getCardName);
 	lua_register(L, "getCardZone", getCardZone);
 	lua_register(L, "getCardCiv", getCardCiv);
 	lua_register(L, "getCardType", getCardType);
+	lua_register(L, "getCardRace", getCardRace);
 	lua_register(L, "getCardOwner", getCardOwner);
 	lua_register(L, "getCreaturePower", getCreaturePower);
 	lua_register(L, "getCreatureCanBlock", getCreatureCanBlock);

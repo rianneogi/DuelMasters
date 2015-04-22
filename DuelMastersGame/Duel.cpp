@@ -95,7 +95,7 @@ int Duel::handleMessage(Message& msg)
 		getZone(owner, c->Zone)->removeCard(c);
 		getZone(owner, msg.getInt("to"))->addCard(c);
 		c->Zone = msg.getInt("to");
-		if (c->Type == TYPE_SPELL)
+		if (c->Zone == ZONE_BATTLE && c->Type == TYPE_SPELL)
 		{
 			c->callOnCast(); //cast the spell
 		}
@@ -119,14 +119,14 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("to", ZONE_GRAVEYARD);
 		MsgMngr.sendMessage(m);
 	}
-	else if (msg.getType() == "carddraw")
+	/*else if (msg.getType() == "carddraw") //carddraw is replaced by cardmove with to=ZONE_HAND
 	{
 		int plyr = msg.getInt("player");
 		Message m("cardmove");
 		m.addValue("card", decks[plyr].getTopCard());
 		m.addValue("to", ZONE_HAND);
 		MsgMngr.sendMessage(m);
-	}
+	}*/
 	else if (msg.getType() == "cardplay")
 	{
 		Message m("cardmove");
@@ -231,9 +231,10 @@ int Duel::handleMessage(Message& msg)
 			m.addValue("card", (*i)->UniqueId);
 			MsgMngr.sendMessage(m);
 		}
-		Message m("carddraw"); //draw card
-		m.addValue("player", plyr);
-		MsgMngr.sendMessage(m);
+		//Message m("carddraw"); //draw card
+		//m.addValue("player", plyr);
+		//MsgMngr.sendMessage(m);
+		drawCards(plyr, 1);
 	}
 	else if (msg.getType() == "modifierdestroy")
 	{
@@ -343,9 +344,10 @@ int Duel::handleInterfaceInput(Message& msg)
 			}
 			else if (defendertype == DEFENDER_PLAYER)
 			{
-				if (shields[CardList.at(defender)->Owner].cards.size() == 0)
+				//int def = msg.getInt("defender");
+				if (shields[defender].cards.size() == 0)
 				{
-					winner = getOpponent(CardList.at(defender)->Owner);
+					winner = getOpponent(defender);
 				}
 				else
 				{
@@ -374,6 +376,7 @@ int Duel::handleInterfaceInput(Message& msg)
 
 			Message m("creaturebreakshield");
 			m.addValue("attacker", attacker);
+			m.addValue("defender", defender);
 			m.addValue("shield", shield);
 			MsgMngr.sendMessage(m);
 		}
@@ -414,11 +417,18 @@ int Duel::handleInterfaceInput(Message& msg)
 			choice.callselect(choiceCard, sid);
 		}
 	}
-	else if (type == "choiceskip")
+	else if (type == "choicebutton1")
 	{
-		if (choice.canskip == 1 && isChoiceActive)
+		if (choice.buttoncount >= 1 && isChoiceActive)
 		{
-			choice.callskip(choiceCard);
+			choice.callbutton1(choiceCard);
+		}
+	}
+	else if (type == "choicebutton2")
+	{
+		if (choice.buttoncount >= 2 && isChoiceActive)
+		{
+			choice.callbutton2(choiceCard);
 		}
 	}
 	return 0;
@@ -746,6 +756,17 @@ int Duel::getIsShieldTrigger(int uid)
 	return c;
 }
 
+void Duel::drawCards(int player, int count)
+{
+	for (int i = 0; i < count; i++)
+	{
+		Message msg("cardmove");
+		msg.addValue("card", decks[player].cards.at(decks[player].cards.size() - i - 1)->UniqueId);
+		msg.addValue("to", ZONE_HAND);
+		MsgMngr.sendMessage(msg);
+	}
+}
+
 void Duel::setDecks(string p1, string p2)
 {
 	loadDeck(p1, 0);
@@ -816,6 +837,7 @@ void Duel::nextTurn()
 
 void Duel::resetAttack()
 {
+	cout << "attackreset" << endl;
 	attackphase = PHASE_NONE;
 	attacker = -1;
 	defender = -1;
