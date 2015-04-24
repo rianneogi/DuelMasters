@@ -39,7 +39,7 @@ end
 
 Abils.Breaker = function(id,breakercount)
     if(getMessageType()=="get creaturebreaker") then
-		if(getMessageType("creature")==id) then
+		if(getMessageInt("creature")==id) then
             if(getMessageInt("breaker") < breakercount) then
 			    setMessageInt("breaker",breakercount)
             end

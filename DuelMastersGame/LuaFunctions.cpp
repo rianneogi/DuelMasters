@@ -273,6 +273,9 @@ void registerLua(lua_State* L)
 	lua_register(L, "choicePushValid", choicePushValid);
 	lua_register(L, "setChoiceActive", setChoiceActive);
 
+	lua_register(L, "createModifier", createModifier);
+	lua_register(L, "destroyModifier", destroyModifier);
+	
 	lua_register(L, "destroyCard", destroyCard);
 	lua_register(L, "moveCard", moveCard);
 	lua_register(L, "tapCard", tapCard);

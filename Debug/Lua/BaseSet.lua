@@ -403,7 +403,7 @@ Cards["Burning Power"] = {
 	OnCast = function(id)
 		createChoice("Burning Power: Choose creature",0,id)
 		choicePushSelect(3,"Cards","Burning Power","Select")
-		choicePushValid(2,"Choice","InYourBattle")
+		choicePushValid(2,"Checks","InYourBattle")
 		--choicePushButton1(2,"Actions","SkipChoice")
 	end,
 
@@ -1316,7 +1316,7 @@ Cards["Magma Gazer"] = {
     OnCast = function(id)
 		createChoice("Magma Gazer: Choose creature",0,id)
 		choicePushSelect(3,"Cards","Magma Gazer","Select")
-		choicePushValid(2,"Choice","InYourBattle")
+		choicePushValid(2,"Checks","InYourBattle")
 	end,
 
 	Select = function(cid,sid)
