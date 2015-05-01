@@ -106,6 +106,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 	else if (duel.attackphase == PHASE_BLOCK)
 	{
 		infotext.setString("Choose Blocker");
+		canceltext.setString("Skip");
 		window.draw(cancelbutton);
 		window.draw(canceltext);
 		window.draw(infotext);
@@ -118,6 +119,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 	else if (duel.attackphase == PHASE_TRIGGER)
 	{
 		infotext.setString("Choose shield triggers to cast");
+		canceltext.setString("Skip");
 		window.draw(cancelbutton);
 		window.draw(canceltext);
 		window.draw(infotext);
@@ -436,6 +438,7 @@ void DuelInterface::handleEvent(sf::Event event)
 			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && duel.isChoiceActive == 0) //end turn
 			{
 				Message m("endturn");
+				m.addValue("player", duel.turn);
 				duel.handleInterfaceInput(m);
 				endturnsound.play();
 				undoSelection();

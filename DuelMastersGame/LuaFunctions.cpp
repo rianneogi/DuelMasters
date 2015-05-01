@@ -89,6 +89,17 @@ static int choicePushValid(lua_State* L)
 	return 0;
 }
 
+static int choicePushValidNoCheck(lua_State* L)
+{
+	int count = lua_tointeger(L, 1);
+	for (int i = 2; i <= count + 1; i++)
+	{
+		ActiveDuel->duel.choice.pushvalid(lua_tostring(L, i));
+	}
+	//ActiveDuel->duel.checkChoiceValid();
+	return 0;
+}
+
 static int setChoiceActive(lua_State* L)
 {
 	ActiveDuel->duel.isChoiceActive = lua_tointeger(L, 1);
@@ -127,7 +138,7 @@ static int tapCard(lua_State* L)
 
 static int untapCard(lua_State* L)
 {
-	Message msg("uncardtap");
+	Message msg("carduntap");
 	msg.addValue("card", lua_tointeger(L, 1));
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
 	return 0;
@@ -159,6 +170,14 @@ static int destroyModifier(lua_State* L)
 	Message msg("modifierdestroy");
 	msg.addValue("card", lua_tointeger(L, 1));
 	msg.addValue("modifier", lua_tointeger(L, 2));
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	return 0;
+}
+
+static int shuffleDeck(lua_State* L)
+{
+	Message msg("deckshuffle");
+	msg.addValue("player", lua_tointeger(L, 1));
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
 	return 0;
 }
@@ -271,6 +290,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "choicePushButton1", choicePushButton1);
 	lua_register(L, "choicePushButton2", choicePushButton2);
 	lua_register(L, "choicePushValid", choicePushValid);
+	lua_register(L, "choicePushValidNoCheck", choicePushValidNoCheck);
 	lua_register(L, "setChoiceActive", setChoiceActive);
 
 	lua_register(L, "createModifier", createModifier);
@@ -283,6 +303,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "drawCards", drawCards);
 	lua_register(L, "createModifier", createModifier);
 	lua_register(L, "destroyModifier", destroyModifier);
+	lua_register(L, "shuffleDeck", shuffleDeck);
 
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getZoneSize", getZoneSize);

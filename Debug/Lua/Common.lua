@@ -144,7 +144,7 @@ Abils.destroyYourManaOnSummon = function(id, count)
 	if(getMessageType()=="post cardmove") then
 		if(getMessageInt("card")==id) then
 			createChoice("Select mana to destroy",0,id)
-			choicePushSelect(2,"Actions","destroy")
+			choicePushSelect(2,"Actions","destroySelected")
 			choicePushValid(2,"Checks","InYourMana")
 		end
 	end
@@ -154,10 +154,31 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
 	if(getMessageType()=="post cardmove") then
 		if(getMessageInt("card")==id) then
 			createChoice("Select creature to destroy",0,id)
-			choicePushSelect(2,"Actions","destroy")
+			choicePushSelect(2,"Actions","destroySelected")
 			choicePushValid(2,"Checks","InYourBattle")
 		end
 	end
+end
+
+Actions.destroySelected = function(cid,sid)
+    destroyCard(sid)
+    setChoiceActive(0)
+end
+
+Abils.untapAtEOT = function(id,name)
+    if(getMessageType()=="pre endturn") then
+		if(getMessageInt("player")==getCardOwner(id)) then
+			createChoice(name..": Untap this creature?",2,id)
+			choicePushButton1(2,"Actions","untapAtEOTButton1")
+            choicePushButton2(2,"Actions","SkipChoice")
+			choicePushValidNoCheck(2,"Checks","False")
+		end
+	end
+end
+
+Actions.untapAtEOTButton1 = function(cid)
+    untapCard(cid)
+    setChoiceActive(0)
 end
 
 Abils.destroyModAtEOT = function(cid,mid)
@@ -260,6 +281,14 @@ Checks.CreatureInYourDeck = function(cid,sid)
 	else
 		return 0
 	end
+end
+
+Checks.True = function(cid,sid)
+    return 1
+end
+
+Checks.False = function(cid,sid)
+    return 0
 end
 
 Actions.SkipChoice = function(cid)

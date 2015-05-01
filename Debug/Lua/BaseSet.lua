@@ -54,8 +54,27 @@ Cards["Aqua Sniper"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        
-	end
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Aqua Sniper: Choose 2 creatures",0,id)
+	            choicePushSelect(3,"Cards","Aqua Sniper","Select1")
+		        choicePushValid(2,"Checks","InBattle")
+            end
+        end
+	end,
+
+    Select1 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        setChoiceActive(0)
+        createChoice("Aqua Sniper: Choose 2 creatures",0,cid)
+	    choicePushSelect(3,"Cards","Aqua Sniper","Select2")
+		choicePushValid(2,"Checks","InBattle")
+    end,
+
+    Select2 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        Actions.SkipChoice(cid)
+    end
 }
 
 Cards["Aqua Soldier"] = {
@@ -561,6 +580,7 @@ Cards["Crystal Memory"] = {
 
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
+        shuffleDeck(getCardOwner(sid))
         setChoiceActive(0)
 	end
 }
@@ -724,6 +744,7 @@ Cards["Dimension Gate"] = {
 
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
+        shuffleDeck(getCardOwner(sid))
         setChoiceActive(0)
 	end
 }
@@ -799,7 +820,27 @@ Cards["Explosive Fighter Ucarn"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-	end
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Explosive Fighter Ucarn: Choose 2 cards in the mana zone",0,id)
+	            choicePushSelect(3,"Cards","Explosive Fighter Ucarn","Select1")
+		        choicePushValid(2,"Checks","InYourMana")
+            end
+        end
+	end,
+
+    Select1 = function(cid,sid)
+        destroyCard(sid)
+        setChoiceActive(0)
+        createChoice("Explosive Fighter Ucarn: Choose 2 cards in the mana zone",0,cid)
+	    choicePushSelect(3,"Cards","Explosive Fighter Ucarn","Select2")
+		choicePushValid(2,"Checks","InYourMana")
+    end,
+
+    Select2 = function(cid,sid)
+        destroyCard(sid)
+        Actions.SkipChoice(cid)
+    end
 }
 
 Cards["Faerie Child"] = {
@@ -921,6 +962,7 @@ Cards["Frei, Vizier of Air"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.untapAtEOT(id,"Frei, Vizier of Air")
 	end
 }
 
@@ -967,7 +1009,33 @@ Cards["Gigaberos"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-	end
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Gigaberos: Choose 2 creatures in your battle zone",1,id)
+	            choicePushSelect(3,"Cards","Gigaberos","Select1")
+                choicePushSkip(3,"Cards","Gigaberos","Skip")
+		        choicePushValid(2,"Checks","InYourBattle")
+            end
+        end
+	end,
+
+    Skip = function(cid)
+        destroyCard(cid)
+        Actions.skipChoice(cid)
+    end,
+
+    Select1 = function(cid,sid)
+        destroyCard(sid)
+        setChoiceActive(0)
+        createChoice("Gigaberos: Choose 2 creatures in your battle zone",0,cid)
+	    choicePushSelect(3,"Cards","Gigaberos","Select2")
+		choicePushValid(2,"Checks","InYourBattle")
+    end,
+
+    Select2 = function(cid,sid)
+        destroyCard(sid)
+        Actions.SkipChoice(cid)
+    end
 }
 
 Cards["Gigagiele"] = {
@@ -1004,7 +1072,27 @@ Cards["Gigargon"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-	end
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Gigargon: Choose 2 creatures in your battle zone",0,id)
+	            choicePushSelect(3,"Cards","Gigargon","Select1")
+		        choicePushValid(2,"Checks","InYourGraveyard")
+            end
+        end
+	end,
+
+    Select1 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        setChoiceActive(0)
+        createChoice("Gigargon: Choose 2 creatures in your battle zone",0,cid)
+	    choicePushSelect(3,"Cards","Gigargon","Select2")
+		choicePushValid(2,"Checks","InYourGraveyard")
+    end,
+
+    Select2 = function(cid,sid)
+        moveCard(sid,ZONE_HAND)
+        Actions.SkipChoice(cid)
+    end
 }
 
 Cards["Golden Wing Striker"] = {
@@ -1072,12 +1160,13 @@ Cards["Holy Awe"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-		local owner = getOwner(id)
+		local owner = getCardOwner(id)
 		local opp = getOpponent(owner)
 		local size = getZoneSize(opp,ZONE_BATTLE)-1
 		for i=0,size,1 do
 			tapCard(getCardAt(opp,ZONE_BATTLE,i))
 		end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -1302,7 +1391,37 @@ Cards["Laser Wing"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_LIGHT,
 	cost = 5,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+        createChoice("Laser Wing: Choose 2 of your creatures",0,id)
+        choicePushSelect(3,"Cards","Laser Wing","Select1")
+        choicePushValid(2,"Checks","InYourBattle")
+	end,
+
+    Select1 = function(cid,sid)
+        createModifier(sid,3,"Cards","Laser Wing","Modifier")
+        setChoiceActive(0)
+        createChoice("Laser Wing: Choose 2 of your creatures",0,cid)
+	    choicePushSelect(3,"Cards","Laser Wing","Select2")
+		choicePushValid(2,"Checks","InYourBattle")
+    end,
+
+    Select2 = function(cid,sid)
+        createModifier(sid,3,"Cards","Laser Wing","Modifier")
+        Actions.EndChoiceSpell(cid)
+    end,
+
+    Modifier = function(cid,mid)
+		if(getMessageType()=="get creaturecanbeblocked") then
+			if(getMessageInt("creature")==cid) then
+				setMessageInt("canbeblocked",0)
+			end
+		end
+		if(getMessageType()=="pre endturn") then
+			destroyModifier(cid,mid)
+		end
+	end
 }
 
 Cards["Magma Gazer"] = {
@@ -1418,14 +1537,18 @@ Cards["Miele, Vizier of Lightning"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id)
-	    choicePushSelect(3,"Cards","Miele, Vizier of Lightning","Select")
-        choicePushButton1(2,"Actions","ChoiceSkip")
-		choicePushValid(2,"Checks","UntappedInOppBattle")
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id)
+	            choicePushSelect(3,"Cards","Miele, Vizier of Lightning","Select")
+                choicePushButton1(2,"Actions","ChoiceSkip")
+		        choicePushValid(2,"Checks","UntappedInOppBattle")
+            end
+        end
 	end,
 
     Select = function(cid,sid)
-        tapCard(cid)
+        tapCard(sid)
         setChoiceActive(0)
     end
 }
@@ -1455,7 +1578,26 @@ Cards["Moonlight Flash"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_LIGHT,
 	cost = 4,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+        createChoice("Moonlight Flash: Choose 2 of your opponent's creatures",0,id)
+        choicePushSelect(3,"Cards","Moonlight Flash","Select1")
+        choicePushValid(2,"Checks","InOppBattle")
+	end,
+
+    Select1 = function(cid,sid)
+        tapCard(sid)
+        setChoiceActive(0)
+        createChoice("Moonlight Flash: Choose 2 of your opponent's creatures",0,cid)
+	    choicePushSelect(3,"Cards","Moonlight Flash","Select2")
+		choicePushValid(2,"Checks","InOppBattle")
+    end,
+
+    Select2 = function(cid,sid)
+        tapCard(sid)
+        Actions.EndChoiceSpell(cid)
+    end
 }
 
 Cards["Natural Snare"] = {
@@ -1470,7 +1612,7 @@ Cards["Natural Snare"] = {
         createChoice("Natural Snare: Choose an opponent's creature",0,id)
 	    choicePushSelect(3,"Cards","Natural Snare","Select")
         --choicePushButton1(2,"Actions","ChoiceSkip")
-		choicePushValid(2,"Checks","InYourHand")
+		choicePushValid(2,"Checks","InOppBattle")
 	end,
 
     Select = function(cid,sid)
@@ -1549,7 +1691,18 @@ Cards["Pangaea's Song"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_NATURE,
 	cost = 1,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+        createChoice("Pangaea's Song: Choose a creature in your battle zone",0,id)
+	    choicePushSelect(3,"Cards","Pangaea's Song","Select")
+		choicePushValid(2,"Checks","InYourBattle")
+    end,
+
+    Select = function(cid,sid)
+        moveCard(sid,ZONE_MANA)
+        setChoiceActive(0)
+    end
 }
 
 Cards["Phantom Fish"] = {
@@ -1648,6 +1801,7 @@ Cards["Rayla, Truth Enforcer"] = {
 
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
+        shuffleDeck(getCardOwner(sid))
         setChoiceActive(0)
 	end
 }
@@ -1766,7 +1920,7 @@ Cards["Rothus, the Traveler"] = {
 }
 
 Cards["Ruby Grass"] = {
-	name = "Ruby Grass",
+    name = "Ruby Grass",
 	set = "Base Set",
 	type = TYPE_SPELL,
 	civilization = CIV_LIGHT,
@@ -1776,7 +1930,11 @@ Cards["Ruby Grass"] = {
 	shieldtrigger = 0,
 	blocker = 1,
 
-	power = 3000
+	power = 3000,
+
+    HandleMessage = function(id)
+        Abils.untapAtEOT(id,"Ruby Grass")
+	end
 }
 
 Cards["Saucer-Head Shark"] = {
@@ -1931,8 +2089,8 @@ Cards["Solar Ray"] = {
 	end,
 
     Select = function(cid,sid)
-        tapCard(cid)
-        setChoiceActive(0)
+        tapCard(sid)
+        Actions.EndChoiceSpell(cid)
     end
 }
 
@@ -1953,10 +2111,6 @@ Cards["Sonic Wing"] = {
 
 	Select = function(cid,sid)
 		createModifier(sid,3,"Cards","Sonic Wing","Modifier")
-		Actions.EndChoiceSpell(cid)
-	end,
-
-	Skip = function(cid)
 		Actions.EndChoiceSpell(cid)
 	end,
 
@@ -2095,7 +2249,20 @@ Cards["Storm Shell"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-	end
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Storm Shell: Choose an opponent's creature",0,id)
+	            choicePushSelect(3,"Cards","Storm Shell","Select")
+                --choicePushButton1(2,"Actions","ChoiceSkip")
+		        choicePushValid(2,"Checks","InOppBattle")
+            end
+        end
+	end,
+
+    Select = function(cid,sid)
+        moveCard(sid,ZONE_MANA)
+        setChoiceActive(0)
+    end
 }
 
 Cards["Super Explosive Volcanodon"] = {
@@ -2184,7 +2351,7 @@ Cards["Teleportation"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        createChoice("Teleportation: Choose a creature",0,id)
+        createChoice("Teleportation: Choose 2 creatures",0,id)
 	    choicePushSelect(3,"Cards","Teleportation","Select1")
 		choicePushValid(2,"Checks","InBattle")
 	end,
@@ -2192,7 +2359,7 @@ Cards["Teleportation"] = {
     Select1 = function(cid,sid)
         moveCard(sid,ZONE_HAND)
         setChoiceActive(0)
-        createChoice("Teleportation: Choose a creature",0,id)
+        createChoice("Teleportation: Choose 2 creatures",0,cid)
 	    choicePushSelect(3,"Cards","Teleportation","Select2")
 		choicePushValid(2,"Checks","InBattle")
     end,
@@ -2270,7 +2437,25 @@ Cards["Toel, Vizier of Hope"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-	end
+        if(getMessageType()=="pre endturn") then
+		    if(getMessageInt("player")==getCardOwner(id)) then
+			    createChoice("Toel, Vizier of Hope: Untap creatures?",2,id)
+			    choicePushButton1(3,"Cards","Toel, Vizier of Hope","Button1")
+                choicePushButton2(2,"Actions","SkipChoice")
+			    choicePushValidNoCheck(2,"Checks","False")
+		    end
+	    end
+	end,
+
+    Button1 = function(cid)
+        local owner = getCardOwner(cid)
+		local size = getZoneSize(owner,ZONE_BATTLE)-1
+		for i=0,size,1 do
+		    local cid = getCardAt(owner,ZONE_BATTLE,i)
+		    untapCard(cid)
+		end
+        setChoiceActive(0)
+    end
 }
 
 Cards["Tornado Flame"] = {
@@ -2397,14 +2582,18 @@ Cards["Unicorn Fish"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        createChoice("Unicorn Fish: Choose a creature",1,id)
-	    choicePushSelect(3,"Cards","Unicorn Fish","Select")
-        choicePushButton1(2,"Actions","ChoiceSkip")
-		choicePushValid(2,"Checks","InBattle")
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                createChoice("Unicorn Fish: Choose a creature",1,id)
+	            choicePushSelect(3,"Cards","Unicorn Fish","Select")
+                choicePushButton1(2,"Actions","ChoiceSkip")
+		        choicePushValid(2,"Checks","InBattle")
+            end
+        end
 	end,
 
     Select = function(cid,sid)
-        moveCard(cid,ZONE_HAND)
+        moveCard(sid,ZONE_HAND)
         setChoiceActive(0)
     end
 }
@@ -2424,6 +2613,7 @@ Cards["Urth, Purifying Elemental"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
+        Abils.untapAtEOT(id,"Urth, Purifying Elemental")
 	end
 }
 

@@ -249,6 +249,10 @@ int Duel::handleMessage(Message& msg)
 	{
 		resetAttack();
 	}
+	else if (msg.getType() == "deckshuffle")
+	{
+		decks[msg.getInt("player")].shuffle();
+	}
 	return 0;
 }
 
@@ -414,21 +418,27 @@ int Duel::handleInterfaceInput(Message& msg)
 		int sid = msg.getInt("selection");
 		if (choiceCanBeSelected(sid) == 1)
 		{
-			choice.callselect(choiceCard, sid);
+			int chcard = choiceCard;
+			resetChoice();
+			choice.callselect(chcard, sid);
 		}
 	}
 	else if (type == "choicebutton1")
 	{
 		if (choice.buttoncount >= 1 && isChoiceActive)
 		{
-			choice.callbutton1(choiceCard);
+			int chcard = choiceCard;
+			resetChoice();
+			choice.callbutton1(chcard);
 		}
 	}
 	else if (type == "choicebutton2")
 	{
 		if (choice.buttoncount >= 2 && isChoiceActive)
 		{
-			choice.callbutton2(choiceCard);
+			int chcard = choiceCard;
+			resetChoice();
+			choice.callbutton2(chcard);
 		}
 	}
 	return 0;
@@ -436,7 +446,7 @@ int Duel::handleInterfaceInput(Message& msg)
 
 void Duel::update(int deltatime)
 {
-	//if (!(isChoiceActive || attackphase != PHASE_NONE))
+	if (!isChoiceActive)
 	{
 		bool worldchanged = false;
 		while (MsgMngr.hasMoreMessages())
@@ -539,11 +549,9 @@ void Duel::checkChoiceValid()
 			count++;
 		}
 	}
-	cout << "count : " << count << endl;
 	if (count == 0) //no valid targets
 	{
-		isChoiceActive = false;
-		choiceCard = -1;
+		resetChoice();
 	}
 }
 
@@ -843,6 +851,12 @@ void Duel::resetAttack()
 	defender = -1;
 	breakcount = -1;
 	shieldtargets.clear();
+}
+
+void Duel::resetChoice()
+{
+	choiceCard = -1;
+	isChoiceActive = false;
 }
 
 Zone* Duel::getZone(int player, int zone)

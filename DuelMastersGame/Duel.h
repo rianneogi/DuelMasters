@@ -79,6 +79,7 @@ public:
 
 	//void undoSelection();
 	void resetAttack();
+	void resetChoice();
 
 	Zone* getZone(int player, int zone);
 	void destroyCard(Card* c);
