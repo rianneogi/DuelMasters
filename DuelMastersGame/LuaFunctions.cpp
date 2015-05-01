@@ -252,7 +252,13 @@ static int getCreaturePower(lua_State* L)
 
 static int getCreatureCanBlock(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.getCreatureCanBlock(lua_tointeger(L, 1)));
+	lua_pushinteger(L, ActiveDuel->duel.getCreatureCanBlock(lua_tointeger(L, 1),lua_tointeger(L,2)));
+	return 1;
+}
+
+static int getCreatureIsBlocker(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.getCreatureIsBlocker(lua_tointeger(L, 1)));
 	return 1;
 }
 

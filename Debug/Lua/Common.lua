@@ -97,9 +97,19 @@ Abils.canAttackUntappedCreatures = function(id)
 end
 
 Abils.cantBeBlocked = function(id)
-	if(getMessageType()=="get creaturecanbeblocked") then
-		if(getMessageInt("creature")==id) then
-			setMessageInt("canbeblocked",0)
+	if(getMessageType()=="get creaturecanblock") then
+		if(getMessageInt("attacker")==id) then
+			setMessageInt("canblock",0)
+		end
+	end
+end
+
+Abils.cantBeBlockedPower = function(id,power)
+    if(getMessageType()=="get creaturecanblock") then
+		if(getMessageInt("attacker")==id) then
+            if(getCreaturePower(getMessageInt("blocker"))<=power) then
+			    setMessageInt("canblock",0)
+            end
 		end
 	end
 end

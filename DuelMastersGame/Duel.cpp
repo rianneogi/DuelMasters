@@ -289,7 +289,7 @@ int Duel::handleInterfaceInput(Message& msg)
 		int defen = msg.getInt("defender");
 		if (msg.getInt("defendertype") == DEFENDER_PLAYER)
 		{
-			if (getCreatureCanAttack(attck) == 1 && getCreatureCanAttackPlayers(attck) == 1
+			if (getCreatureCanAttackPlayer(attck,defen) == 1
 				&& CardList.at(attck)->isTapped == false)
 			{
 				MsgMngr.sendMessage(msg);
@@ -300,9 +300,9 @@ int Duel::handleInterfaceInput(Message& msg)
 		}
 		else if (msg.getInt("defendertype") == DEFENDER_CREATURE)
 		{
-			if ((CardList.at(defen)->isTapped == true || getCreatureCanAttackUntappedCreatures(attck) == 1)
-				&& getCreatureCanAttack(attck) == 1 && getCreatureCanAttackCreatures(attck) == 1
-				&& getCreatureCanBeAttacked(defen) == 1 && CardList.at(attck)->isTapped == false)
+			if ((CardList.at(defen)->isTapped == true || getCreatureCanAttackCreature(attck,defen) == CANATTACK_UNTAPPED)
+				&& getCreatureCanAttackCreature(attck, defen) >= CANATTACK_TAPPED
+				&& CardList.at(attck)->isTapped == false)
 			{
 				MsgMngr.sendMessage(msg);
 				Message msg2("cardtap");
@@ -316,7 +316,7 @@ int Duel::handleInterfaceInput(Message& msg)
 		if (attackphase == PHASE_BLOCK)
 		{
 			int blocker = msg.getInt("blocker");
-			if (getCreatureCanBlock(blocker) && getCreatureCanBeBlocked(attacker) && CardList.at(blocker)->isTapped == false
+			if (getCreatureCanBlock(attacker, blocker) && CardList.at(blocker)->isTapped == false
 				&& blocker != defender)
 			{
 				Message msg2("cardtap");
@@ -611,11 +611,45 @@ int Duel::getCreatureBreaker(int uid)
 	return c;
 }
 
-int Duel::getCreatureCanAttack(int uid)
+//int Duel::getCreatureCanAttack(int uid)
+//{
+//	Message oldmsg = currentMessage;
+//	currentMessage = Message("get creaturecanattack");
+//	currentMessage.addValue("canattack", 1);
+//	currentMessage.addValue("creature", uid);
+//
+//	vector<Card*>::iterator i;
+//	for (i = CardList.begin(); i != CardList.end(); i++)
+//	{
+//		(*i)->handleMessage(currentMessage);
+//	}
+//	int c = currentMessage.getInt("canattack");
+//	currentMessage = oldmsg;
+//	return c;
+//}
+
+//int Duel::getCreatureCanBeAttacked(int uid)
+//{
+//	Message oldmsg = currentMessage;
+//	currentMessage = Message("get creaturecanbeattacked");
+//	currentMessage.addValue("canbeattacked", 1);
+//	currentMessage.addValue("creature", uid);
+//
+//	vector<Card*>::iterator i;
+//	for (i = CardList.begin(); i != CardList.end(); i++)
+//	{
+//		(*i)->handleMessage(currentMessage);
+//	}
+//	int c = currentMessage.getInt("canbeattacked");
+//	currentMessage = oldmsg;
+//	return c;
+//}
+
+int Duel::getCreatureIsBlocker(int uid)
 {
 	Message oldmsg = currentMessage;
-	currentMessage = Message("get creaturecanattack");
-	currentMessage.addValue("canattack", 1);
+	currentMessage = Message("get creatureisblocker");
+	currentMessage.addValue("isblocker", CardList.at(uid)->isBlocker);
 	currentMessage.addValue("creature", uid);
 
 	vector<Card*>::iterator i;
@@ -623,34 +657,18 @@ int Duel::getCreatureCanAttack(int uid)
 	{
 		(*i)->handleMessage(currentMessage);
 	}
-	int c = currentMessage.getInt("canattack");
+	int c = currentMessage.getInt("isblocker");
 	currentMessage = oldmsg;
 	return c;
 }
 
-int Duel::getCreatureCanBeAttacked(int uid)
-{
-	Message oldmsg = currentMessage;
-	currentMessage = Message("get creaturecanbeattacked");
-	currentMessage.addValue("canbeattacked", 1);
-	currentMessage.addValue("creature", uid);
-
-	vector<Card*>::iterator i;
-	for (i = CardList.begin(); i != CardList.end(); i++)
-	{
-		(*i)->handleMessage(currentMessage);
-	}
-	int c = currentMessage.getInt("canbeattacked");
-	currentMessage = oldmsg;
-	return c;
-}
-
-int Duel::getCreatureCanBlock(int uid)
+int Duel::getCreatureCanBlock(int attckr,int blckr)
 {
 	Message oldmsg = currentMessage;
 	currentMessage = Message("get creaturecanblock");
-	currentMessage.addValue("canblock", CardList.at(uid)->isBlocker);
-	currentMessage.addValue("creature", uid);
+	currentMessage.addValue("canblock", CardList.at(blckr)->isBlocker);
+	currentMessage.addValue("blocker", blckr);
+	currentMessage.addValue("attacker", attckr);
 
 	vector<Card*>::iterator i;
 	for (i = CardList.begin(); i != CardList.end(); i++)
@@ -662,73 +680,75 @@ int Duel::getCreatureCanBlock(int uid)
 	return c;
 }
 
-int Duel::getCreatureCanBeBlocked(int uid)
+//int Duel::getCreatureCanBeBlocked(int uid)
+//{
+//	Message oldmsg = currentMessage;
+//	currentMessage = Message("get creaturecanbeblocked");
+//	currentMessage.addValue("canbeblocked", 1);
+//	currentMessage.addValue("creature", uid);
+//
+//	vector<Card*>::iterator i;
+//	for (i = CardList.begin(); i != CardList.end(); i++)
+//	{
+//		(*i)->handleMessage(currentMessage);
+//	}
+//	int c = currentMessage.getInt("canbeblocked");
+//	currentMessage = oldmsg;
+//	return c;
+//}
+
+int Duel::getCreatureCanAttackPlayer(int attckr,int plyr)
 {
 	Message oldmsg = currentMessage;
-	currentMessage = Message("get creaturecanbeblocked");
-	currentMessage.addValue("canbeblocked", 1);
-	currentMessage.addValue("creature", uid);
+	currentMessage = Message("get creaturecanattackplayer");
+	currentMessage.addValue("canattackplayer", 1);
+	currentMessage.addValue("attacker", attckr);
+	currentMessage.addValue("player", plyr);
 
 	vector<Card*>::iterator i;
 	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(currentMessage);
 	}
-	int c = currentMessage.getInt("canbeblocked");
+	int c = currentMessage.getInt("canattackplayer");
 	currentMessage = oldmsg;
 	return c;
 }
 
-int Duel::getCreatureCanAttackPlayers(int uid)
-{
-	Message oldmsg = currentMessage;
-	currentMessage = Message("get creaturecanattackplayers");
-	currentMessage.addValue("canattackplayers", 1);
-	currentMessage.addValue("creature", uid);
-
-	vector<Card*>::iterator i;
-	for (i = CardList.begin(); i != CardList.end(); i++)
-	{
-		(*i)->handleMessage(currentMessage);
-	}
-	int c = currentMessage.getInt("canattackplayers");
-	currentMessage = oldmsg;
-	return c;
-}
-
-int Duel::getCreatureCanAttackCreatures(int uid)
+int Duel::getCreatureCanAttackCreature(int attckr,int dfndr)
 {
 	Message oldmsg = currentMessage;
 	currentMessage = Message("get creaturecanattackcreatures");
-	currentMessage.addValue("canattackcreatures", 1);
-	currentMessage.addValue("creature", uid);
+	currentMessage.addValue("canattackcreature", 1);
+	currentMessage.addValue("attacker", attckr);
+	currentMessage.addValue("defender", attckr);
 
 	vector<Card*>::iterator i;
 	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(currentMessage);
 	}
-	int c = currentMessage.getInt("canattackcreatures");
+	int c = currentMessage.getInt("canattackcreature");
 	currentMessage = oldmsg;
 	return c;
 }
 
-int Duel::getCreatureCanAttackUntappedCreatures(int uid)
-{
-	Message oldmsg = currentMessage;
-	currentMessage = Message("get creaturecanattackuntappedcreatures");
-	currentMessage.addValue("canattackuntappedcreatures", 0);
-	currentMessage.addValue("creature", uid);
-
-	vector<Card*>::iterator i;
-	for (i = CardList.begin(); i != CardList.end(); i++)
-	{
-		(*i)->handleMessage(currentMessage);
-	}
-	int c = currentMessage.getInt("canattackuntappedcreatures");
-	currentMessage = oldmsg;
-	return c;
-}
+//int Duel::getCreatureCanAttackUntappedCreatures(int uid)
+//{
+//	Message oldmsg = currentMessage;
+//	currentMessage = Message("get creaturecanattackuntappedcreatures");
+//	currentMessage.addValue("canattackuntappedcreatures", 0);
+//	currentMessage.addValue("creature", uid);
+//
+//	vector<Card*>::iterator i;
+//	for (i = CardList.begin(); i != CardList.end(); i++)
+//	{
+//		(*i)->handleMessage(currentMessage);
+//	}
+//	int c = currentMessage.getInt("canattackuntappedcreatures");
+//	currentMessage = oldmsg;
+//	return c;
+//}
 
 int Duel::getCardCost(int uid)
 {

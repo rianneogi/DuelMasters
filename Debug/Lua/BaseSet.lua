@@ -2162,6 +2162,7 @@ Cards["Stampeding Longhorn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.cantBeBlockedPower(id,3000)
 	end
 }
 
@@ -2502,6 +2503,7 @@ Cards["Tower Shell"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.cantBeBlockedPower(id,4000)
 	end
 }
 

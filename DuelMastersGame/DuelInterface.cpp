@@ -298,7 +298,7 @@ void DuelInterface::handleEvent(sf::Event event)
 				for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
 				{
 					if (checkCollision((*i)->getBounds(), MouseX, MouseY)
-						&& duel.getCreatureCanBlock((*i)->UniqueId) && duel.getCreatureCanBeBlocked(selectedcard) && (*i)->isTapped == false
+						&& duel.getCreatureCanBlock(duel.attacker, (*i)->UniqueId) && (*i)->isTapped == false
 						&& (*i)->UniqueId != duel.defender)
 					{
 						/*Message msg2("cardtap");
@@ -387,7 +387,7 @@ void DuelInterface::handleEvent(sf::Event event)
 			else if (selectedcardzone == ZONE_BATTLE) //attack
 			{
 				if (checkCollision(duel.shields[getOpponent(duel.turn)].getBounds(), MouseX, MouseY) //attack player
-					&& duel.getCreatureCanAttack(selectedcard) == 1 && duel.getCreatureCanAttackPlayers(selectedcard) == 1
+					&& duel.getCreatureCanAttackPlayer(selectedcard,getOpponent(duel.turn)) == 1
 					&& duel.CardList.at(selectedcard)->isTapped == false)
 				{
 					/*Message msg2("cardtap");
@@ -410,9 +410,9 @@ void DuelInterface::handleEvent(sf::Event event)
 				for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
 				{
 					if (checkCollision((*i)->getBounds(), MouseX, MouseY) //attack creature
-						&& ((*i)->isTapped == true || duel.getCreatureCanAttackUntappedCreatures(selectedcard) == 1)
-						&& duel.getCreatureCanAttack(selectedcard) == 1 && duel.getCreatureCanAttackCreatures(selectedcard) == 1
-						&& duel.getCreatureCanBeAttacked((*i)->UniqueId) == 1 && duel.CardList.at(selectedcard)->isTapped == false)
+						&& ((*i)->isTapped == true || duel.getCreatureCanAttackCreature(selectedcard,(*i)->UniqueId) == CANATTACK_UNTAPPED)
+						&& duel.getCreatureCanAttackCreature(selectedcard,(*i)->UniqueId) >= CANATTACK_TAPPED
+						&& duel.CardList.at(selectedcard)->isTapped == false)
 					{
 						/*Message msg2("cardtap");
 						msg2.addValue("card", selectedcard);
