@@ -462,7 +462,28 @@ Cards["Chaos Strike"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_FIRE,
 	cost = 2,
-	shieldtrigger = 0
+	shieldtrigger = 0,
+
+    OnCast = function(id)
+		createChoice("Chaos Strike: Choose creature",0,id)
+		choicePushSelect(3,"Cards","Chaos Strike","Select")
+        --choicePushButton1(3,"Cards","Sonic Wing","Skip")
+		choicePushValid(2,"Choice","UntappedInOppBattle")
+	end,
+
+	Select = function(cid,sid)
+		createModifier(sid,3,"Cards","Chaos Strike","Modifier")
+		Actions.EndChoiceSpell(cid)
+	end,
+
+	Modifier = function(cid,mid)
+		if(getMessageType()=="get creaturecanattackcreature") then
+			if(getMessageInt("defender")==cid) then
+				setMessageInt("canattack",1)
+			end
+		end
+		Abils.destroyModAtEOT(cid,mid)
+	end
 }
 
 Cards["Chilias, the Oracle"] = {
@@ -991,7 +1012,12 @@ Cards["Ghost Touch"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 2,
-	shieldtrigger = 1
+	shieldtrigger = 1,
+
+    OnCast = function(id)
+        discardCardAtRandom(getOpponent(getCardOwner(id)))
+        Actions.EndSpell(id)
+    end
 }
 
 Cards["Gigaberos"] = {
@@ -1413,14 +1439,8 @@ Cards["Laser Wing"] = {
     end,
 
     Modifier = function(cid,mid)
-		if(getMessageType()=="get creaturecanbeblocked") then
-			if(getMessageInt("creature")==cid) then
-				setMessageInt("canbeblocked",0)
-			end
-		end
-		if(getMessageType()=="pre endturn") then
-			destroyModifier(cid,mid)
-		end
+		Abils.cantBeBlocked(cid)
+	    Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -1484,6 +1504,11 @@ Cards["Masked Horror, Shadow of Scorn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("card")==id) then
+                discardCardAtRandom(getOpponent(getCardOwner(id)))
+            end
+        end
 	end
 }
 
@@ -2115,14 +2140,8 @@ Cards["Sonic Wing"] = {
 	end,
 
 	Modifier = function(cid,mid)
-		if(getMessageType()=="get creaturecanbeblocked") then
-			if(getMessageInt("creature")==cid) then
-				setMessageInt("canbeblocked",0)
-			end
-		end
-		if(getMessageType()=="pre endturn") then
-			destroyModifier(cid,mid)
-		end
+        Abils.cantBeBlocked(cid)
+	    Abils.destroyModAtEOT(cid,mid)
 	end
 }
 

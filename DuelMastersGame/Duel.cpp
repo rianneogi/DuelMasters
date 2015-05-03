@@ -253,6 +253,14 @@ int Duel::handleMessage(Message& msg)
 	{
 		decks[msg.getInt("player")].shuffle();
 	}
+	else if (msg.getType() == "carddiscard")
+	{
+		Message m("cardmove");
+		m.addValue("card", hands[msg.getInt("player")].cards.at(rand() % hands[msg.getInt("player")].cards.size())->UniqueId);
+		m.addValue("from", ZONE_HAND);
+		m.addValue("to", ZONE_GRAVEYARD);
+		MsgMngr.sendMessage(m);
+	}
 	return 0;
 }
 

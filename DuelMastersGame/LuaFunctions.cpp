@@ -119,6 +119,15 @@ static int destroyCard(lua_State* L)
 	return 0;
 }
 
+static int discardCardAtRandom(lua_State* L)
+{
+	Message msg("carddiscard");
+	msg.addValue("player", lua_tointeger(L, 1));
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	return 0;
+}
+
+
 static int moveCard(lua_State* L)
 {
 	Message msg("cardmove");
@@ -303,6 +312,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "destroyModifier", destroyModifier);
 	
 	lua_register(L, "destroyCard", destroyCard);
+	lua_register(L, "discardCardAtRandom", discardCardAtRandom);
 	lua_register(L, "moveCard", moveCard);
 	lua_register(L, "tapCard", tapCard);
 	lua_register(L, "untapCard", untapCard);
