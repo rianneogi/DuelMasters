@@ -13,7 +13,11 @@ DuelInterface::DuelInterface()
 	endturntext.setPosition(ENDTURNX + CARDZONEOFFSET, ENDTURNY + CARDZONEOFFSET);
 	endturntext.setColor(sf::Color::Black);
 
-	endturnsound = sf::Sound(Sounds.at(SOUND_ENDTURN));
+	//endturnsound = sf::Sound(Sounds.at(SOUND_ENDTURN));
+	for (int i = 0; i < SoundBuffers.size(); i++)
+	{
+		sounds.push_back(sf::Sound(SoundBuffers.at(i)));
+	}
 
 	cancelbutton = sf::RectangleShape(sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT));
 	cancelbutton.setPosition(CANCELBOXX, CANCELBOXY);
@@ -367,6 +371,7 @@ void DuelInterface::handleEvent(sf::Event event)
 					Message msg("cardplay");
 					msg.addValue("card", selectedcard);
 					duel.handleInterfaceInput(msg);
+					sounds.at(SOUND_PLAY).play();
 
 					undoSelection();
 				}
@@ -399,6 +404,7 @@ void DuelInterface::handleEvent(sf::Event event)
 					msg.addValue("defender", getOpponent(duel.turn));
 					msg.addValue("defendertype", DEFENDER_PLAYER);
 					duel.handleInterfaceInput(msg);
+					sounds.at(SOUND_TAP).play();
 
 					sf::FloatRect bounds = duel.shields[getOpponent(duel.turn)].getBounds();
 
@@ -423,6 +429,7 @@ void DuelInterface::handleEvent(sf::Event event)
 						msg.addValue("defender", (*i)->UniqueId);
 						msg.addValue("defendertype", DEFENDER_CREATURE);
 						duel.handleInterfaceInput(msg);
+						sounds.at(SOUND_TAP).play();
 
 						arrows.at(mousearrow).setTo((*i)->x, (*i)->y);
 						mousearrow = -1;
@@ -440,7 +447,7 @@ void DuelInterface::handleEvent(sf::Event event)
 				Message m("endturn");
 				m.addValue("player", duel.turn);
 				duel.handleInterfaceInput(m);
-				endturnsound.play();
+				sounds.at(SOUND_ENDTURN).play();
 				undoSelection();
 			}
 

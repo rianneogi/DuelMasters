@@ -207,6 +207,7 @@ Cards["Aura Blast"] = {
 		for i=0,size,1 do
 			createModifier(getCardAt(owner,ZONE_BATTLE,i),3,"Cards","Aura Blast","Modifier")
 		end
+        Actions.EndSpell(id)
 	end,
 
 	Modifier = function(cid,mid)
@@ -468,7 +469,7 @@ Cards["Chaos Strike"] = {
 		createChoice("Chaos Strike: Choose creature",0,id)
 		choicePushSelect(3,"Cards","Chaos Strike","Select")
         --choicePushButton1(3,"Cards","Sonic Wing","Skip")
-		choicePushValid(2,"Choice","UntappedInOppBattle")
+		choicePushValid(2,"Checks","UntappedInOppBattle")
 	end,
 
 	Select = function(cid,sid)

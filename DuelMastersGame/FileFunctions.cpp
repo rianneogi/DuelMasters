@@ -1,7 +1,7 @@
 #include "FileFunctions.h"
 
 vector<sf::Texture> Textures;
-vector<sf::SoundBuffer> Sounds;
+vector<sf::SoundBuffer> SoundBuffers;
 vector<sf::Sprite> Sprites;
 vector<sf::Texture> CardTextures;
 vector<sf::Sprite> CardSprites;
@@ -18,17 +18,20 @@ int loadfiles()
 		return -1;
 	}
 
-	Sounds.push_back(sf::SoundBuffer());
-	if (!Sounds.at(0).loadFromFile("Graphics\\endturn.wav"))
+	for (int i = 0; i < SoundCount; i++)
 	{
-		cout << "ERROR couldnt load endturn sound" << endl;
-		return -1;
+		SoundBuffers.push_back(sf::SoundBuffer());
+		if (!SoundBuffers.at(i).loadFromFile(SoundPaths[i]))
+		{
+			cout << "ERROR couldnt load sound no. " << i << endl;
+			return -2;
+		}
 	}
 
 	if (!DefaultFont.loadFromFile("Graphics\\OxygenMono.ttf"))
 	{
 		cout << "ERROR couldnt load font" << endl;
-		return -2;
+		return -3;
 	}
 
 	/*for (int i = 0; i < Textures.size(); i++)

@@ -21,10 +21,14 @@ extern "C"
 using namespace std;
 
 enum SpriteId { TEXTURE_CARDBACK };
-enum SoundId { SOUND_ENDTURN };
+enum SoundId { SOUND_ENDTURN, SOUND_DRAW, SOUND_TAP, SOUND_UNTAP, SOUND_PLAY, SOUND_SHUFFLE };
+
+const string SoundPaths[] = { "Graphics\\Sounds\\endturn.wav", "Graphics\\Sounds\\draw.wav", "Graphics\\Sounds\\tap.wav",
+"Graphics\\Sounds\\untap.wav", "Graphics\\Sounds\\playcard.wav", "Graphics\\Sounds\\shuffle.wav" };
+const int SoundCount = 6;
 
 extern vector<sf::Texture> Textures;
-extern vector<sf::SoundBuffer> Sounds;
+extern vector<sf::SoundBuffer> SoundBuffers;
 extern vector<sf::Sprite> Sprites;
 
 extern vector<sf::Texture> CardTextures;

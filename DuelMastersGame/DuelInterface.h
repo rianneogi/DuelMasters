@@ -17,7 +17,7 @@ public:
 
 	sf::RectangleShape endturnbutton;
 	sf::Text endturntext;
-	sf::Sound endturnsound;
+	vector<sf::Sound> sounds;
 
 	sf::RectangleShape cancelbutton;
 	sf::Text canceltext;
