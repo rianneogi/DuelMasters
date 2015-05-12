@@ -392,7 +392,7 @@ void DuelInterface::handleEvent(sf::Event event)
 			else if (selectedcardzone == ZONE_BATTLE) //attack
 			{
 				if (checkCollision(duel.shields[getOpponent(duel.turn)].getBounds(), MouseX, MouseY) //attack player
-					&& duel.getCreatureCanAttackPlayer(selectedcard,getOpponent(duel.turn)) == 1
+					&& duel.getCreatureCanAttackPlayers(selectedcard) == 1
 					&& duel.CardList.at(selectedcard)->isTapped == false)
 				{
 					/*Message msg2("cardtap");
@@ -417,7 +417,7 @@ void DuelInterface::handleEvent(sf::Event event)
 				{
 					if (checkCollision((*i)->getBounds(), MouseX, MouseY) //attack creature
 						&& ((*i)->isTapped == true || duel.getCreatureCanAttackCreature(selectedcard,(*i)->UniqueId) == CANATTACK_UNTAPPED)
-						&& duel.getCreatureCanAttackCreature(selectedcard,(*i)->UniqueId) >= CANATTACK_TAPPED
+						&& duel.getCreatureCanAttackCreature(selectedcard,(*i)->UniqueId) <= CANATTACK_UNTAPPED
 						&& duel.CardList.at(selectedcard)->isTapped == false)
 					{
 						/*Message msg2("cardtap");

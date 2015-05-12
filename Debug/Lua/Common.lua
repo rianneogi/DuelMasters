@@ -17,6 +17,10 @@ ZONE_GRAVEYARD = 5
 DEFENDER_CREATURE = 0
 DEFENDER_PLAYER = 1
 
+CANATTACK_NO = 0
+CANATTACK_TAPPED = 1
+CANATTACK_UNTAPPED = 2
+
 Abils = {}
 Checks = {}
 Actions = {}
@@ -65,17 +69,22 @@ Abils.Slayer = function(id)
 end
 
 Abils.cantAttack = function(id)
-	if(getMessageType()=="get creaturecanattack") then
-		if(getMessageInt("creature")==id) then
+	if(getMessageType()=="get creaturecanattackcreature") then
+		if(getMessageInt("defender")==id) then
+			setMessageInt("canattack",CANATTACK_NO)
+		end
+	end
+    if(getMessageType()=="get creaturecanattackplayers") then
+		if(getMessageInt("defender")==id) then
 			setMessageInt("canattack",0)
 		end
 	end
 end
 
 Abils.cantAttackCreatures = function(id)
-	if(getMessageType()=="get creaturecanattackcreatures") then
+	if(getMessageType()=="get creaturecanattackcreature") then
 		if(getMessageInt("creature")==id) then
-			setMessageInt("canattackcreatures",0)
+			setMessageInt("canattack",CANATTACK_NO)
 		end
 	end
 end
@@ -83,15 +92,15 @@ end
 Abils.cantAttackPlayers = function(id)
 	if(getMessageType()=="get creaturecanattackplayers") then
 		if(getMessageInt("creature")==id) then
-			setMessageInt("canattackplayers",0)
+			setMessageInt("canattack",0)
 		end
 	end
 end
 
 Abils.canAttackUntappedCreatures = function(id)
-	if(getMessageType()=="get creaturecanattackuntappedcreatures") then
+	if(getMessageType()=="get creaturecanattackcreature") then
 		if(getMessageInt("creature")==id) then
-			setMessageInt("canattackuntappedcreatures",1)
+			setMessageInt("canattack",CANATTACK_UNTAPPED)
 		end
 	end
 end

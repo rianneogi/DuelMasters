@@ -3,7 +3,7 @@
 #include "Choice.h"
 
 enum AttackPhase { PHASE_NONE, PHASE_BLOCK, PHASE_TARGET, PHASE_TRIGGER };
-enum CanAttack { CANATTACK_NO, CANATTACK_TAPPED, CANATTACK_UNTAPPED };
+enum CanAttack { CANATTACK_TAPPED, CANATTACK_UNTAPPED, CANATTACK_NO };
 
 class Duel
 {
@@ -93,10 +93,12 @@ public:
 	int getCreatureBreaker(int uid);
 	int getCreatureIsBlocker(int uid);
 	int getCreatureCanBlock(int attckr, int blckr);
-	int getCreatureCanAttackPlayer(int attckr, int plyr);
-	int getCreatureCanAttackCreature(int attckr, int dfndr);
 	//int getCreatureCanAttack(int uid);
-	//int getCreatureCanBeAttacked(int uid);
+	int getCreatureCanAttackPlayers(int uid);
+	//int getCreatureCanAttackCreatures(int uid);
+	//int getCreatureCanAttackTarget(int attckr, int dfndr);
+	int getCreatureCanAttackCreature(int attckr, int dfndr);
+	int getCreatureCanBeAttacked(int attckr, int dfndr);
 	//int getCreatureCanBeBlocked(int uid);
 	//int getCreatureCanAttackUntappedCreatures(int uid);
 	int getCardCost(int uid);

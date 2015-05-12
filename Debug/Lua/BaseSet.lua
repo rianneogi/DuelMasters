@@ -480,7 +480,7 @@ Cards["Chaos Strike"] = {
 	Modifier = function(cid,mid)
 		if(getMessageType()=="get creaturecanattackcreature") then
 			if(getMessageInt("defender")==cid) then
-				setMessageInt("canattack",1)
+				setMessageInt("canattack",CANATTACK_UNTAPPED)
 			end
 		end
 		Abils.destroyModAtEOT(cid,mid)
