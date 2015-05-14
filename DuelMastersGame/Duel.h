@@ -98,7 +98,7 @@ public:
 	//int getCreatureCanAttackCreatures(int uid);
 	//int getCreatureCanAttackTarget(int attckr, int dfndr);
 	int getCreatureCanAttackCreature(int attckr, int dfndr);
-	int getCreatureCanBeAttacked(int attckr, int dfndr);
+	//int getCreatureCanBeAttacked(int attckr, int dfndr);
 	//int getCreatureCanBeBlocked(int uid);
 	//int getCreatureCanAttackUntappedCreatures(int uid);
 	int getCardCost(int uid);

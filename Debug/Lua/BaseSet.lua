@@ -1040,7 +1040,7 @@ Cards["Gigaberos"] = {
             if(getMessageInt("card")==id) then
                 createChoice("Gigaberos: Choose 2 creatures in your battle zone",1,id)
 	            choicePushSelect(3,"Cards","Gigaberos","Select1")
-                choicePushSkip(3,"Cards","Gigaberos","Skip")
+                choicePushButton1(3,"Cards","Gigaberos","Skip")
 		        choicePushValid(2,"Checks","InYourBattle")
             end
         end
