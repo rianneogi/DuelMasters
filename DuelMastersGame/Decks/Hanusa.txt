@@ -1,41 +1,13 @@
-Senatine Jade Tree
-Senatine Jade Tree
-Senatine Jade Tree
-Senatine Jade Tree
-Ruby Grass
-Ruby Grass
-Ruby Grass
-Ruby Grass
-Emerald Grass
-Emerald Grass
-Emerald Grass
-Emerald Grass
-La Ura Giga, Sky Guardian
-La Ura Giga, Sky Guardian
-La Ura Giga, Sky Guardian
-La Ura Giga, Sky Guardian
-Dia Nork, Moonlight Guardian
-Dia Nork, Moonlight Guardian
-Dia Nork, Moonlight Guardian
-Dia Nork, Moonlight Guardian
-Szubs Kin, Twilight Guardian
-Szubs Kin, Twilight Guardian
-Szubs Kin, Twilight Guardian
-Szubs Kin, Twilight Guardian
-Lah, Purification Enforcer
-Lah, Purification Enforcer
-Lah, Purification Enforcer
-Lah, Purification Enforcer
-Solar Ray
-Solar Ray
-Solar Ray
-Solar Ray
-Sonic Wing
-Sonic Wing
-Gran Gure, Space Guardian
-Gran Gure, Space Guardian
-Holy Awe
-Holy Awe
-Hanusa, Radiance Elemental
-Hanusa, Radiance Elemental
+4 Senatine Jade Tree
+4 Ruby Grass
+4 Emerald Grass
+4 Miele, Vizier of Lightning
+2 Toel, Vizier of Hope
+4 Iere, Vizier of Bullets
+4 Lok, Vizier of Hunting
+4 Frei, Vizier of Air
+4 Iocant, the Oracle
+2 Laser Wing
+2 Sonic Wing
+2 Hanusa, Radiance Elemental
 

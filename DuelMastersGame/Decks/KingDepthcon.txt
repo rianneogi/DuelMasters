@@ -1,40 +1,12 @@
-Aqua Hulcus
-Aqua Hulcus
-Aqua Hulcus
-Aqua Hulcus
-Tropico
-Tropico
-Tropico
-Tropico
-Saucer-Head Shark
-Saucer-Head Shark
-Seamine
-Seamine
-Faerie Child
-Faerie Child
-Faerie Child
-Faerie Child
-King Coral
-King Coral
-King Coral
-King Coral
-Marine Flower
-Marine Flower
-Hunter Fish
-Hunter Fish
-Phantom Fish
-Phantom Fish
-Revolver Fish
-Revolver Fish
-Brain Serum
-Brain Serum
-Brain Serum
-Brain Serum
-Spiral Gate
-Spiral Gate
-Spiral Gate
-Spiral Gate
-Teleportation
-King Ripped-Hide
-King Depthcon
-King Depthcon
+2 Saucer-Head Shark
+2 Seamine
+4 Candy Drop
+4 King Coral
+4 Marine Flower
+4 Hunter Fish
+4 Phantom Fish
+4 Revolver Fish
+2 King Ripped-Hide
+2 King Depthcon
+4 Crystal Memory
+4 Brain Serum

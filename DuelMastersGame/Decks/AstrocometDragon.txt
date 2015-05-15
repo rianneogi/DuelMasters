@@ -1,40 +1,12 @@
-Crimson Hammer
-Crimson Hammer
-Crimson Hammer
-Crimson Hammer
-Tornado Flame
-Tornado Flame
-Tornado Flame
-Tornado Flame
-Brawler Zyler
-Brawler Zyler
-Brawler Zyler
-Brawler Zyler
-Bolshack Dragon
-Bolshack Dragon
-Chaos Strike
-Chaos Strike
-Magma Gazer
-Magma Gazer
-Rothus, the Traveler
-Rothus, the Traveler
-Rothus, the Traveler
-Rothus, the Traveler
-Fatal Attacker Horvath
-Fatal Attacker Horvath
-Fatal Attacker Horvath
-Fatal Attacker Horvath
-Armored Walker Urherion
-Armored Walker Urherion
-Armored Walker Urherion
-Armored Walker Urherion
-Deadly Fighter Braid Claw
-Deadly Fighter Braid Claw
-Deadly Fighter Braid Claw
-Deadly Fighter Braid Claw
-Immortal Baron, Vorg
-Immortal Baron, Vorg
-Immortal Baron, Vorg
-Immortal Baron, Vorg
-Astrocomet Dragon
-Astrocomet Dragon
+4 Meteosaur
+2 Burning Power
+4 Brawler Zyler
+2 Bolshack Dragon
+2 Stonesaur
+4 Magma Gazer
+4 Rothus, the Traveler
+4 Fatal Attacker Horvath
+4 Armored Walker Urherion
+4 Super Explosive Volcanodon
+4 Immortal Baron, Vorg
+2 Astrocomet Dragon

@@ -1,40 +1,13 @@
-Bronze-Arm Tribe
-Bronze-Arm Tribe
-Bronze-Arm Tribe
-Bronze-Arm Tribe
-Aura Blast
-Aura Blast
-Aura Blast
-Aura Blast
-Burning Mane
-Burning Mane
-Burning Mane
-Burning Mane
-Fear Fang
-Fear Fang
-Fear Fang
-Fear Fang
-Dome Shell
-Dome Shell
-Dome Shell
-Dome Shell
-Tower Shell
-Tower Shell
-Tower Shell
-Tower Shell
-Stampeding Longhorn
-Stampeding Longhorn
-Stampeding Longhorn
-Stampeding Longhorn
-Steel Smasher
-Steel Smasher
-Steel Smasher
-Steel Smasher
-Storm Shell
-Storm Shell
-Tri-Horn Shepherd
-Tri-Horn Shepherd
-Natural Snare
-Natural Snare
-Deathblade Beetle
-Deathblade Beetle
+4 Aura Blast
+4 Dome Shell
+4 Tower Shell
+4 Dimension Gate
+4 Mighty Shouter
+2 Storm Shell
+4 Golden Wing Striker
+4 Forest Hornet
+4 Ultimate Force
+2 Pangaea's Song
+2 Natural Snare
+2 Deathblade Beetle
+
