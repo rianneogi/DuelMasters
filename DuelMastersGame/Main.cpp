@@ -20,7 +20,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1400,800), "Duel Masters");
 	window.setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
-	ActiveDuel->duel.setDecks("Decks\\DeathbladeBeetle.txt", "Decks\\Zagaan.txt");
+	ActiveDuel->duel.setDecks("Decks\\More decks\\FL Burning Light Base Set.txt", "Decks\\More decks\\FW Cheap Shot (Base set).txt");
 	ActiveDuel->duel.startDuel();
 
 	while (window.isOpen())

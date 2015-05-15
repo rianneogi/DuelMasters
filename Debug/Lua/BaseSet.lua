@@ -1445,6 +1445,24 @@ Cards["Laser Wing"] = {
 	end
 }
 
+Cards["Lok, Vizier of Hunting"] = {
+	name = "Lok, Vizier of Hunting",
+	set = "Base Set",
+	type = TYPE_CREATURE,
+	civilization = CIV_LIGHT,
+	race = "Initiate",
+	cost = 4,
+
+	shieldtrigger = 0,
+	blocker = 0,
+
+	power = 4000,
+	breaker = 1,
+
+	HandleMessage = function(id)
+	end
+}
+
 Cards["Magma Gazer"] = {
 	name = "Magma Gazer",
 	set = "Base Set",

@@ -877,14 +877,46 @@ void Duel::loadDeck(string s, int p)
 		if (str == "")
 			continue;
 		cout << "loading card " << str << endl;
-		Card* c = new Card(nextUniqueId, getCardIdFromName(str), p);
-		CardList.push_back(c);
-		decks[p].addCard(c);
-		nextUniqueId++;
+		for (int i = 0; i < str.size(); i++)
+		{
+			if (str.at(i) == ' ')
+			{
+				int count = atoi(str.substr(0, i).c_str());
+				string name = str.substr(i + 1);
+				for (int j = 0; j < count; j++)
+				{
+					Card* c = new Card(nextUniqueId, getCardIdFromName(name), p);
+					CardList.push_back(c);
+					decks[p].addCard(c);
+					nextUniqueId++;
+				}
+				break;
+			}
+		}
 	}
-
-	file.close();
 }
+
+//void Duel::loadDeck(string s, int p)
+//{
+//	decks[p].cards.empty();
+//	fstream file;
+//	file.open(s, ios::in | ios::out);
+//	string str;
+//
+//	while (!file.eof())
+//	{
+//		getline(file, str);
+//		if (str == "")
+//			continue;
+//		cout << "loading card " << str << endl;
+//		Card* c = new Card(nextUniqueId, getCardIdFromName(str), p);
+//		CardList.push_back(c);
+//		decks[p].addCard(c);
+//		nextUniqueId++;
+//	}
+//
+//	file.close();
+//}
 
 void Duel::startDuel()
 {
