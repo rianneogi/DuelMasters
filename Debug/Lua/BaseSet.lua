@@ -603,7 +603,7 @@ Cards["Crystal Memory"] = {
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
         shuffleDeck(getCardOwner(sid))
-        setChoiceActive(0)
+        Actions.EndChoiceSpell(id)
 	end
 }
 
@@ -767,7 +767,7 @@ Cards["Dimension Gate"] = {
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
         shuffleDeck(getCardOwner(sid))
-        setChoiceActive(0)
+        Actions.EndChoiceSpell(id)
 	end
 }
 

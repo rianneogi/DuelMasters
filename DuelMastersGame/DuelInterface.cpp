@@ -256,11 +256,11 @@ void DuelInterface::handleEvent(sf::Event event)
 					cout << "cs returned " << cs << endl;
 					if (cs != -1)
 					{
-						if (duel.choice.callvalid(duel.choiceCard, cs) == 1)
+						if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
 						{
 							cout << "true " << endl;
 							Message msg("choiceselect");
-							msg.addValue("selection", cs);
+							msg.addValue("selection", cardsearch.zone->cards.at(cs)->UniqueId);
 							duel.handleInterfaceInput(msg);
 						}
 					}
