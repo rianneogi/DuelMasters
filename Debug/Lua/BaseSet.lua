@@ -767,7 +767,7 @@ Cards["Dimension Gate"] = {
 	Select = function(cid,sid)
 		moveCard(sid,ZONE_HAND)
         shuffleDeck(getCardOwner(sid))
-        Actions.EndChoiceSpell(id)
+        Actions.EndChoiceSpell(cid)
 	end
 }
 

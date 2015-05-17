@@ -447,7 +447,7 @@ void DuelInterface::handleEvent(sf::Event event)
 					undoSelection();
 				}
 			}
-			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && !duel.isChoiceActive) //end turn
+			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && !(duel.isChoiceActive)) //end turn
 			{
 				Message m("endturn");
 				m.addValue("player", duel.turn);
