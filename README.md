@@ -7,4 +7,5 @@
 
 ##Dependencies
 -The SFML Library
+
 -Lua 5.1 for Windows
