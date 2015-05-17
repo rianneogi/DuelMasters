@@ -253,11 +253,16 @@ void DuelInterface::handleEvent(sf::Event event)
 				if (cardsearch.zone != NULL)
 				{
 					int cs = cardsearch.getCardAtPos(MouseX, MouseY);
+					cout << "cs returned " << cs << endl;
 					if (cs != -1)
 					{
-						Message msg("choiceselect");
-						msg.addValue("selection", cs);
-						duel.handleInterfaceInput(msg);
+						if (duel.choice.callvalid(duel.choiceCard, cs) == 1)
+						{
+							cout << "true " << endl;
+							Message msg("choiceselect");
+							msg.addValue("selection", cs);
+							duel.handleInterfaceInput(msg);
+						}
 					}
 				}
 			}
@@ -442,7 +447,7 @@ void DuelInterface::handleEvent(sf::Event event)
 					undoSelection();
 				}
 			}
-			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && duel.isChoiceActive == 0) //end turn
+			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && !duel.isChoiceActive) //end turn
 			{
 				Message m("endturn");
 				m.addValue("player", duel.turn);

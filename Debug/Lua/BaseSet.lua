@@ -1718,7 +1718,7 @@ Cards["Onslaughter Triceps"] = {
             if(getMessageInt("card")==id) then
 			    createChoice("Onslaughter Triceps: Choose a card in your mana zone",0,id)
 			    choicePushSelect(3,"Cards","Onslaughter Triceps","Select")
-			    choicePushValid(2,"Checks","InYourHand")
+			    choicePushValid(2,"Checks","InYourMana")
             end
 		end
 	end,

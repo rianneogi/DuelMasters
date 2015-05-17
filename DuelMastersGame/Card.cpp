@@ -88,7 +88,7 @@ void Card::render(sf::RenderWindow& window)
 {
 	//sprite.setPosition(x, y);
 	window.draw(sprite);
-	if (Zone == ZONE_BATTLE)
+	if (Zone == ZONE_BATTLE && Type == TYPE_CREATURE)
 	{
 		window.draw(powertext);
 	}

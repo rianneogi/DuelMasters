@@ -278,6 +278,14 @@ Checks.UntappedInOppBattle = function(cid,sid)
 	end
 end
 
+Checks.InYourHand = function(cid,sid)
+    if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_HAND) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.InYourDeck = function(cid,sid)
 	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_DECK) then
 		return 1
@@ -295,7 +303,7 @@ Checks.SpellInYourDeck = function(cid,sid)
 end
 
 Checks.CreatureInYourDeck = function(cid,sid)
-	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_DECK and getCardType(sid)==TYPE_Creature) then
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_DECK and getCardType(sid)==TYPE_CREATURE) then
 		return 1
 	else
 		return 0

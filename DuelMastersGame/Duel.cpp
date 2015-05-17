@@ -290,7 +290,7 @@ int Duel::handleInterfaceInput(Message& msg)
 	}
 	else if (type == "endturn")
 	{
-		if (attackphase == PHASE_NONE && isChoiceActive == 0)
+		if (attackphase == PHASE_NONE && !isChoiceActive)
 		{
 			nextTurn();
 		}
@@ -545,6 +545,7 @@ void Duel::addChoice(string info, int skip, int card)
 	choice = Choice(info, skip);
 	choiceCard = card;
 	isChoiceActive = true;
+	cout << "choice set: " << info << endl;
 }
 
 int Duel::choiceCanBeSelected(int sid)
@@ -967,6 +968,7 @@ void Duel::resetChoice()
 {
 	choiceCard = -1;
 	isChoiceActive = false;
+	cout << "choice reset" << endl;
 }
 
 Zone* Duel::getZone(int player, int zone)
