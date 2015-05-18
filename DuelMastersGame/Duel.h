@@ -74,7 +74,7 @@ public:
 	//void render(sf::RenderWindow& window);
 	void handleEvent(sf::Event event);
 
-	void addChoice(string info, int skip, int card);
+	void addChoice(string info, int skip, int card, int validref);
 	void checkChoiceValid();
 	int choiceCanBeSelected(int sid);
 

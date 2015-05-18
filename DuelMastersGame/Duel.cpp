@@ -540,9 +540,9 @@ void Duel::dispatchMessage(Message& msg)
 	//std::cout << "  post\n";
 }
 
-void Duel::addChoice(string info, int skip, int card)
+void Duel::addChoice(string info, int skip, int card, int validref)
 {
-	choice = Choice(info, skip);
+	choice = Choice(info, skip, validref);
 	choiceCard = card;
 	isChoiceActive = true;
 	cout << "choice set: " << info << endl;

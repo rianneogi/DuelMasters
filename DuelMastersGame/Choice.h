@@ -11,9 +11,10 @@ public:
 	vector<string> validfunc;
 	string infotext;
 	int buttoncount;
+	int validref;
 
 	Choice();
-	Choice(string info, int skip);
+	Choice(string info, int skip, int vr);
 	~Choice();
 
 	void pushselect(string s);

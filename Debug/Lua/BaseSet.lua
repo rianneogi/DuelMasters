@@ -1584,21 +1584,30 @@ Cards["Miele, Vizier of Lightning"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="post cardmove") then
             if(getMessageInt("card")==id) then
-                createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id)
+                --createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id)
 	            --choicePushSelect(3,"Cards","Miele, Vizier of Lightning","Select")
                 --choicePushButton1(2,"Actions","ChoiceSkip")
 		        --choicePushValid(2,"Checks","UntappedInOppBattle")
-                while(isChoiceActive()==1) do
-                    local r = getChoice()
-                    if(r>=0) then
-                        if(Checks.UntappedInOppBattle(id,r)==1) then
-                            tapCard(r)
-                            setChoiceActive(0)
-                        end
-                    end
-                    if(r==-1) then
-                        setChoiceActive(0)
-                    end
+--                while(isChoiceActive()==1) do
+--                   local r = getChoice()
+--                   if(r>=0) then
+--                        if(Checks.UntappedInOppBattle(id,r)==1) then
+--                            tapCard(r)
+--                            setChoiceActive(0)
+--                        end
+--                    end
+--                    if(r==-1) then
+--                        setChoiceActive(0)
+--                    end
+--                end
+                --valid = Checks.UntappedInOppBattle
+                local r = createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id,Checks.UntappedInOppBattle)
+                if(r>=0) then
+                    tapCard(r)
+                    setChoiceActive(0)
+                end
+                if(r==-1 or r==-4) then
+                    setChoiceActive(0)
                 end
             end
         end

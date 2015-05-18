@@ -276,8 +276,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						if (checkCollision((*i)->getBounds(), MouseX, MouseY))
 						{
-							/*if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
-							{*/
+							if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
+							{
 								//choice.callselect(duel.choiceCard, (*i)->UniqueId);
 								/*Message msg("choiceselect");
 								msg.addValue("selection", (*i)->UniqueId);
@@ -287,7 +287,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 									return (*i)->UniqueId;
 								}
 								break;
-							//}
+							}
 						}
 					}
 				}
@@ -297,8 +297,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					cout << "cs returned " << cs << endl;
 					if (cs != -1)
 					{
-						/*if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
-						{*/
+						if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
+						{
 							cout << "true " << endl;
 							/*Message msg("choiceselect");
 							msg.addValue("selection", cardsearch.zone->cards.at(cs)->UniqueId);
@@ -307,7 +307,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							{
 								return cardsearch.zone->cards.at(cs)->UniqueId;
 							}
-						//}
+						}
 					}
 				}
 			}

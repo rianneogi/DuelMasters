@@ -4,7 +4,7 @@ Choice::Choice() : infotext(""), buttoncount(0)
 {
 }
 
-Choice::Choice(string info, int bcount) : infotext(info), buttoncount(bcount)
+Choice::Choice(string info, int bcount, int vr) : infotext(info), buttoncount(bcount), validref(vr)
 {
 }
 
@@ -92,9 +92,9 @@ void Choice::callbutton2(int cid)
 
 int Choice::callvalid(int cid, int sid)
 {
-	int size = validfunc.size();
-	int r = -1;
-	if (size > 0)
+	//int size = validfunc.size();
+	//int r = -1;
+	/*if (size > 0)
 	{
 		lua_getglobal(LuaCards, validfunc.at(0).c_str());
 		for (int i = 1; i < size; i++)
@@ -111,6 +111,19 @@ int Choice::callvalid(int cid, int sid)
 			lua_pop(LuaCards, 1);
 		}
 	}
+	if (r == -1)
+	{
+		cout << "ERROR callvalid returning -1" << endl;
+	}
+	return r;*/
+
+	int r = -1;
+	lua_rawgeti(LuaCards, LUA_REGISTRYINDEX, validref);
+	lua_pushinteger(LuaCards, cid);
+	lua_pushinteger(LuaCards, sid);
+	lua_pcall(LuaCards, 2, 1, 0);
+	r = lua_tointeger(LuaCards, -1);
+	lua_pop(LuaCards, 1);
 	if (r == -1)
 	{
 		cout << "ERROR callvalid returning -1" << endl;

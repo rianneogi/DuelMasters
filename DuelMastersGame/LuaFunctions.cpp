@@ -44,8 +44,22 @@ static int getMessageType(lua_State* L)
 
 static int createChoice(lua_State* L)
 {
-	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3));
-	return 0;
+	lua_pushvalue(L, -1);
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), ref);
+	ActiveDuel->duel.checkChoiceValid();
+	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
+	{
+		int r = mainLoop(*Window, 1); //wait for return (a choice)
+		lua_pushinteger(L, r);
+		return 1;
+	}
+	else
+	{
+		lua_pushinteger(L, -4);
+	}
+	luaL_unref(L, LUA_REGISTRYINDEX, ref);
+	return 1;
 }
 
 static int choicePushSelect(lua_State* L)
