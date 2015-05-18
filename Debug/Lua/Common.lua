@@ -170,44 +170,38 @@ Abils.drawOnSummon = function(id, count)
 end
 
 Abils.destroyYourManaOnSummon = function(id, count)
-	if(getMessageType()=="post cardmove") then
-		if(getMessageInt("card")==id) then
-			createChoice("Select mana to destroy",0,id)
-			choicePushSelect(2,"Actions","destroySelected")
-			choicePushValid(2,"Checks","InYourMana")
-		end
-	end
+    summon = function(id)
+        for i=1,count do
+            local ch = createChoice("Select mana to destroy",0,id,Checks.InYourMana)
+            if(ch>=0) then
+                destroyCard(ch)
+            end
+        end
+    end
+    Abils.onSummon(id,summon)
 end
 
 Abils.destroyYourCreatureOnSummon = function(id, count)
-	if(getMessageType()=="post cardmove") then
-		if(getMessageInt("card")==id) then
-			createChoice("Select creature to destroy",0,id)
-			choicePushSelect(2,"Actions","destroySelected")
-			choicePushValid(2,"Checks","InYourBattle")
-		end
-	end
-end
-
-Actions.destroySelected = function(cid,sid)
-    destroyCard(sid)
-    setChoiceActive(0)
+    summon = function(id)
+        for i=1,count do
+            local ch = createChoice("Select creature to destroy",0,id,Checks.InYourBattle)
+            if(ch>=0) then
+                destroyCard(ch)
+            end
+        end
+    end
+    Abils.onSummon(id,summon)
 end
 
 Abils.untapAtEOT = function(id,name)
     if(getMessageType()=="pre endturn") then
-		if(getMessageInt("player")==getCardOwner(id)) then
-			createChoice(name..": Untap this creature?",2,id)
-			choicePushButton1(2,"Actions","untapAtEOTButton1")
-            choicePushButton2(2,"Actions","SkipChoice")
-			choicePushValidNoCheck(2,"Checks","False")
+		if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE) then
+			local ch = createChoice(name..": Untap this creature?",2,id,Checks.False)
+			if(ch==RETURN_BUTTON1) then
+                untapCard(id)
+            end
 		end
 	end
-end
-
-Actions.untapAtEOTButton1 = function(cid)
-    untapCard(cid)
-    setChoiceActive(0)
 end
 
 Abils.destroyModAtEOT = function(cid,mid)
@@ -234,6 +228,22 @@ end
 
 Checks.InYourGraveyard = function(cid,sid)
 	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_GRAVEYARD) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.CreatureInYourGraveyard = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_GRAVEYARD and getCardType(sid)==TYPE_CREATURE) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.SpellInYourGraveyard = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_GRAVEYARD and getCardType(sid)==TYPE_SPELL) then
 		return 1
 	else
 		return 0

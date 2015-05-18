@@ -255,6 +255,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					//choice.callskip(duel.choiceCard);
 					/*Message msg("choicebutton1");
 					duel.handleInterfaceInput(msg);*/
+					duel.resetChoice();
 					if (callback != 0)
 					{
 						return RETURN_BUTTON1;
@@ -265,6 +266,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					//choice.callskip(duel.choiceCard);
 					/*Message msg("choicebutton2");
 					duel.handleInterfaceInput(msg);*/
+					duel.resetChoice();
 					if (callback != 0)
 					{
 						return RETURN_BUTTON2;
@@ -282,6 +284,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 								/*Message msg("choiceselect");
 								msg.addValue("selection", (*i)->UniqueId);
 								duel.handleInterfaceInput(msg);*/
+								duel.resetChoice();
 								if (callback != 0)
 								{
 									return (*i)->UniqueId;
@@ -303,6 +306,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							/*Message msg("choiceselect");
 							msg.addValue("selection", cardsearch.zone->cards.at(cs)->UniqueId);
 							duel.handleInterfaceInput(msg);*/
+							duel.resetChoice();
 							if (callback != 0)
 							{
 								return cardsearch.zone->cards.at(cs)->UniqueId;
