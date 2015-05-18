@@ -1,6 +1,7 @@
 #include "LuaFunctions.h"
 
 DuelInterface* ActiveDuel;
+sf::RenderWindow* Window;
 
 int main()
 {
@@ -17,34 +18,35 @@ int main()
 
 	//createCardSprites();
 
-	sf::RenderWindow window(sf::VideoMode(1400,800), "Duel Masters");
-	window.setPosition(sf::Vector2i(0, 0));
+	Window = new sf::RenderWindow(sf::VideoMode(1400,800), "Duel Masters");
+	Window->setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
-	ActiveDuel->duel.setDecks("Decks\\More decks\\FL Burning Light Base Set.txt", "Decks\\More decks\\FW Cheap Shot (Base set).txt");
+	ActiveDuel->duel.setDecks("Decks\\test.txt", "Decks\\test.txt");
 	ActiveDuel->duel.startDuel();
 
-	while (window.isOpen())
+	while (Window->isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (Window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				ActiveDuel->handleEvent(event);
-				window.close();
+				ActiveDuel->handleEvent(event, 0);
+				Window->close();
 			}
-			ActiveDuel->handleEvent(event);
+			ActiveDuel->handleEvent(event, 0);
 			ActiveDuel->update(0);
 		}
 
-		window.clear();
+		Window->clear();
 
-		ActiveDuel->render(window);
+		ActiveDuel->render(*Window);
 
-		window.display();
+		Window->display();
 	}
 
 	delete ActiveDuel;
+	delete Window;
 	cleanupCards();
 	
 	return 0;

@@ -135,7 +135,7 @@ end
 
 Abils.returnAfterDestroyed = function(id)
 	if(getMessageType()=="mod carddestroy") then
-		if(getMessageInt("card")==id) then
+		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_HAND)
 		end
 	end
@@ -143,20 +143,25 @@ end
 
 Abils.manaAfterDestroyed = function(id)
 	if(getMessageType()=="mod carddestroy") then
-		if(getMessageInt("card")==id) then
+		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_MANA)
 		end
 	end
 end
 
+Abils.onSummon = function(id, func)
+    if(getMessageType()=="post cardmove") then
+		if(getMessageInt("card")==id and getMessageInt("to")==ZONE_BATTLE) then
+            func(id)
+        end
+    end
+end
+
 Abils.drawOnSummon = function(id, count)
-	if(getMessageType()=="post cardmove") then
-		if(getMessageInt("card")==id) then
-			if(getMessageInt("to")==ZONE_BATTLE) then
-				drawCards(getTurn(),count)
-			end
-		end
+	func = function(id)
+		drawCards(getTurn(),count)
 	end
+	Abils.onSummon(id,func)
 end
 
 Abils.destroyYourManaOnSummon = function(id, count)

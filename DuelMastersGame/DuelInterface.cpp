@@ -1,5 +1,34 @@
 #include "DuelInterface.h"
 
+int mainLoop(sf::RenderWindow& window, int callback)
+{
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				ActiveDuel->handleEvent(event, callback);
+				window.close();
+			}
+
+			int r = ActiveDuel->handleEvent(event, callback);
+			ActiveDuel->update(0);
+
+			if (callback != 0 && r != -3)
+			{
+				return r;
+			}
+		}
+
+		window.clear();
+
+		ActiveDuel->render(window);
+
+		window.display();
+	}
+}
 
 DuelInterface::DuelInterface()
 {
@@ -207,9 +236,9 @@ void DuelInterface::render(sf::RenderWindow& window)
 	}*/
 }
 
-void DuelInterface::handleEvent(sf::Event event)
+int DuelInterface::handleEvent(sf::Event event, int callback)
 {
-	if (duel.winner != -1) return;
+	if (duel.winner != -1) return -3;
 	if (event.type == sf::Event::MouseMoved)
 	{
 		MouseX = event.mouseMove.x;
@@ -224,14 +253,22 @@ void DuelInterface::handleEvent(sf::Event event)
 				if (checkCollision(cancelbutton.getGlobalBounds(), MouseX, MouseY)) //button1 press
 				{
 					//choice.callskip(duel.choiceCard);
-					Message msg("choicebutton1");
-					duel.handleInterfaceInput(msg);
+					/*Message msg("choicebutton1");
+					duel.handleInterfaceInput(msg);*/
+					if (callback != 0)
+					{
+						return -1;
+					}
 				}
 				if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY)) //button2 press
 				{
 					//choice.callskip(duel.choiceCard);
-					Message msg("choicebutton2");
-					duel.handleInterfaceInput(msg);
+					/*Message msg("choicebutton2");
+					duel.handleInterfaceInput(msg);*/
+					if (callback != 0)
+					{
+						return -2;
+					}
 				}
 				for (vector<Card*>::iterator i = duel.CardList.begin(); i != duel.CardList.end(); i++)
 				{
@@ -239,14 +276,18 @@ void DuelInterface::handleEvent(sf::Event event)
 					{
 						if (checkCollision((*i)->getBounds(), MouseX, MouseY))
 						{
-							if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
-							{
+							/*if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
+							{*/
 								//choice.callselect(duel.choiceCard, (*i)->UniqueId);
-								Message msg("choiceselect");
+								/*Message msg("choiceselect");
 								msg.addValue("selection", (*i)->UniqueId);
-								duel.handleInterfaceInput(msg);
+								duel.handleInterfaceInput(msg);*/
+								if (callback != 0)
+								{
+									return (*i)->UniqueId;
+								}
 								break;
-							}
+							//}
 						}
 					}
 				}
@@ -256,13 +297,17 @@ void DuelInterface::handleEvent(sf::Event event)
 					cout << "cs returned " << cs << endl;
 					if (cs != -1)
 					{
-						if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
-						{
+						/*if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
+						{*/
 							cout << "true " << endl;
-							Message msg("choiceselect");
+							/*Message msg("choiceselect");
 							msg.addValue("selection", cardsearch.zone->cards.at(cs)->UniqueId);
-							duel.handleInterfaceInput(msg);
-						}
+							duel.handleInterfaceInput(msg);*/
+							if (callback != 0)
+							{
+								return cardsearch.zone->cards.at(cs)->UniqueId;
+							}
+						//}
 					}
 				}
 			}
@@ -496,6 +541,7 @@ void DuelInterface::handleEvent(sf::Event event)
 		cardsearch.handleEvent(event);
 	}
 
+	return -3;
 	/*for (int i = 0; i < 2; i++)
 	{
 	decks[i].handleEvent(event);

@@ -110,6 +110,19 @@ static int setChoiceActive(lua_State* L)
 	return 0;
 }
 
+static int isChoiceActive(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.isChoiceActive);
+	return 1;
+}
+
+static int getChoice(lua_State* L)
+{
+	int r = mainLoop(*Window, 1);
+	lua_pushinteger(L, r);
+	return 1;
+}
+
 static int destroyCard(lua_State* L)
 {
 	Message msg("carddestroy");
@@ -307,6 +320,8 @@ void registerLua(lua_State* L)
 	lua_register(L, "choicePushValid", choicePushValid);
 	lua_register(L, "choicePushValidNoCheck", choicePushValidNoCheck);
 	lua_register(L, "setChoiceActive", setChoiceActive);
+	lua_register(L, "isChoiceActive", isChoiceActive);
+	lua_register(L, "getChoice", getChoice);
 
 	lua_register(L, "createModifier", createModifier);
 	lua_register(L, "destroyModifier", destroyModifier);

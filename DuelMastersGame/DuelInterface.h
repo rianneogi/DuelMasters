@@ -37,8 +37,11 @@ public:
 	void dispatchMessage(Message& msg);
 	void update(int deltatime);
 	void render(sf::RenderWindow& window);
-	void handleEvent(sf::Event event);
+	int handleEvent(sf::Event event, int callback);
 
 	void undoSelection();
 };
+
+extern DuelInterface* ActiveDuel;
+int mainLoop(sf::RenderWindow& window, int callback);
 
