@@ -16,7 +16,7 @@ int mainLoop(sf::RenderWindow& window, int callback)
 			int r = ActiveDuel->handleEvent(event, callback);
 			ActiveDuel->update(0);
 
-			if (callback != 0 && r != -3)
+			if (callback != 0 && r != RETURN_NOTHING) //if we need to callback(return) and a choice has been made
 			{
 				return r;
 			}
@@ -238,7 +238,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 
 int DuelInterface::handleEvent(sf::Event event, int callback)
 {
-	if (duel.winner != -1) return -3;
+	if (duel.winner != -1) return RETURN_NOTHING;
 	if (event.type == sf::Event::MouseMoved)
 	{
 		MouseX = event.mouseMove.x;
@@ -257,7 +257,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					duel.handleInterfaceInput(msg);*/
 					if (callback != 0)
 					{
-						return -1;
+						return RETURN_BUTTON1;
 					}
 				}
 				if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY)) //button2 press
@@ -267,7 +267,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					duel.handleInterfaceInput(msg);*/
 					if (callback != 0)
 					{
-						return -2;
+						return RETURN_BUTTON2;
 					}
 				}
 				for (vector<Card*>::iterator i = duel.CardList.begin(); i != duel.CardList.end(); i++)
@@ -541,7 +541,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 		cardsearch.handleEvent(event);
 	}
 
-	return -3;
+	return RETURN_NOTHING;
 	/*for (int i = 0; i < 2; i++)
 	{
 	decks[i].handleEvent(event);

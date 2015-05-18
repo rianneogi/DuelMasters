@@ -2,6 +2,8 @@
 
 #include "Duel.h"
 
+enum ReturnValue { RETURN_BUTTON1 = -1, RETURN_BUTTON2 = -2, RETURN_NOVALID = -3, RETURN_NOTHING = -4 };
+
 class DuelInterface
 {
 public:

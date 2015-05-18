@@ -1602,11 +1602,12 @@ Cards["Miele, Vizier of Lightning"] = {
 --                end
                 --valid = Checks.UntappedInOppBattle
                 local r = createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id,Checks.UntappedInOppBattle)
+                printstr("r: "..r)
                 if(r>=0) then
                     tapCard(r)
                     setChoiceActive(0)
                 end
-                if(r==-1 or r==-4) then
+                if(r==RETURN_BUTTON1 or r==RETURN_NOVALID) then
                     setChoiceActive(0)
                 end
             end

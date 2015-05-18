@@ -16,34 +16,13 @@ int main()
 		cout << "ERROR couldnt init cards" << endl;
 	}
 
-	//createCardSprites();
-
 	Window = new sf::RenderWindow(sf::VideoMode(1400,800), "Duel Masters");
 	Window->setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
 	ActiveDuel->duel.setDecks("Decks\\test.txt", "Decks\\test.txt");
 	ActiveDuel->duel.startDuel();
 
-	while (Window->isOpen())
-	{
-		sf::Event event;
-		while (Window->pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				ActiveDuel->handleEvent(event, 0);
-				Window->close();
-			}
-			ActiveDuel->handleEvent(event, 0);
-			ActiveDuel->update(0);
-		}
-
-		Window->clear();
-
-		ActiveDuel->render(*Window);
-
-		Window->display();
-	}
+	mainLoop(*Window, 0);
 
 	delete ActiveDuel;
 	delete Window;

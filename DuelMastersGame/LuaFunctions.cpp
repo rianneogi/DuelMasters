@@ -50,13 +50,13 @@ static int createChoice(lua_State* L)
 	ActiveDuel->duel.checkChoiceValid();
 	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
 	{
-		int r = mainLoop(*Window, 1); //wait for return (a choice)
+		int r = mainLoop(*Window, 1); //wait for selection made by user
 		lua_pushinteger(L, r);
 		return 1;
 	}
 	else
 	{
-		lua_pushinteger(L, -4);
+		lua_pushinteger(L, RETURN_NOVALID);
 	}
 	luaL_unref(L, LUA_REGISTRYINDEX, ref);
 	return 1;
