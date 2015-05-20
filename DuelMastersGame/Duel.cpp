@@ -461,20 +461,7 @@ void Duel::update(int deltatime)
 {
 	if (!isChoiceActive)
 	{
-		bool worldchanged = false;
-		while (MsgMngr.hasMoreMessages())
-		{
-			Message msg = MsgMngr.peekMessage();
-			MsgMngr.dispatch();
-			std::cout << "dispatching message: ";
-			for (std::map<std::string, std::string>::iterator i = msg.map.begin(); i != msg.map.end(); i++)
-			{
-				std::cout << i->first << " " << i->second << " ";
-			}
-			std::cout << "\n";
-			dispatchMessage(msg);
-			worldchanged = true;
-		}
+		bool worldchanged = dispatchAllMessages();
 		if (worldchanged)
 		{
 			for (vector<Card*>::iterator i = CardList.begin(); i != CardList.end(); i++)
@@ -486,6 +473,25 @@ void Duel::update(int deltatime)
 			}
 		}
 	}
+}
+
+bool Duel::dispatchAllMessages()
+{
+	bool worldchanged = false;
+	while (MsgMngr.hasMoreMessages())
+	{
+		Message msg = MsgMngr.peekMessage();
+		MsgMngr.dispatch();
+		std::cout << "dispatching message: ";
+		for (std::map<std::string, std::string>::iterator i = msg.map.begin(); i != msg.map.end(); i++)
+		{
+			std::cout << i->first << " " << i->second << " ";
+		}
+		std::cout << "\n";
+		dispatchMessage(msg);
+		worldchanged = true;
+	}
+	return worldchanged;
 }
 
 void Duel::dispatchMessage(Message& msg)

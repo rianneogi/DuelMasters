@@ -44,6 +44,7 @@ static int getMessageType(lua_State* L)
 
 static int createChoice(lua_State* L)
 {
+	ActiveDuel->duel.dispatchAllMessages(); //first resolve all pending messages
 	lua_pushvalue(L, -1);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), ref);

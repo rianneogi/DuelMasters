@@ -213,10 +213,10 @@ Cards["Black Feather, Shadow of Rage"] = {
 	HandleMessage = function(id)
         summon = function(id)
             local c = createChoice("Select creature to destroy",0,id,Checks.InYourBattle)
-            if(c>=0)
+            if(c>=0) then
                 destroyCard(c)
             end
-            if(c==RETURN_NOVALID or c==RETURN_SKIP)
+            if(c==RETURN_NOVALID or c==RETURN_SKIP) then
                 destroyCard(id)
             end
         end
@@ -559,7 +559,7 @@ Cards["Crystal Memory"] = {
 
     OnCast = function(id)
 	    local ch = createChoice("Crystal Memory: Choose a card in your deck",0,id,Checks.InYourDeck)
-	    if(c>=0) then
+	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
             shuffleDeck(getCardOwner(ch))
         end
@@ -715,7 +715,7 @@ Cards["Dimension Gate"] = {
 
     OnCast = function(id)
 	    local ch = createChoice("Dimension Gate: Choose a creature in your deck",0,id,Checks.CreatureInYourDeck)
-	    if(ch>=0)
+	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
             shuffleDeck(getCardOwner(ch))
         end
@@ -987,7 +987,7 @@ Cards["Gigaberos"] = {
                 else
                     destroyCard(ch)
                     local ch2 = createChoice("Gigaberos: Choose 2 creatures in your battle zone",0,id,Checks.InYourBattle)
-                    if(ch2>=0)
+                    if(ch2>=0) then
                         destroyCard(ch2)
                     end
                 end
@@ -1036,7 +1036,7 @@ Cards["Gigargon"] = {
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
                 local ch2 = createChoice("Gigargon: Choose 2 creatures in your graveyard",1,id,Checks.CreatureInYourGraveyard)
-                if(ch2>=0)
+                if(ch2>=0) then
                     moveCard(ch2,ZONE_HAND)
                 end
             end
@@ -1459,7 +1459,7 @@ Cards["Meteosaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        createChoice("Meteosaur: Choose an opponent's creature",1,id)
+        createChoice("Meteosaur: Choose an opponent's creature",1,id,Checks.InOppBattle)
 	    choicePushSelect(3,"Cards","Meteosaur","Select")
         choicePushButton1(2,"Actions","ChoiceSkip")
 		choicePushSelect(3,"Cards","Meteosaur","Valid")
@@ -1612,7 +1612,7 @@ Cards["Onslaughter Triceps"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.destroYourManaOnSummon(id,1)
+		Abils.destroyYourManaOnSummon(id,1)
 	end
 }
 
@@ -1828,7 +1828,7 @@ Cards["Rothus, the Traveler"] = {
 Cards["Ruby Grass"] = {
     name = "Ruby Grass",
 	set = "Base Set",
-	type = TYPE_SPELL,
+	type = TYPE_CREATURE,
 	civilization = CIV_LIGHT,
 	race = "Starlight Tree",
 	cost = 3,
@@ -2029,7 +2029,7 @@ Cards["Spiral Gate"] = {
     OnCast = function(id)
         local ch = createChoice("Spiral Gate: Choose a creature",0,id,Checks.InBattle)
 	    if(ch>=0) then
-            moveCard(sid,ZONE_HAND)
+            moveCard(ch,ZONE_HAND)
         end
         Actions.EndSpell(id)
 	end
@@ -2114,7 +2114,7 @@ Cards["Stonesaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		Abils.PowerAttacker(id,id)
+		Abils.PowerAttacker(id,2000)
 	end
 }
 
@@ -2245,6 +2245,7 @@ Cards["Terror Pit"] = {
 	    if(ch>=0) then
             destroyCard(ch)
         end
+        Actions.EndSpell(id)
 	end
 }
 

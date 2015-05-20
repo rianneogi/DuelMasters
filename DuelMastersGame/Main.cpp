@@ -19,7 +19,7 @@ int main()
 	Window = new sf::RenderWindow(sf::VideoMode(1400,800), "Duel Masters");
 	Window->setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
-	ActiveDuel->duel.setDecks("Decks\\test.txt", "Decks\\test.txt");
+	ActiveDuel->duel.setDecks("Decks\\Sachit Deck.txt", "Decks\\Rian Deck.txt");
 	ActiveDuel->duel.startDuel();
 
 	mainLoop(*Window, 0);
