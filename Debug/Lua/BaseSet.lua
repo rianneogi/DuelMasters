@@ -55,12 +55,12 @@ Cards["Aqua Sniper"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local c = createChoice("Aqua Sniper: Choose 2 creatures",0,id,Checks.InBattle)
-            if(c>=0) then   
-                moveCard(c,ZONE_HAND)
-                local c2 = createChoice("Aqua Sniper: Choose 2 creatures",0,id,Checks.InBattle)
-                if(c2>=0) then
-                    moveCard(c2,ZONE_HAND)
+            local ch = createChoice("Aqua Sniper: Choose 2 creatures",0,id,Checks.InBattle)
+            if(ch>=0) then   
+                moveCard(ch,ZONE_HAND)
+                local ch2 = createChoice("Aqua Sniper: Choose 2 creatures",0,id,Checks.InBattle)
+                if(ch2>=0) then
+                    moveCard(ch2,ZONE_HAND)
                 end
             end
         end
@@ -1811,7 +1811,7 @@ Cards["Rothus, the Traveler"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
+        local summon = function(id)
             local ch = createChoice("Rothus, the Traveler: Select creature to destroy",0,id,Checks.InYourBattle)
             if(ch>=0) then
                 destroyCard(ch)
@@ -1860,18 +1860,14 @@ Cards["Saucer-Head Shark"] = {
 	HandleMessage = function(id)
 		if(getMessageType()=="post cardmove") then
 			if(getMessageInt("card")==id) then
-                printstr("saucer")
 				local owner = getCardOwner(id)
-                printstr("1")
 				local size = getZoneSize(owner,ZONE_BATTLE)-1
-                printstr("2")
 				for i=0,size,1 do
 					local cid = getCardAt(owner,ZONE_BATTLE,i)
 					if(getCreaturePower(cid)<=2000) then
 						moveCard(cid,ZONE_HAND)
 					end
 				end
-                printstr("3")
 				owner = getOpponent(getCardOwner(id))
 				size = getZoneSize(owner,ZONE_BATTLE)-1
 				for i=0,size,1 do

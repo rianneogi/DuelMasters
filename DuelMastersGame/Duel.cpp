@@ -502,11 +502,15 @@ void Duel::dispatchMessage(Message& msg)
 	currentMessage = msg;
 
 	currentMessage.addValue("msgtype", "mod " + type);
-	for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
+	/*for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
 	for (i = battlezones[getOpponent(turn)].cards.begin(); i != battlezones[getOpponent(turn)].cards.end(); i++)
+	{
+		(*i)->handleMessage(msg);
+	}*/
+	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
@@ -516,11 +520,15 @@ void Duel::dispatchMessage(Message& msg)
 		return;
 
 	currentMessage.addValue("msgtype", "pre " + type);
-	for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
+	/*for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
 	for (i = battlezones[getOpponent(turn)].cards.begin(); i != battlezones[getOpponent(turn)].cards.end(); i++)
+	{
+		(*i)->handleMessage(msg);
+	}*/
+	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
@@ -534,11 +542,15 @@ void Duel::dispatchMessage(Message& msg)
 	//std::cout << "  in\n";
 
 	currentMessage.addValue("msgtype", "post " + type);
-	for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
+	/*for (i = battlezones[turn].cards.begin(); i != battlezones[turn].cards.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
 	for (i = battlezones[getOpponent(turn)].cards.begin(); i != battlezones[getOpponent(turn)].cards.end(); i++)
+	{
+		(*i)->handleMessage(msg);
+	}*/
+	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(msg);
 	}
@@ -564,6 +576,8 @@ void Duel::checkChoiceValid()
 	int count = 0;
 	for (vector<Card*>::iterator i = CardList.begin(); i != CardList.end(); i++)
 	{
+		if (choice.infotext == "Rothus, the Traveler: Select creature to destroy")
+			cout << "checking card : " << (*i)->Name << endl;
 		if (choiceCanBeSelected((*i)->UniqueId) == 1)
 		{
 			count++;
@@ -571,6 +585,7 @@ void Duel::checkChoiceValid()
 	}
 	if (count == 0) //no valid targets
 	{
+		cout << "no valid targets" << endl;
 		resetChoice();
 	}
 }

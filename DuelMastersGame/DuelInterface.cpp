@@ -434,6 +434,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					Message msg("cardmana");
 					msg.addValue("card", selectedcard);
 					duel.handleInterfaceInput(msg);
+					sounds.at(SOUND_PLAY).play();
 
 					undoSelection();
 					//manaUsed = 1;
