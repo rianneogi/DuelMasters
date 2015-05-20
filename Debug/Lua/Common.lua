@@ -275,11 +275,6 @@ Checks.InYourBattle = function(cid,sid)
 end
 
 Checks.InOppBattle = function(cid,sid)
-    printstr("Oppbattle called")
-    printstr("owner1: "..getCardOwner(sid))
-    printstr("owner2: "..getCardOwner(cid))
-    printstr("zone: "..getCardZone(sid))
-    printstr("type: "..getCardType(sid))
 	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE) then
 		return 1
 	else
