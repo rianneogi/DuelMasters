@@ -24,6 +24,11 @@ public:
 	vector<int> shieldtargets;
 	int attackphase;
 
+	int castingcard;
+	int castingciv;
+	int castingcost;
+	bool castingcivtapped;
+
 	Choice choice;
 	int choiceCard;
 	bool isChoiceActive;
@@ -81,7 +86,10 @@ public:
 
 	//void undoSelection();
 	void resetAttack();
+	void resetCasting();
 	void resetChoice();
+
+	bool isThereUntappedManaOfCiv(int player, int civ);
 
 	Zone* getZone(int player, int zone);
 	void destroyCard(Card* c);
@@ -103,6 +111,7 @@ public:
 	//int getCreatureCanBeBlocked(int uid);
 	//int getCreatureCanAttackUntappedCreatures(int uid);
 	int getCardCost(int uid);
+	int getCardCivilization(int uid);
 	int getIsShieldTrigger(int uid);
 };
 

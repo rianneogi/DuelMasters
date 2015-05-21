@@ -157,6 +157,11 @@ void DuelInterface::render(sf::RenderWindow& window)
 		window.draw(canceltext);
 		window.draw(infotext);
 	}
+	else if (duel.castingcard != -1)
+	{
+		infotext.setString("Tap " + std::to_string(duel.castingcost) + " mana");
+		window.draw(infotext);
+	}
 
 	if (cardsearch.zone != NULL)
 	{
@@ -377,6 +382,18 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					duel.handleInterfaceInput(m);
 
 					undoSelection();
+				}
+			}
+			else if (duel.castingcard != -1)
+			{
+				for (vector<Card*>::iterator i = duel.manazones[duel.turn].cards.begin(); i != duel.manazones[duel.turn].cards.end(); i++)
+				{
+					if (checkCollision((*i)->getBounds(), MouseX, MouseY))
+					{
+						Message m("manatap");
+						m.addValue("card", (*i)->UniqueId);
+						duel.handleInterfaceInput(m);
+					}
 				}
 			}
 			else if (selectedcard == -1) //select a card

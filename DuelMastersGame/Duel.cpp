@@ -71,6 +71,11 @@ Duel::Duel()
 	attacker = -1;
 	defender = -1;
 	breakcount = -1;
+	
+	castingcard = -1;
+	castingciv = -1;
+	castingcost = -1;
+	castingcivtapped = false;
 
 	isChoiceActive = false;
 	choiceCard = -1;
@@ -275,10 +280,14 @@ int Duel::handleInterfaceInput(Message& msg)
 	{
 		int whichCard = msg.getInt("card");
 		int manacost = getCardCost(whichCard);
-		if (manazones[turn].getUntappedMana() >= manacost)
+		if (manazones[turn].getUntappedMana() >= manacost && isThereUntappedManaOfCiv(turn, getCardCivilization(whichCard)))
 		{
-			manazones[turn].tapMana(manacost);
-			MsgMngr.sendMessage(msg);
+			//manazones[turn].tapMana(manacost);
+			castingcard = whichCard;
+			castingciv = getCardCivilization(castingcard);
+			castingcost = getCardCost(castingcard);
+			castingcivtapped = false;
+			//MsgMngr.sendMessage(msg);
 		}
 	}
 	else if (type == "cardmana")
@@ -424,6 +433,40 @@ int Duel::handleInterfaceInput(Message& msg)
 			//resetAttack();
 			Message msg3("resetattack");
 			MsgMngr.sendMessage(msg3);
+		}
+	}
+	else if (type == "manatap")
+	{
+		int card = msg.getInt("card");
+		if (CardList.at(card)->isTapped == false)
+		{
+			if (castingcost == 1) //last card to be tapped
+			{
+				if (getCardCivilization(card) == castingciv || castingcivtapped)
+				{
+					Message msg2("cardtap");
+					msg2.addValue("card", card);
+					MsgMngr.sendMessage(msg2);
+					castingcost--;
+					castingcivtapped = true;
+
+					Message msg3("cardplay");
+					msg3.addValue("card", castingcard);
+					MsgMngr.sendMessage(msg3);
+					resetCasting();
+				}
+			}
+			else
+			{
+				Message msg2("cardtap");
+				msg2.addValue("card", card);
+				MsgMngr.sendMessage(msg2);
+				castingcost--;
+				if (getCardCivilization(card) == castingciv)
+				{
+					castingcivtapped = true;
+				}
+			}
 		}
 	}
 	else if (type == "choiceselect")
@@ -838,6 +881,21 @@ int Duel::getIsShieldTrigger(int uid)
 	return c;
 }
 
+int Duel::getCardCivilization(int uid)
+{
+	return CardList.at(uid)->Civilization;
+}
+
+bool Duel::isThereUntappedManaOfCiv(int player,int civ)
+{
+	for (vector<Card*>::iterator i = manazones[player].cards.begin(); i != manazones[player].cards.end(); i++)
+	{
+		if (getCardCivilization((*i)->UniqueId) == civ)
+			return true;
+	}
+	return false;
+}
+
 void Duel::drawCards(int player, int count)
 {
 	for (int i = 0; i < count; i++)
@@ -957,6 +1015,15 @@ void Duel::resetAttack()
 	defender = -1;
 	breakcount = -1;
 	shieldtargets.clear();
+}
+
+void Duel::resetCasting()
+{
+	cout << "casting reset" << endl;
+	castingcard = -1;
+	castingciv = -1;
+	castingcivtapped = false;
+	castingcost = -1;
 }
 
 void Duel::resetChoice()

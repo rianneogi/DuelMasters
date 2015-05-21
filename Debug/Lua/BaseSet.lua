@@ -529,7 +529,7 @@ Cards["Crimson Hammer"] = {
 	name = "Crimson Hammer",
 	set = "Base Set",
 	type = TYPE_SPELL,
-	civilization = CIV_SPELL,
+	civilization = CIV_FIRE,
 	cost = 2,
 	shieldtrigger = 0,
 
