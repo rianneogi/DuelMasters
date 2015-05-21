@@ -221,6 +221,18 @@ static int shuffleDeck(lua_State* L)
 	return 0;
 }
 
+static int openDeck(lua_State* L)
+{
+	ActiveDuel->cardsearch.zone = ActiveDuel->duel.getZone(lua_tointeger(L, 1), ZONE_DECK);
+	return 0;
+}
+
+static int closeDeck(lua_State* L)
+{
+	ActiveDuel->cardsearch.zone = NULL;
+	return 0;
+}
+
 static int getCardAt(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
@@ -352,6 +364,8 @@ void registerLua(lua_State* L)
 	lua_register(L, "createModifier", createModifier);
 	lua_register(L, "destroyModifier", destroyModifier);
 	lua_register(L, "shuffleDeck", shuffleDeck);
+	lua_register(L, "openDeck", openDeck);
+	lua_register(L, "closeDeck", closeDeck);
 
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getZoneSize", getZoneSize);

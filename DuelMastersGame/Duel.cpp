@@ -890,7 +890,7 @@ bool Duel::isThereUntappedManaOfCiv(int player,int civ)
 {
 	for (vector<Card*>::iterator i = manazones[player].cards.begin(); i != manazones[player].cards.end(); i++)
 	{
-		if (getCardCivilization((*i)->UniqueId) == civ)
+		if ((*i)->isTapped == false && getCardCivilization((*i)->UniqueId) == civ)
 			return true;
 	}
 	return false;

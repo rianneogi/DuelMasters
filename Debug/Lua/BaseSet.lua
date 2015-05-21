@@ -558,7 +558,10 @@ Cards["Crystal Memory"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
+        local owner = getCardOwner(id)
+        openDeck(owner)
 	    local ch = createChoice("Crystal Memory: Choose a card in your deck",0,id,Checks.InYourDeck)
+        closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
             shuffleDeck(getCardOwner(ch))
@@ -714,7 +717,10 @@ Cards["Dimension Gate"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
+        local owner = getCardOwner(id)
+        openDeck(owner)
 	    local ch = createChoice("Dimension Gate: Choose a creature in your deck",0,id,Checks.CreatureInYourDeck)
+        closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
             shuffleDeck(getCardOwner(ch))
@@ -1712,7 +1718,10 @@ Cards["Rayla, Truth Enforcer"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
+            local owner = getCardOwner(id)
+            openDeck(owner)
             local ch = createChoice("Rayla, Truth Enforcer: Choose a spell in your deck",1,id,Checks.SpellInYourDeck)
+            closeDeck(owner)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end

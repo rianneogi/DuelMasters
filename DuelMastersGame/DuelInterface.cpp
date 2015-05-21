@@ -537,7 +537,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 				}
 			}
-			for (int i = 0; i < 2; i++)
+			/*for (int i = 0; i < 2; i++)
 			{
 				if (checkCollision(duel.decks[i].getBounds(), MouseX, MouseY))
 				{
@@ -550,7 +550,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						cardsearch.setZone(NULL);
 					}
 				}
-			}
+			}*/
 		}
 		else if (event.mouseButton.button == sf::Mouse::Right)
 		{
