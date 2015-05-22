@@ -614,7 +614,15 @@ Cards["Dark Reversal"] = {
 	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 2,
-	shieldtrigger = 1
+	shieldtrigger = 1,
+
+    HandleMessage = function(id)
+        local ch = createChoice("Dark Reversal: Choose a creature in your graveyard",0,id,Checks.InYourGraveyard)
+        if(ch>=0) then
+            moveCard(ch,ZONE_HAND)
+        end
+        Actions.EndSpell(id)
+    end
 }
 
 Cards["Deadly Fighter Braid Claw"] = {

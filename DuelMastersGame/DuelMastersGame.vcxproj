@@ -70,6 +70,7 @@
   <ItemGroup>
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="BattleZone.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Choice.cpp" />
     <ClCompile Include="Constants.cpp" />
@@ -81,6 +82,7 @@
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ManaZone.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageManager.cpp" />
@@ -92,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="BattleZone.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Choice.h" />
     <ClInclude Include="Constants.h" />
@@ -102,6 +105,7 @@
     <ClInclude Include="Graveyard.h" />
     <ClInclude Include="Hand.h" />
     <ClInclude Include="LuaFunctions.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="ManaZone.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageManager.h" />

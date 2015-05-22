@@ -54,7 +54,6 @@ public:
 	sf::FloatRect getBounds();
 };
 
-bool checkCollision(sf::FloatRect& b, int x, int y);
 int getCardIdFromName(string s);
 int initCards();
 void cleanupCards();

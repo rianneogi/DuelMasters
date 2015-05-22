@@ -237,12 +237,3 @@ void cleanupCards()
 {
 	lua_close(LuaCards);
 }
-
-bool checkCollision(sf::FloatRect& b, int x, int y)
-{
-	if (x >= b.left && x <= b.left + b.width && y >= b.top && y <= b.top + b.height)
-	{
-		return true;
-	}
-	return false;
-}
