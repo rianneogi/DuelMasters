@@ -76,7 +76,7 @@ public:
 	int handleInterfaceInput(Message& msg);
 	bool dispatchAllMessages();
 	void dispatchMessage(Message& msg);
-	void update(int deltatime);
+	void update(unsigned int deltatime);
 	//void render(sf::RenderWindow& window);
 	void handleEvent(sf::Event event);
 

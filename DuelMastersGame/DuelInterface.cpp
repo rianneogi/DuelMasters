@@ -9,22 +9,26 @@ int mainLoop(sf::RenderWindow& window, int callback)
 		{
 			if (event.type == sf::Event::Closed)
 			{
-				ActiveDuel->handleEvent(event, callback);
+				currentWindow->handleEvent(event, callback);
 				window.close();
 			}
 
-			int r = ActiveDuel->handleEvent(event, callback);
-			ActiveDuel->update(0);
+			int r = currentWindow->handleEvent(event, callback);
+			currentWindow->update(0);
 
 			if (callback != 0 && r != RETURN_NOTHING) //if we need to callback(return) and a choice has been made
 			{
 				return r;
 			}
+			if (r == RETURN_QUIT)
+			{
+				window.close();
+			}
 		}
 
 		window.clear();
 
-		ActiveDuel->render(window);
+		currentWindow->render(window);
 
 		window.display();
 	}
@@ -64,6 +68,9 @@ DuelInterface::DuelInterface()
 
 	hovercard = sf::Sprite();
 	hovercard.setPosition(HOVERCARDX, HOVERCARDY);
+
+	quitbutton = Button(sf::Vector2f(QUITBUTTONX, QUITBUTTONY), sf::Vector2f(QUITBUTTONLENGTH, QUITBUTTONHEIGHT), sf::Color::White,
+		3, sf::Color::Green, sf::Color::Black, "Main Menu", 16);
 
 	selectedcard = -1;
 	selectedcardzone = -1;
@@ -219,6 +226,8 @@ void DuelInterface::render(sf::RenderWindow& window)
 			window.draw(hovercard);
 		}
 	}
+
+	quitbutton.render(window);
 
 	//draw arrows
 	if (arrows.size() > 0)
@@ -522,6 +531,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				sounds.at(SOUND_ENDTURN).play();
 				undoSelection();
 			}
+			if (quitbutton.collision(MouseX, MouseY)) //go back to main menu
+			{
+				currentWindow = static_cast<GameWindow*>(mainMenu);
+			}
 
 			for (int i = 0; i < 2; i++) //view graveyard
 			{
@@ -575,7 +588,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	}*/
 }
 
-void DuelInterface::update(int deltatime)
+void DuelInterface::update(unsigned int deltatime)
 {
 	duel.update(deltatime);
 }

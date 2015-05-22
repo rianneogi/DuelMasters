@@ -75,9 +75,11 @@
     <ClCompile Include="Choice.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DeckBuilder.cpp" />
     <ClCompile Include="Duel.cpp" />
     <ClCompile Include="DuelInterface.cpp" />
     <ClCompile Include="FileFunctions.cpp" />
+    <ClCompile Include="GameWindow.cpp" />
     <ClCompile Include="Graveyard.cpp" />
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="LuaFunctions.cpp" />
@@ -99,9 +101,11 @@
     <ClInclude Include="Choice.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Deck.h" />
+    <ClInclude Include="DeckBuilder.h" />
     <ClInclude Include="Duel.h" />
     <ClInclude Include="DuelInterface.h" />
     <ClInclude Include="FileFunctions.h" />
+    <ClInclude Include="GameWindow.h" />
     <ClInclude Include="Graveyard.h" />
     <ClInclude Include="Hand.h" />
     <ClInclude Include="LuaFunctions.h" />

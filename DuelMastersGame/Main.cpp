@@ -1,6 +1,11 @@
 #include "LuaFunctions.h"
 
 DuelInterface* ActiveDuel;
+MainMenu* mainMenu;
+DeckBuilder* deckBuilder;
+
+GameWindow* currentWindow;
+
 sf::RenderWindow* Window;
 
 int main()
@@ -21,6 +26,9 @@ int main()
 	ActiveDuel = new DuelInterface();
 	ActiveDuel->duel.setDecks("Decks\\yash.txt", "Decks\\Rian Deck.txt");
 	ActiveDuel->duel.startDuel();
+
+	mainMenu = new MainMenu();
+	currentWindow = static_cast<GameWindow*>(mainMenu);
 
 	mainLoop(*Window, 0);
 

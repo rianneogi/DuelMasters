@@ -2,9 +2,7 @@
 
 #include "Duel.h"
 
-enum ReturnValue { RETURN_BUTTON1 = -1, RETURN_BUTTON2 = -2, RETURN_NOVALID = -3, RETURN_NOTHING = -4 };
-
-class DuelInterface
+class DuelInterface : public GameWindow
 {
 public:
 	Duel duel;
@@ -25,6 +23,8 @@ public:
 	sf::Text canceltext;
 	sf::Text infotext;
 
+	Button quitbutton;
+
 	vector<Arrow> arrows;
 	int mousearrow;
 
@@ -37,13 +37,12 @@ public:
 
 	int handleMessage(Message& msg);
 	void dispatchMessage(Message& msg);
-	void update(int deltatime);
+	void update(unsigned int deltatime);
 	void render(sf::RenderWindow& window);
 	int handleEvent(sf::Event event, int callback);
 
 	void undoSelection();
 };
 
-extern DuelInterface* ActiveDuel;
 int mainLoop(sf::RenderWindow& window, int callback);
 

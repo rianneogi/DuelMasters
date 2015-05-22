@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MainMenu.h"
+#include "DeckBuilder.h"
 
 extern lua_State* LuaCards;
 

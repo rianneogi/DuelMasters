@@ -616,7 +616,7 @@ Cards["Dark Reversal"] = {
 	cost = 2,
 	shieldtrigger = 1,
 
-    HandleMessage = function(id)
+    OnCast = function(id)
         local ch = createChoice("Dark Reversal: Choose a creature in your graveyard",0,id,Checks.InYourGraveyard)
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)

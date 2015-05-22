@@ -500,7 +500,7 @@ int Duel::handleInterfaceInput(Message& msg)
 	return 0;
 }
 
-void Duel::update(int deltatime)
+void Duel::update(unsigned int deltatime)
 {
 	if (!isChoiceActive)
 	{
