@@ -36,6 +36,26 @@ void DeckBuilder::render(sf::RenderWindow& window)
 	{
 		window.draw(*i);
 	}
+	int count = 0;
+	for (map<int, int>::iterator i = decklist.begin(); i != decklist.end(); i++)
+	{
+		if (count < decklistpos)
+			continue;
+		string s = std::to_string(i->second) + " " + CardNames.at(i->first);
+		sf::RectangleShape r(sf::Vector2f(150, 20));
+		r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*count);
+		r.setFillColor(sf::Color::White);
+		window.draw(r);
+		sf::Text t(s, DefaultFont, 14);
+		t.setColor(sf::Color::Black);
+		t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*count + CARDZONEOFFSET);
+		window.draw(t);
+		count++;
+		if (count >= decklistpos + CARDSEARCHITEMCOUNT)
+		{
+			break;
+		}
+	}
 }
 
 int DeckBuilder::handleEvent(sf::Event e, int callback)
@@ -47,34 +67,49 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 	}
 	else  if (e.type == sf::Event::MouseWheelMoved)
 	{
-		cardlistpos -= e.mouseWheel.delta;
-		if (cardlistpos < 0)
+		if (MouseX < 250 * cardcountx + 50)
 		{
-			cardlistpos = 0;
-		}
-		if (cardlistpos > CardNames.size() / cardcountx)
-		{
-			cardlistpos = CardNames.size() / cardcountx;
-		}
-
-		int hori = 0;
-		int vert = 0;
-		for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
-		{
-			int index = (cardlistpos + vert)*cardcountx + hori;
-			if (index < CardTextures.size())
+			cardlistpos -= e.mouseWheel.delta;
+			if (cardlistpos < 0)
 			{
-				(*i).setTexture(CardTextures.at(index), true);
-				hori++;
-				if (hori >= cardcountx)
+				cardlistpos = 0;
+			}
+			if (cardlistpos > CardNames.size() / cardcountx)
+			{
+				cardlistpos = CardNames.size() / cardcountx;
+			}
+
+			int hori = 0;
+			int vert = 0;
+			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
+			{
+				int index = (cardlistpos + vert)*cardcountx + hori;
+				if (index < CardTextures.size())
 				{
-					hori = 0;
-					vert++;
+					(*i).setTexture(CardTextures.at(index), true);
+					hori++;
+					if (hori >= cardcountx)
+					{
+						hori = 0;
+						vert++;
+					}
+				}
+				else
+				{
+					break;
 				}
 			}
-			else
+		}
+		else
+		{
+			decklistpos -= e.mouseWheel.delta;
+			if (decklistpos < 0)
 			{
-				break;
+				decklistpos = 0;
+			}
+			if (decklistpos >= decklist.size())
+			{
+				decklistpos = decklist.size()-1;
 			}
 		}
 	}
@@ -82,9 +117,41 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 	{
 		if (e.mouseButton.button == sf::Mouse::Left)
 		{
-			if (exitbutton.collision(MouseX, MouseY))
+			int count = 0;
+			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
+			{
+				if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
+				{
+					if (decklist[count] < 4)
+					{
+						decklist[count]++;
+					}
+				}
+				count++;
+			}
+
+			if (exitbutton.collision(MouseX, MouseY)) //go to main menu
 			{
 				currentWindow = static_cast<GameWindow*>(mainMenu);
+			}
+		}
+		else if (e.mouseButton.button == sf::Mouse::Right)
+		{
+			int count = 0;
+			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
+			{
+				if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
+				{
+					if (decklist[count] > 0)
+					{
+						decklist[count]--;
+					}
+					if (decklist[count] == 0)
+					{
+						decklist.erase(count);
+					}
+				}
+				count++;
 			}
 		}
 	}
