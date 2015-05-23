@@ -259,7 +259,7 @@ Checks.InOppGraveyard = function(cid,sid)
 end
 
 Checks.InBattle = function(cid,sid)
-	if(getCardZone(sid)==ZONE_BATTLE) then
+	if(getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE) then
 		return 1
 	else
 		return 0

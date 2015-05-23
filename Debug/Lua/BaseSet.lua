@@ -1450,11 +1450,10 @@ Cards["Masked Horror, Shadow of Scorn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        if(getMessageType()=="post cardmove") then
-            if(getMessageInt("card")==id) then
-                discardCardAtRandom(getOpponent(getCardOwner(id)))
-            end
+        local summon = function(id)
+            discardCardAtRandom(getOpponent(getCardOwner(id)))
         end
+        Abils.onSummon(id,summon)
 	end
 }
 

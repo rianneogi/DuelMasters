@@ -262,6 +262,15 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	{
 		if (event.mouseButton.button == sf::Mouse::Left)
 		{
+			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && !(duel.isChoiceActive)) //end turn
+			{
+				Message m("endturn");
+				m.addValue("player", duel.turn);
+				duel.handleInterfaceInput(m);
+				sounds.at(SOUND_ENDTURN).play();
+				undoSelection();
+			}
+
 			if (duel.isChoiceActive)
 			{
 				if (checkCollision(cancelbutton.getGlobalBounds(), MouseX, MouseY)) //button1 press
@@ -523,14 +532,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					undoSelection();
 				}
 			}
-			if (checkCollision(endturnbutton.getGlobalBounds(), MouseX, MouseY) && duel.attackphase == PHASE_NONE && !(duel.isChoiceActive)) //end turn
-			{
-				Message m("endturn");
-				m.addValue("player", duel.turn);
-				duel.handleInterfaceInput(m);
-				sounds.at(SOUND_ENDTURN).play();
-				undoSelection();
-			}
+			
 			if (quitbutton.collision(MouseX, MouseY)) //go back to main menu
 			{
 				currentWindow = static_cast<GameWindow*>(mainMenu);

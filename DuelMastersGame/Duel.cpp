@@ -925,6 +925,11 @@ void Duel::loadDeck(string s, int p)
 	file.open(s, ios::in | ios::out);
 	string str;
 
+	if (!file.is_open())
+	{
+		cout << "ERROR opening deck: " << s << endl;
+	}
+
 	while (!file.eof())
 	{
 		getline(file, str);

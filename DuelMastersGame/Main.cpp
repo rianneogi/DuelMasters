@@ -21,19 +21,24 @@ int main()
 		cout << "ERROR couldnt init cards" << endl;
 	}
 
-	Window = new sf::RenderWindow(sf::VideoMode(1400,800), "Duel Masters");
+	Window = new sf::RenderWindow(sf::VideoMode(1300,800), "Duel Masters");
 	Window->setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
-	ActiveDuel->duel.setDecks("Decks\\yash.txt", "Decks\\Rian Deck.txt");
+	ActiveDuel->duel.setDecks("Decks\\More decks\\FL Burning Light Base Set.txt", "Decks\\More decks\\FW Cheap Shot Base Set.txt");
 	ActiveDuel->duel.startDuel();
 
 	mainMenu = new MainMenu();
+	deckBuilder = new DeckBuilder();
+
 	currentWindow = static_cast<GameWindow*>(mainMenu);
 
 	mainLoop(*Window, 0);
 
 	delete ActiveDuel;
+	delete deckBuilder;
+	delete mainMenu;
 	delete Window;
+
 	cleanupCards();
 	
 	return 0;
