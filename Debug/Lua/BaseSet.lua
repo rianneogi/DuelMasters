@@ -439,7 +439,7 @@ Cards["Chaos Strike"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-		local c = createChoice("Chaos Strike: Choose creature",0,id,Checks.InYourBattle)
+		local c = createChoice("Chaos Strike: Choose creature",0,id,Checks.InOppBattle)
 		if(c>=0) then
             createModifier(c,3,"Cards","Chaos Strike","Modifier")
         end
@@ -1472,11 +1472,6 @@ Cards["Meteosaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        createChoice("Meteosaur: Choose an opponent's creature",1,id,Checks.InOppBattle)
-	    choicePushSelect(3,"Cards","Meteosaur","Select")
-        choicePushButton1(2,"Actions","ChoiceSkip")
-		choicePushSelect(3,"Cards","Meteosaur","Valid")
-
         summon = function(id)
             valid = function(cid,sid)
                 if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=2000) then

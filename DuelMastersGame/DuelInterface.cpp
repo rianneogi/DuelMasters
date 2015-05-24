@@ -380,7 +380,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					if (checkCollision((*i)->getBounds(), MouseX, MouseY)
 						&& duel.getCreatureCanBlock(duel.attacker, (*i)->UniqueId) && (*i)->isTapped == false
-						&& (*i)->UniqueId != duel.defender)
+						&& ((*i)->UniqueId != duel.defender || duel.defendertype == DEFENDER_PLAYER))
 					{
 						/*Message msg2("cardtap");
 						msg2.addValue("card", (*i)->UniqueId);
