@@ -953,6 +953,8 @@ void Duel::loadDeck(string s, int p)
 			}
 		}
 	}
+
+	file.close();
 }
 
 //void Duel::loadDeck(string s, int p)

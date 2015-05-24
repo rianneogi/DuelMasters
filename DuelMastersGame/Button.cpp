@@ -32,6 +32,11 @@ void Button::render(sf::RenderWindow& window)
 	window.draw(text);
 }
 
+void Button::setString(string s)
+{
+	text.setString(s);
+}
+
 bool checkCollision(sf::FloatRect& b, int x, int y)
 {
 	if (x >= b.left && x <= b.left + b.width && y >= b.top && y <= b.top + b.height)

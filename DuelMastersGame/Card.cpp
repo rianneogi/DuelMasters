@@ -205,7 +205,7 @@ static int loadcard(lua_State* L)
 	{
 		cout << "ERROR cant load texture " << CardNames.at(CardNames.size() - 1) << endl;
 	}
-	//isSpellTypeSummon.push_back(0);
+	CardTextures.at(CardTextures.size() - 1).setSmooth(true);
 	return 0;
 }
 
