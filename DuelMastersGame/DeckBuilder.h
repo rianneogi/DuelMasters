@@ -13,7 +13,6 @@ public:
 	sf::Sprite hovercard;
 
 	int decklistpos;
-	//std::map<int, int> decklist;
 	vector<DeckItem> decklist;
 
 	int cardlistpos;

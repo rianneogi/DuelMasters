@@ -18,7 +18,7 @@ void ZoneList::render(sf::RenderWindow& window)
 	int count = 0;
 	for (vector<Card*>::reverse_iterator i = zone->cards.rbegin() + scrollpos; i != zone->cards.rend(); i++)
 	{
-		sf::RectangleShape r(sf::Vector2f(150, 20));
+		sf::RectangleShape r(sf::Vector2f(CARDSEARCHLENGTH, 20));
 		r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*count);
 		r.setFillColor(sf::Color::White);
 		window.draw(r);
@@ -54,7 +54,7 @@ int ZoneList::getCardAtPos(int x, int y)
 {
 	if (zone == NULL) return -1;
 	int ans = -1;
-	if (x >= CARDSEARCHX && x <= CARDSEARCHX + 100)
+	if (x >= CARDSEARCHX && x <= CARDSEARCHX + CARDSEARCHLENGTH)
 	{
 		if (y >= CARDSEARCHY && y <= CARDSEARCHY + CARDSEARCHITEMCOUNT*CARDSEARCHSEPERATION)
 		{

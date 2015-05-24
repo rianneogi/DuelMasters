@@ -71,17 +71,18 @@ void DeckBuilder::render(sf::RenderWindow& window)
 		int count = 0;
 		for (vector<string>::iterator i = decks.begin(); i != decks.end(); i++)
 		{
-			if (count < decklistpos)
-				continue;
-			string s = *i;
-			sf::RectangleShape r(sf::Vector2f(150, 20));
-			r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*count);
-			r.setFillColor(sf::Color::White);
-			window.draw(r);
-			sf::Text t(s, DefaultFont, 14);
-			t.setColor(sf::Color::Black);
-			t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*count + CARDZONEOFFSET);
-			window.draw(t);
+			if (count >= decklistpos)
+			{
+				string s = *i;
+				sf::RectangleShape r(sf::Vector2f(150, 20));
+				r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos));
+				r.setFillColor(sf::Color::White);
+				window.draw(r);
+				sf::Text t(s, DefaultFont, 14);
+				t.setColor(sf::Color::Black);
+				t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
+				window.draw(t);
+			}
 			count++;
 			if (count >= decklistpos + CARDSEARCHITEMCOUNT)
 			{
@@ -98,17 +99,18 @@ void DeckBuilder::render(sf::RenderWindow& window)
 		int count = 0;
 		for (vector<DeckItem>::iterator i = decklist.begin(); i != decklist.end(); i++)
 		{
-			if (count < decklistpos)
-				continue;
-			string s = std::to_string((*i).count) + " " + CardNames.at((*i).card);
-			sf::RectangleShape r(sf::Vector2f(150, 20));
-			r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*count);
-			r.setFillColor(sf::Color::White);
-			window.draw(r);
-			sf::Text t(s, DefaultFont, 14);
-			t.setColor(sf::Color::Black);
-			t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*count + CARDZONEOFFSET);
-			window.draw(t);
+			if (count >= decklistpos)
+			{
+				string s = std::to_string((*i).count) + " " + CardNames.at((*i).card);
+				sf::RectangleShape r(sf::Vector2f(CARDSEARCHLENGTH, 20));
+				r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos));
+				r.setFillColor(sf::Color::White);
+				window.draw(r);
+				sf::Text t(s, DefaultFont, 14);
+				t.setColor(sf::Color::Black);
+				t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
+				window.draw(t);
+			}
 			count++;
 			if (count >= decklistpos + CARDSEARCHITEMCOUNT)
 			{
@@ -136,11 +138,15 @@ void DeckBuilder::render(sf::RenderWindow& window)
 		}
 		count++;
 	}
-	int card = getCardAtPos(MouseX, MouseY);
-	if (card != -1)
+
+	if (isloadingdeck == 0)
 	{
-		//hovercard.setTexture(CardTextures.at(decklist.at(card)->first));
-		//window.draw(hovercard);
+		int card = getCardAtPos(MouseX, MouseY);
+		if (card != -1)
+		{
+			hovercard.setTexture(CardTextures.at(decklist.at(card).card));
+			window.draw(hovercard);
+		}
 	}
 }
 
@@ -171,7 +177,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 	}
 	else  if (e.type == sf::Event::MouseWheelMoved)
 	{
-		if (MouseX < 250 * cardcountx + 50)
+		if (MouseX < 100 * cardcountx + 50)
 		{
 			cardlistpos -= e.mouseWheel.delta;
 			if (cardlistpos < 0)
@@ -213,7 +219,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			}
 			if (decklistpos >= decklist.size())
 			{
-				decklistpos = decklist.size()-1;
+				decklistpos = decklist.size() - 1;
 			}
 		}
 	}
@@ -221,19 +227,29 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 	{
 		if (e.mouseButton.button == sf::Mouse::Left)
 		{
-			int count = 0;
-			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
+			if (isloadingdeck == 0)
 			{
-				if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
+				int count = 0;
+				for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
 				{
-					//if (decklist[cardlistpos*cardcountx + count] < 4)
-					if (getCardCount(cardlistpos*cardcountx + count) < 4)
+					if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
 					{
-						//decklist[cardlistpos*cardcountx + count]++;
-						addCard(cardlistpos*cardcountx + count);
+						if (getCardCount(cardlistpos*cardcountx + count) < 4)
+						{
+							addCard(cardlistpos*cardcountx + count);
+						}
+					}
+					count++;
+				}
+
+				int card = getCardAtPos(MouseX, MouseY);
+				if (card != -1)
+				{
+					if (getCardCount(decklist.at(card).card) < 4)
+					{
+						addCard(decklist.at(card).card);
 					}
 				}
-				count++;
 			}
 
 			if (exitbutton.collision(MouseX, MouseY)) //go to main menu
@@ -242,6 +258,8 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			}
 			if (loadbutton.collision(MouseX, MouseY))
 			{
+				isloadingdeck = 1;
+				decklistpos = 0;
 				currentdeck = "";
 			}
 			if (savebutton.collision(MouseX, MouseY))
@@ -255,37 +273,47 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			{
 				decklist.clear();
 				currentdeck = "New Deck";
+				isloadingdeck = 0;
+				decklistpos = 0;
 			}
 
-			if (currentdeck == "")
+			if (isloadingdeck == 1)
 			{
 				int d = getDeckAtPos(MouseX, MouseY);
 				if (d != -1)
 				{
 					currentdeck = decks.at(d);
 					loaddeck();
+					isloadingdeck = 0;
+					decklistpos = 0;
 				}
 			}
 		}
 		else if (e.mouseButton.button == sf::Mouse::Right)
 		{
-			int count = 0;
-			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
+			if (isloadingdeck == 0)
 			{
-				if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
+				int count = 0;
+				for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
 				{
-					//if (decklist[cardlistpos*cardcountx + count] > 0)
-					if (getCardCount(cardlistpos*cardcountx + count) > 0)
+					if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
 					{
-						//decklist[cardlistpos*cardcountx + count]--;
-						removeCard(cardlistpos*cardcountx + count);
+						if (getCardCount(cardlistpos*cardcountx + count) > 0)
+						{
+							removeCard(cardlistpos*cardcountx + count);
+						}
 					}
-					/*if (getCardCount(cardlistpos*cardcountx + count) == 0)
-					{
-						decklist.erase(cardlistpos*cardcountx + count);
-					}*/
+					count++;
 				}
-				count++;
+
+				int card = getCardAtPos(MouseX, MouseY);
+				if (card != -1)
+				{
+					if (getCardCount(decklist.at(card).card) > 0)
+					{
+						removeCard(decklist.at(card).card);
+					}
+				}
 			}
 		}
 	}
@@ -295,7 +323,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 int DeckBuilder::getCardAtPos(int x, int y)
 {
 	int ans = -1;
-	if (x >= CARDSEARCHX && x <= CARDSEARCHX + 100)
+	if (x >= CARDSEARCHX && x <= CARDSEARCHX + CARDSEARCHLENGTH)
 	{
 		if (y >= CARDSEARCHY && y <= CARDSEARCHY + CARDSEARCHITEMCOUNT*CARDSEARCHSEPERATION)
 		{
@@ -312,7 +340,7 @@ int DeckBuilder::getCardAtPos(int x, int y)
 int DeckBuilder::getDeckAtPos(int x, int y)
 {
 	int ans = -1;
-	if (x >= CARDSEARCHX && x <= CARDSEARCHX + 100)
+	if (x >= CARDSEARCHX && x <= CARDSEARCHX + CARDSEARCHLENGTH)
 	{
 		if (y >= CARDSEARCHY && y <= CARDSEARCHY + CARDSEARCHITEMCOUNT*CARDSEARCHSEPERATION)
 		{
@@ -386,12 +414,22 @@ void DeckBuilder::savedeck()
 
 void DeckBuilder::addCard(int cid)
 {
+	bool found = false;
 	for (vector<DeckItem>::iterator i = decklist.begin(); i != decklist.end(); i++)
 	{
 		if ((*i).card == cid)
 		{
 			(*i).count++;
+			found = true;
+			break;
 		}
+	}
+	if (!found)
+	{
+		DeckItem d;
+		d.count = 1;
+		d.card = cid;
+		decklist.push_back(d);
 	}
 }
 
@@ -402,6 +440,11 @@ void DeckBuilder::removeCard(int cid)
 		if ((*i).card == cid)
 		{
 			(*i).count--;
+			if ((*i).count == 0)
+			{
+				decklist.erase(i);
+			}
+			break;
 		}
 	}
 }
@@ -415,16 +458,27 @@ int DeckBuilder::getCardCount(int cid)
 			return (*i).count;
 		}
 	}
+	return 0;
 }
 
 void DeckBuilder::setCardCount(int cid, int count)
 {
+	bool found = false;
 	for (vector<DeckItem>::iterator i = decklist.begin(); i != decklist.end(); i++)
 	{
 		if ((*i).card == cid)
 		{
 			(*i).count = count;
+			found = true;
+			break;
 		}
+	}
+	if (!found)
+	{
+		DeckItem d;
+		d.count = count;
+		d.card = cid;
+		decklist.push_back(d);
 	}
 }
 
