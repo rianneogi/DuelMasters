@@ -1404,7 +1404,7 @@ Cards["Magma Gazer"] = {
     OnCast = function(id)
 		local ch = createChoice("Magma Gazer: Choose creature",0,id,Checks.InYourBattle)
 		if(ch>=0) then
-            createModifier(sid,3,"Cards","Magma Gazer","Modifier")
+            createModifier(ch,3,"Cards","Magma Gazer","Modifier")
         end
         Actions.EndSpell(id)
 	end,

@@ -299,7 +299,7 @@ int Duel::handleInterfaceInput(Message& msg)
 	}
 	else if (type == "endturn")
 	{
-		if (attackphase == PHASE_NONE && !isChoiceActive)
+		if (attackphase == PHASE_NONE && !isChoiceActive && castingcard == -1)
 		{
 			nextTurn();
 		}
@@ -339,7 +339,7 @@ int Duel::handleInterfaceInput(Message& msg)
 		{
 			int blocker = msg.getInt("blocker");
 			if (getCreatureCanBlock(attacker, blocker) && CardList.at(blocker)->isTapped == false
-				&& blocker != defender)
+				&& (blocker != defender || defendertype == DEFENDER_PLAYER))
 			{
 				Message msg2("cardtap");
 				msg2.addValue("card", blocker);
