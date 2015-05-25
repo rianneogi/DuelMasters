@@ -23,6 +23,8 @@ public:
 	Button quitbutton;
 	sf::Text infotext;
 
+	Button cardCountBox;
+
 	vector<Arrow> arrows;
 	int mousearrow;
 

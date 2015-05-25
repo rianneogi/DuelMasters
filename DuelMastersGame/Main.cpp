@@ -24,8 +24,8 @@ int main()
 	Window = new sf::RenderWindow(sf::VideoMode(1300,800), "Duel Masters");
 	Window->setPosition(sf::Vector2i(0, 0));
 	ActiveDuel = new DuelInterface();
-	ActiveDuel->duel.setDecks("Decks\\My decks\\DF Unholy Fire.txt", "Decks\\My decks\\F Bolshack.txt");
-	ActiveDuel->duel.startDuel();
+	/*ActiveDuel->duel.setDecks("Decks\\My decks\\DF Unholy Fire.txt", "Decks\\My decks\\F Bolshack.txt");
+	ActiveDuel->duel.startDuel();*/
 
 	mainMenu = new MainMenu();
 	deckBuilder = new DeckBuilder();

@@ -17,6 +17,7 @@ public:
 	bool collision(int MouseX, int MouseY);
 	
 	void setString(string s);
+	void setPosition(int x, int y);
 };
 
 bool checkCollision(sf::FloatRect& b, int x, int y);

@@ -37,6 +37,12 @@ void Button::setString(string s)
 	text.setString(s);
 }
 
+void Button::setPosition(int x,int y)
+{
+	rect.setPosition(x, y);
+	text.setPosition(x + CARDZONEOFFSET, y + CARDZONEOFFSET);
+}
+
 bool checkCollision(sf::FloatRect& b, int x, int y)
 {
 	if (x >= b.left && x <= b.left + b.width && y >= b.top && y <= b.top + b.height)

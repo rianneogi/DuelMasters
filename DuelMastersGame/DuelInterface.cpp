@@ -64,6 +64,8 @@ DuelInterface::DuelInterface()
 
 	decklist = List(CARDSEARCHX, CARDSEARCHY, CARDSEARCHLENGTH, CARDSEARCHSEPERATION, CARDSEARCHITEMCOUNT);
 	deckschosen = 0;
+
+	cardCountBox = Button(sf::Vector2f(0, 0), sf::Vector2f(25, 25), sf::Color::Black, 0, sf::Color::Black, sf::Color::White, "0", 16);
 }
 
 DuelInterface::~DuelInterface()
@@ -222,6 +224,32 @@ void DuelInterface::render(sf::RenderWindow& window)
 			{
 				(*i).render(window);
 			}
+		}
+		
+		//draw count
+		for (int i = 0; i < 2; i++)
+		{
+			if (checkCollision((duel.getZone(i, ZONE_DECK))->getBounds(), MouseX, MouseY))
+			{
+				cardCountBox.setString(std::to_string(duel.getZone(i, ZONE_DECK)->cards.size()));
+				cardCountBox.setPosition(MouseX - 25, MouseY - 25);
+				cardCountBox.render(window);
+			}
+			if (checkCollision((duel.getZone(i, ZONE_GRAVEYARD))->getBounds(), MouseX, MouseY))
+			{
+				cardCountBox.setString(std::to_string(duel.getZone(i, ZONE_GRAVEYARD)->cards.size()));
+				cardCountBox.setPosition(MouseX - 25, MouseY - 25);
+				cardCountBox.render(window);
+			}
+			/*for (int j = 0; j < 6; j++)
+			{
+				if (checkCollision((duel.getZone(i, j))->getBounds(), MouseX, MouseY))
+				{
+					cardCountBox.setString(std::to_string(duel.getZone(i, j)->cards.size()));
+					cardCountBox.setPosition(MouseX - 25, MouseY - 25);
+					cardCountBox.render(window);
+				}
+			}*/
 		}
 	}
 	else if (duelstate == DUELSTATE_SINGLE)

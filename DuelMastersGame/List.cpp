@@ -56,7 +56,7 @@ int List::getItemAtPos(int MouseX, int MouseY)
 	{
 		if (MouseY >= y && MouseY <= y + itemCount*itemHeight)
 		{
-			ans = ((MouseY - y) / itemCount) + scrollpos;
+			ans = ((MouseY - y) / itemHeight) + scrollpos;
 		}
 	}
 	if (ans >= items.size() || ans < 0)
