@@ -88,6 +88,7 @@ public:
 	void resetAttack();
 	void resetCasting();
 	void resetChoice();
+	void clearCards();
 
 	bool isThereUntappedManaOfCiv(int player, int civ);
 

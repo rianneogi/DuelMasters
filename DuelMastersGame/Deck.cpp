@@ -56,22 +56,22 @@ void Deck::shuffle()
 	}
 }
 
-void Deck::loadFromFile(string s, int uid)
-{
-	cards.empty();
-	fstream file;
-	file.open(s, ios::in | ios::out);
-	string str;
-
-	int cnt = 0;
-	
-	while (!file.eof())
-	{
-		getline(file, str);
-		Card* c = new Card(uid+cnt, getCardIdFromName(str), owner);
-		addCard(c);
-		cnt++;
-	}
-
-	file.close();
-}
+//void Deck::loadFromFile(string s, int uid)
+//{
+//	cards.empty();
+//	fstream file;
+//	file.open(s, ios::in | ios::out);
+//	string str;
+//
+//	int cnt = 0;
+//	
+//	while (!file.eof())
+//	{
+//		getline(file, str);
+//		Card* c = new Card(uid+cnt, getCardIdFromName(str), owner);
+//		addCard(c);
+//		cnt++;
+//	}
+//
+//	file.close();
+//}

@@ -48,6 +48,7 @@ DeckBuilder::DeckBuilder()
 		getline(deckfile, s);
 		decks.push_back(s);
 	}
+	deckfile.close();
 }
 
 DeckBuilder::~DeckBuilder()
@@ -358,7 +359,7 @@ void DeckBuilder::loaddeck()
 {
 	decklist.clear();
 	fstream file;
-	file.open("Decks\\My Decks\\" + currentdeck + ".txt", ios::in);
+	file.open("Decks\\My Decks\\" + currentdeck + DECKEXTENSION, ios::in);
 	string str;
 
 	if (!file.is_open())
@@ -396,7 +397,7 @@ void DeckBuilder::savedeck()
 	if (currentdeck == "" || isloadingdeck == 1) return;
 
 	fstream file;
-	file.open("Decks\\My Decks\\" + currentdeck + ".txt", ios::out | ios::trunc);
+	file.open("Decks\\My Decks\\" + currentdeck + DECKEXTENSION, ios::out | ios::trunc);
 
 	if (!file.is_open())
 	{

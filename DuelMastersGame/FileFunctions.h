@@ -20,6 +20,8 @@ extern "C"
 
 using namespace std;
 
+const string DECKEXTENSION = ".txt";
+
 enum SpriteId { TEXTURE_CARDBACK };
 enum SoundId { SOUND_ENDTURN, SOUND_DRAW, SOUND_TAP, SOUND_UNTAP, SOUND_PLAY, SOUND_SHUFFLE };
 

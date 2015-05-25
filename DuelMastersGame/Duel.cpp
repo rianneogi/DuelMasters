@@ -912,10 +912,10 @@ void Duel::setDecks(string p1, string p2)
 	loadDeck(p1, 0);
 	loadDeck(p2, 1);
 
-	decks[0].x = ZONE2X;
+	/*decks[0].x = ZONE2X;
 	decks[1].x = ZONE2X;
 	decks[0].y = CENTER - ZONEYOFFSET * 4;
-	decks[1].y = CENTER + ZONEYOFFSET * 3;
+	decks[1].y = CENTER + ZONEYOFFSET * 3;*/
 }
 
 void Duel::loadDeck(string s, int p)
@@ -1031,6 +1031,23 @@ void Duel::resetCasting()
 	castingciv = -1;
 	castingcivtapped = false;
 	castingcost = -1;
+}
+
+void Duel::clearCards()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		decks[i].cards.clear();
+		graveyards[i].cards.clear();
+		hands[i].cards.clear();
+		manazones[i].cards.clear();
+		shields[i].cards.clear();
+		battlezones[i].cards.clear();
+
+		shields[i].totalcards = 0;
+	}
+	CardList.clear();
+	nextUniqueId = 0;
 }
 
 void Duel::resetChoice()

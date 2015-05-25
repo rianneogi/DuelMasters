@@ -2,28 +2,26 @@
 
 #include "Duel.h"
 
+enum DuelState { DUELSTATE_DUEL, DUELSTATE_MENU, DUELSTATE_SINGLE, DUELSTATE_MULTI };
+
 class DuelInterface : public GameWindow
 {
 public:
 	Duel duel;
+
+	int duelstate;
 
 	int MouseX;
 	int MouseY;
 	int selectedcard;
 	int selectedcardzone;
 
-	/*MessageManager MsgMngr;
-	Message currentMessage;*/
-
-	sf::RectangleShape endturnbutton;
-	sf::Text endturntext;
+	Button endturnbutton;
 	vector<sf::Sound> sounds;
 
-	sf::RectangleShape cancelbutton;
-	sf::Text canceltext;
-	sf::Text infotext;
-
+	Button cancelbutton;
 	Button quitbutton;
+	sf::Text infotext;
 
 	vector<Arrow> arrows;
 	int mousearrow;
@@ -31,6 +29,9 @@ public:
 	sf::Sprite hovercard;
 
 	ZoneList cardsearch;
+
+	List decklist;
+	int deckschosen;
 
 	DuelInterface();
 	~DuelInterface();
@@ -40,6 +41,8 @@ public:
 	void update(unsigned int deltatime);
 	void render(sf::RenderWindow& window);
 	int handleEvent(sf::Event event, int callback);
+
+	void setDecklist();
 
 	void undoSelection();
 };

@@ -15,6 +15,6 @@ public:
 	void handleEvent(sf::Event event);
 	void addCard(Card* c);
 	void shuffle();
-	void loadFromFile(string s, int uid);
+	//void loadFromFile(string s, int uid);
 };
 
