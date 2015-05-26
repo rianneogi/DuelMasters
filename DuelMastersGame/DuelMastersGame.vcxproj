@@ -91,6 +91,7 @@
     <ClCompile Include="MessageManager.cpp" />
     <ClCompile Include="Modifier.cpp" />
     <ClCompile Include="ShieldZone.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Zone.cpp" />
     <ClCompile Include="ZoneList.cpp" />
   </ItemGroup>
@@ -117,6 +118,7 @@
     <ClInclude Include="MessageManager.h" />
     <ClInclude Include="Modifier.h" />
     <ClInclude Include="ShieldZone.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Zone.h" />
     <ClInclude Include="ZoneList.h" />
   </ItemGroup>

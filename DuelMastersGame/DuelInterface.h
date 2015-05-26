@@ -17,7 +17,6 @@ public:
 	int selectedcardzone;
 
 	Button endturnbutton;
-	vector<sf::Sound> sounds;
 
 	Button cancelbutton;
 	Button quitbutton;

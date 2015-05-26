@@ -45,11 +45,6 @@ DuelInterface::DuelInterface()
 	quitbutton = Button(sf::Vector2f(QUITBUTTONX, QUITBUTTONY), sf::Vector2f(QUITBUTTONLENGTH, QUITBUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Green, sf::Color::Black, "Main Menu", 16);
 
-	for (int i = 0; i < SoundBuffers.size(); i++)
-	{
-		sounds.push_back(sf::Sound(SoundBuffers.at(i)));
-	}
-
 	infotext = sf::Text("Choose Blocker", DefaultFont, 16);
 	infotext.setPosition(INFOTEXTX, INFOTEXTY);
 	infotext.setColor(sf::Color::White);
@@ -295,7 +290,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					Message m("endturn");
 					m.addValue("player", duel.turn);
 					duel.handleInterfaceInput(m);
-					sounds.at(SOUND_ENDTURN).play();
 					undoSelection();
 				}
 
@@ -488,7 +482,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						Message msg("cardplay");
 						msg.addValue("card", selectedcard);
 						duel.handleInterfaceInput(msg);
-						sounds.at(SOUND_PLAY).play();
 
 						undoSelection();
 					}
@@ -497,7 +490,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						Message msg("cardmana");
 						msg.addValue("card", selectedcard);
 						duel.handleInterfaceInput(msg);
-						sounds.at(SOUND_PLAY).play();
 
 						undoSelection();
 						//manaUsed = 1;
@@ -522,7 +514,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						msg.addValue("defender", getOpponent(duel.turn));
 						msg.addValue("defendertype", DEFENDER_PLAYER);
 						duel.handleInterfaceInput(msg);
-						sounds.at(SOUND_TAP).play();
 
 						sf::FloatRect bounds = duel.shields[getOpponent(duel.turn)].getBounds();
 
@@ -547,7 +538,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							msg.addValue("defender", (*i)->UniqueId);
 							msg.addValue("defendertype", DEFENDER_CREATURE);
 							duel.handleInterfaceInput(msg);
-							sounds.at(SOUND_TAP).play();
 
 							arrows.at(mousearrow).setTo((*i)->x, (*i)->y);
 							mousearrow = -1;

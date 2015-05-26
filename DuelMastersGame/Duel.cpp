@@ -138,6 +138,7 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("card", msg.getInt("card"));
 		m.addValue("to", ZONE_BATTLE);
 		MsgMngr.sendMessage(m);
+		SoundMngr->playSound(SOUND_PLAY);
 	}
 	else if (msg.getType() == "cardmana")
 	{
@@ -146,6 +147,7 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("card", msg.getInt("card"));
 		m.addValue("to", ZONE_MANA);
 		MsgMngr.sendMessage(m);
+		SoundMngr->playSound(SOUND_PLAY);
 	}
 	else if (msg.getType() == "creatureattack")
 	{
@@ -206,10 +208,12 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "cardtap")
 	{
 		CardList.at(msg.getInt("card"))->tap();
+		SoundMngr->playSound(SOUND_TAP);
 	}
 	else if (msg.getType() == "carduntap")
 	{
 		CardList.at(msg.getInt("card"))->untap();
+		SoundMngr->playSound(SOUND_UNTAP);
 	}
 	else if (msg.getType() == "endturn")
 	{
@@ -218,6 +222,7 @@ int Duel::handleMessage(Message& msg)
 		Message m("startturn");
 		m.addValue("player", turn);
 		MsgMngr.sendMessage(m);
+		SoundMngr->playSound(SOUND_ENDTURN);
 	}
 	else if (msg.getType() == "startturn")
 	{
