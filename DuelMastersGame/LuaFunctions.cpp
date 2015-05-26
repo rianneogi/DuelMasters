@@ -65,56 +65,27 @@ static int createChoice(lua_State* L)
 	return 1;
 }
 
-static int choicePushSelect(lua_State* L)
+static int createChoiceNoCheck(lua_State* L)
 {
-	int count = lua_tointeger(L, 1);
-	for (int i = 2; i <= count + 1; i++)
-	{
-		ActiveDuel->duel.choice.pushselect(lua_tostring(L, i));
-	}
-	return 0;
-}
-
-static int choicePushButton1(lua_State* L)
-{
-	int count = lua_tointeger(L, 1);
-	for (int i = 2; i <= count + 1; i++)
-	{
-		ActiveDuel->duel.choice.pushbutton1(lua_tostring(L, i));
-	}
-	return 0;
-}
-
-static int choicePushButton2(lua_State* L)
-{
-	int count = lua_tointeger(L, 1);
-	for (int i = 2; i <= count + 1; i++)
-	{
-		ActiveDuel->duel.choice.pushbutton2(lua_tostring(L, i));
-	}
-	return 0;
-}
-
-static int choicePushValid(lua_State* L)
-{
-	int count = lua_tointeger(L, 1);
-	for (int i = 2; i <= count + 1; i++)
-	{
-		ActiveDuel->duel.choice.pushvalid(lua_tostring(L, i));
-	}
-	ActiveDuel->duel.checkChoiceValid();
-	return 0;
-}
-
-static int choicePushValidNoCheck(lua_State* L)
-{
-	int count = lua_tointeger(L, 1);
-	for (int i = 2; i <= count + 1; i++)
-	{
-		ActiveDuel->duel.choice.pushvalid(lua_tostring(L, i));
-	}
+	ActiveDuel->duel.dispatchAllMessages(); //first resolve all pending messages
+	//lua_pushvalue(L, -1);
+	lua_pushvalue(L, 4);
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	cout << "ref: " << ref << endl;
+	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), ref);
 	//ActiveDuel->duel.checkChoiceValid();
-	return 0;
+	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
+	{
+		int r = mainLoop(*Window, 1); //wait for selection made by user
+		lua_pushinteger(L, r);
+		return 1;
+	}
+	else
+	{
+		lua_pushinteger(L, RETURN_NOVALID);
+	}
+	luaL_unref(L, LUA_REGISTRYINDEX, ref);
+	return 1;
 }
 
 static int setChoiceActive(lua_State* L)
@@ -343,11 +314,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "getMessageType", getMessageType);
 
 	lua_register(L, "createChoice", createChoice);
-	lua_register(L, "choicePushSelect", choicePushSelect);
-	lua_register(L, "choicePushButton1", choicePushButton1);
-	lua_register(L, "choicePushButton2", choicePushButton2);
-	lua_register(L, "choicePushValid", choicePushValid);
-	lua_register(L, "choicePushValidNoCheck", choicePushValidNoCheck);
+	lua_register(L, "createChoiceNoCheck", createChoiceNoCheck);
 	lua_register(L, "setChoiceActive", setChoiceActive);
 	lua_register(L, "isChoiceActive", isChoiceActive);
 	lua_register(L, "getChoice", getChoice);

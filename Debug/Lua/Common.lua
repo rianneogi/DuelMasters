@@ -195,8 +195,8 @@ end
 
 Abils.untapAtEOT = function(id,name)
     if(getMessageType()=="pre endturn") then
-		if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE) then
-			local ch = createChoice(name..": Untap this creature?",2,id,Checks.False)
+		if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE and isCardTapped(id)==1) then
+			local ch = createChoiceNoCheck(name..": Untap this creature?",2,id,Checks.False)
 			if(ch==RETURN_BUTTON1) then
                 untapCard(id)
             end

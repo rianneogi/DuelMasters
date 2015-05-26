@@ -2306,7 +2306,7 @@ Cards["Toel, Vizier of Hope"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="pre endturn") then
 		    if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE) then
-			    local ch = createChoice("Toel, Vizier of Hope: Untap creatures?",2,id,Checks.False)
+			    local ch = createChoiceNoCheck("Toel, Vizier of Hope: Untap creatures?",2,id,Checks.False)
 			    if(ch==RETURN_BUTTON1) then
                     local owner = getCardOwner(cid)
 		            local size = getZoneSize(owner,ZONE_BATTLE)-1
