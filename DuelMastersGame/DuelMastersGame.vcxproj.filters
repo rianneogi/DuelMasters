@@ -184,5 +184,8 @@
     <None Include="Lua\Cards.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
+    <None Include="..\Debug\Lua\EvoCrushinators.lua">
+      <Filter>Source Files\Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>

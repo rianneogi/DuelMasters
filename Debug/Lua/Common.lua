@@ -298,6 +298,14 @@ Checks.UntappedInOppBattle = function(cid,sid)
 	end
 end
 
+Checks.OppBlocker = function(cid,sid)
+    if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureCanBlock(sid)==1) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.InYourHand = function(cid,sid)
     if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_HAND) then
 		return 1

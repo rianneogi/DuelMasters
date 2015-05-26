@@ -125,6 +125,7 @@
   <ItemGroup>
     <None Include="..\Debug\Lua\BaseSet.lua" />
     <None Include="..\Debug\Lua\Common.lua" />
+    <None Include="..\Debug\Lua\EvoCrushinators.lua" />
     <None Include="Lua\Cards.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
