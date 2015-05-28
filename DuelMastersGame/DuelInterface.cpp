@@ -678,7 +678,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					if (deck != -1)
 					{
 						duel.loadDeck("Decks\\My Decks\\" + decklist.items.at(deck) + DECKEXTENSION, deckschosen);
-						myPlayer = deckschosen;
+						setMyPlayer(deckschosen);
 
 						sf::Packet p;
 						sf::Uint32 ptype = PACKET_SETDECK;

@@ -195,13 +195,14 @@ int getCardIdFromName(string s)
 
 static int loadcard(lua_State* L)
 {
-	std::string s = lua_tostring(L, 1);
-	CardNames.push_back(s);
-	std::cout << "Loading Card : " << s << "\n";
-	s = "Graphics\\BaseSet\\" + s + ".png";
+	string name = lua_tostring(L, 1);
+	string set = lua_tostring(L, 2);
+	CardNames.push_back(name);
+	std::cout << "Loading Card : " << name << "\n";
+	name = "Graphics\\" + set + "\\" + name + ".png";
 	CardTextures.push_back(sf::Texture());
 
-	if (!CardTextures.at(CardTextures.size() - 1).loadFromFile(s))
+	if (!CardTextures.at(CardTextures.size() - 1).loadFromFile(name))
 	{
 		cout << "ERROR cant load texture " << CardNames.at(CardNames.size() - 1) << endl;
 	}

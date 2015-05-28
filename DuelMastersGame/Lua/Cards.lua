@@ -1,10 +1,10 @@
 Cards = {}
 
 package.path = package.path .. ';./?.lua;'
-require("BaseSet")
+require("EvoCrushinators")
 
 loadCards = function()
-	for k,v in pairs(Cards) do loadcard(k) end
+	for k,v in pairs(Cards) do loadcard(k,v.set) end
 end
 
 getCardData = function(card,value)

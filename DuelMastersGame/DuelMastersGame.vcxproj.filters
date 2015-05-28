@@ -175,16 +175,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\Lua\BaseSet.lua">
+    <None Include="..\Release\Lua\BaseSet.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
-    <None Include="..\Debug\Lua\Common.lua">
+    <None Include="..\Release\Lua\Common.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
-    <None Include="Lua\Cards.lua">
-      <Filter>Source Files\Lua</Filter>
-    </None>
-    <None Include="..\Debug\Lua\EvoCrushinators.lua">
+    <None Include="..\Release\Lua\EvoCrushinators.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
   </ItemGroup>

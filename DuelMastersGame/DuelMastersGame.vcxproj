@@ -128,10 +128,9 @@
     <ClInclude Include="ZoneList.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\Lua\BaseSet.lua" />
-    <None Include="..\Debug\Lua\Common.lua" />
-    <None Include="..\Debug\Lua\EvoCrushinators.lua" />
-    <None Include="Lua\Cards.lua" />
+    <None Include="..\Release\Lua\BaseSet.lua" />
+    <None Include="..\Release\Lua\Common.lua" />
+    <None Include="..\Release\Lua\EvoCrushinators.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

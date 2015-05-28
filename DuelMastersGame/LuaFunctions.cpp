@@ -46,7 +46,7 @@ static int createChoice(lua_State* L)
 {
 	ActiveDuel->duel.dispatchAllMessages(); //first resolve all pending messages
 	//lua_pushvalue(L, -1);
-	lua_pushvalue(L, 4);
+	lua_pushvalue(L, 5);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	cout << "ref: " << ref << endl;
 	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
