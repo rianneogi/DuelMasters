@@ -79,6 +79,7 @@ Duel::Duel()
 
 	isChoiceActive = false;
 	choiceCard = -1;
+	choicePlayer = -1;
 
 	winner = -1;
 }
@@ -582,10 +583,11 @@ void Duel::dispatchMessage(Message& msg)
 	//std::cout << "  post\n";
 }
 
-void Duel::addChoice(string info, int skip, int card, int validref)
+void Duel::addChoice(string info, int skip, int card, int player, int validref)
 {
 	choice = Choice(info, skip, validref);
 	choiceCard = card;
+	choicePlayer = player;
 	isChoiceActive = true;
 	cout << "choice set: " << info << endl;
 }
@@ -1062,6 +1064,7 @@ void Duel::clearCards()
 void Duel::resetChoice()
 {
 	choiceCard = -1;
+	choicePlayer = -1;
 	isChoiceActive = false;
 	cout << "choice reset" << endl;
 }

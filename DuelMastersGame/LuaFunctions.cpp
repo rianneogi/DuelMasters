@@ -49,7 +49,7 @@ static int createChoice(lua_State* L)
 	lua_pushvalue(L, 4);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	cout << "ref: " << ref << endl;
-	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), ref);
+	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
 	ActiveDuel->duel.checkChoiceValid();
 	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
 	{
@@ -72,7 +72,7 @@ static int createChoiceNoCheck(lua_State* L)
 	lua_pushvalue(L, 4);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	cout << "ref: " << ref << endl;
-	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), ref);
+	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
 	//ActiveDuel->duel.checkChoiceValid();
 	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
 	{

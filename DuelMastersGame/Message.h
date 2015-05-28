@@ -2,7 +2,7 @@
 
 #include "FileFunctions.h"
 
-enum PacketType { PACKET_MSG, PACKET_SETDECK, PACKET_SETSEED };
+enum PacketType { PACKET_MSG, PACKET_SETDECK, PACKET_SETSEED, PACKET_CHOICESELECT };
 
 class Message
 {

@@ -13,6 +13,7 @@ sf::TcpSocket Socket;
 
 int mainLoop(sf::RenderWindow& window, int callback)
 {
+	sf::Packet packet;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -36,10 +37,13 @@ int mainLoop(sf::RenderWindow& window, int callback)
 			}
 		}
 
-		sf::Packet packet;
 		if (Socket.receive(packet) != sf::Socket::Status::NotReady)
 		{
-			ActiveDuel->receivePacket(packet);
+			int r = ActiveDuel->receivePacket(packet, callback);
+			if (callback != 0 && r != RETURN_NOTHING)
+			{
+				return r;
+			}
 		}
 
 		currentWindow->update(0);

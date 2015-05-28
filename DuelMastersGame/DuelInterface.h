@@ -15,6 +15,8 @@ public:
 	int dueltype;
 	int duelstate;
 
+	int myPlayer;
+
 	int MouseX;
 	int MouseY;
 	int selectedcard;
@@ -46,7 +48,7 @@ public:
 	void update(unsigned int deltatime);
 	void render(sf::RenderWindow& window);
 	int handleEvent(sf::Event event, int callback);
-	void receivePacket(sf::Packet& packet);
+	int receivePacket(sf::Packet& packet, int callback);
 
 	void setDecklist();
 

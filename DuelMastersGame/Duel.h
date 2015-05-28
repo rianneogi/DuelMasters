@@ -31,6 +31,7 @@ public:
 
 	Choice choice;
 	int choiceCard;
+	int choicePlayer;
 	bool isChoiceActive;
 
 	int winner;
@@ -80,7 +81,7 @@ public:
 	//void render(sf::RenderWindow& window);
 	void handleEvent(sf::Event event);
 
-	void addChoice(string info, int skip, int card, int validref);
+	void addChoice(string info, int skip, int card, int player, int validref);
 	void checkChoiceValid();
 	int choiceCanBeSelected(int sid);
 
