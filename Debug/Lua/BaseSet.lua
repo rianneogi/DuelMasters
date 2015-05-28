@@ -1851,6 +1851,7 @@ Cards["Ruby Grass"] = {
 
     HandleMessage = function(id)
         Abils.untapAtEOT(id,"Ruby Grass")
+        Abils.cantAttackPlayers(id)
 	end
 }
 

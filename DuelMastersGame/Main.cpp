@@ -11,6 +11,46 @@ sf::RenderWindow* Window;
 
 sf::TcpSocket Socket;
 
+int mainLoop(sf::RenderWindow& window, int callback)
+{
+	while (window.isOpen())
+	{
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+			{
+				currentWindow->handleEvent(event, callback);
+				window.close();
+			}
+
+			int r = currentWindow->handleEvent(event, callback);
+			currentWindow->update(0);
+
+			if (callback != 0 && r != RETURN_NOTHING) //if we need to callback(return) and a choice has been made
+			{
+				return r;
+			}
+			if (r == RETURN_QUIT)
+			{
+				window.close();
+			}
+		}
+
+		sf::Packet packet;
+		if (Socket.receive(packet)!=sf::Socket::Status::NotReady)
+		{
+			ActiveDuel->receivePacket(packet);
+		}
+
+		window.clear();
+
+		currentWindow->render(window);
+
+		window.display();
+	}
+}
+
 int main()
 {
 	srand(time(0));

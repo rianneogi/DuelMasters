@@ -990,6 +990,10 @@ void Duel::startDuel()
 	manaUsed = 0;
 	for (int i = 0; i < 2; i++)
 	{
+		if (decks[i].cards.size() < 40)
+		{
+			cout << "Deck card count less than 40" << endl;
+		}
 		decks[i].shuffle();
 		for (int j = 0; j < 5; j++)
 		{

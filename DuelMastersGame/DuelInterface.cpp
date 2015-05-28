@@ -1,42 +1,5 @@
 #include "DuelInterface.h"
 
-int mainLoop(sf::RenderWindow& window, int callback)
-{
-	sf::Packet packet;
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-			{
-				currentWindow->handleEvent(event, callback);
-				window.close();
-			}
-
-			int r = currentWindow->handleEvent(event, callback);
-			currentWindow->update(0);
-
-			if (callback != 0 && r != RETURN_NOTHING) //if we need to callback(return) and a choice has been made
-			{
-				return r;
-			}
-			if (r == RETURN_QUIT)
-			{
-				window.close();
-			}
-		}
-
-		Socket.receive(packet);
-
-		window.clear();
-
-		currentWindow->render(window);
-
-		window.display();
-	}
-}
-
 DuelInterface::DuelInterface()
 {
 	duelstate = DUELSTATE_MENU;
@@ -661,23 +624,25 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			{
 				if (cancelbutton.collision(MouseX, MouseY)) //join game
 				{
-					sf::Socket::Status status = Socket.connect("", 53000);
+					sf::Socket::Status status = Socket.connect("192.168.1.100", 53000);
 					Socket.setBlocking(false);
 					dueltype = DUELTYPE_MULTI;
-					if (deckschosen >= 1)
+					cout << "game connected" << endl;
+					if (deckschosen >= 2)
 					{
 						duelstate = DUELSTATE_DUEL;
 						duel.startDuel();
 					}
 				}
-				if (quitbutton.collision(MouseX, MouseY))  //host game
+				if (endturnbutton.collision(MouseX, MouseY))  //host game
 				{
 					sf::TcpListener listener;
 					listener.listen(53000);
 					listener.accept(Socket);
 					Socket.setBlocking(false);
 					dueltype = DUELTYPE_MULTI;
-					if (deckschosen >= 1)
+					cout << "game connected" << endl;
+					if (deckschosen >= 2)
 					{
 						duelstate = DUELSTATE_DUEL;
 						duel.startDuel();
@@ -687,8 +652,21 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				if (deck != -1)
 				{
 					duel.loadDeck("Decks\\My Decks\\" + decklist.items.at(deck) + DECKEXTENSION, deckschosen);
+
+					sf::Packet p;
+					sf::Uint32 ptype = PACKET_SETDECK;
+					sf::Uint32 size = duel.decks[deckschosen].cards.size();
+					p << ptype << size;
+					for (vector<Card*>::iterator i = duel.decks[deckschosen].cards.begin(); i != duel.decks[deckschosen].cards.end(); i++)
+					{
+						p << (*i)->CardId;
+					}
+					Socket.send(p);
+					cout << "sent setdeck packet" << endl;
+
 					deckschosen++;
-					if (deckschosen >= 1 && dueltype == DUELTYPE_MULTI)
+
+					if (deckschosen >= 2 && dueltype == DUELTYPE_MULTI)
 					{
 						duelstate = DUELSTATE_DUEL;
 						duel.startDuel();
@@ -704,7 +682,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					setDecklist();
 					duel.clearCards();
 				}
-				if (quitbutton.collision(MouseX, MouseY))  //multiplayer
+				if (endturnbutton.collision(MouseX, MouseY))  //multiplayer
 				{
 					duelstate = DUELSTATE_MULTI;
 					deckschosen = 0;
@@ -732,13 +710,43 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	return RETURN_NOTHING;
 }
 
-void DuelInterface::recievePacket(sf::Packet& packet)
+void DuelInterface::receivePacket(sf::Packet& packet)
 {
 	if (dueltype == DUELTYPE_MULTI)
 	{
-		Message msg;
-		packet >> msg;
-		duel.handleInterfaceInput(msg);
+		sf::Uint32 ptype;
+		packet >> ptype;
+		if (ptype == PACKET_MSG)
+		{
+			cout << "received msg packet" << endl;
+			Message msg;
+			packet >> msg;
+			duel.handleInterfaceInput(msg);
+		}
+		else if (ptype == PACKET_SETDECK)
+		{
+			cout << "setdeck packet recieved" << endl;
+			sf::Uint32 size;
+			packet >> size;
+			cout << "size: " << endl;
+			duel.decks[deckschosen].cards.empty();
+			for (int i = 0; i < size; i++)
+			{
+				sf::Uint32 cid;
+				packet >> cid;
+				Card* c = new Card(duel.nextUniqueId, cid, deckschosen);
+				duel.CardList.push_back(c);
+				duel.decks[deckschosen].addCard(c);
+				duel.nextUniqueId++;
+				cout << "added card: " << cid << endl;
+			}
+			deckschosen++;
+			if (deckschosen >= 2)
+			{
+				duelstate = DUELSTATE_DUEL;
+				duel.startDuel();
+			}
+		}
 	}
 }
 
