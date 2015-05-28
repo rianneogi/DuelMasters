@@ -25,7 +25,6 @@ int mainLoop(sf::RenderWindow& window, int callback)
 			}
 
 			int r = currentWindow->handleEvent(event, callback);
-			currentWindow->update(0);
 
 			if (callback != 0 && r != RETURN_NOTHING) //if we need to callback(return) and a choice has been made
 			{
@@ -38,10 +37,12 @@ int mainLoop(sf::RenderWindow& window, int callback)
 		}
 
 		sf::Packet packet;
-		if (Socket.receive(packet)!=sf::Socket::Status::NotReady)
+		if (Socket.receive(packet) != sf::Socket::Status::NotReady)
 		{
 			ActiveDuel->receivePacket(packet);
 		}
+
+		currentWindow->update(0);
 
 		window.clear();
 

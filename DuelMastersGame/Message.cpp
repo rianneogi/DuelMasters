@@ -84,6 +84,8 @@ sf::Packet& operator >>(sf::Packet& packet, Message& m)
 sf::Packet createPacketFromMessage(Message& m)
 {
 	sf::Packet p;
+	sf::Uint32 i = PACKET_MSG;
+	p << i;
 	p << m;
 	return p;
 }

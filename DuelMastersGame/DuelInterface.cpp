@@ -642,6 +642,13 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					Socket.setBlocking(false);
 					dueltype = DUELTYPE_MULTI;
 					cout << "game connected" << endl;
+
+					int seed = time(0);
+					srand(seed);
+					sf::Packet packet;
+					packet << PACKET_SETSEED << seed;
+					Socket.send(packet);
+
 					if (deckschosen >= 2)
 					{
 						duelstate = DUELSTATE_DUEL;
@@ -746,6 +753,12 @@ void DuelInterface::receivePacket(sf::Packet& packet)
 				duelstate = DUELSTATE_DUEL;
 				duel.startDuel();
 			}
+		}
+		else if (ptype == PACKET_SETSEED)
+		{
+			sf::Uint32 x;
+			packet >> x;
+			srand(x);
 		}
 	}
 }

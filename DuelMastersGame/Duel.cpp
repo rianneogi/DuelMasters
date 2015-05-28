@@ -443,7 +443,7 @@ int Duel::handleInterfaceInput(Message& msg)
 	else if (type == "manatap")
 	{
 		int card = msg.getInt("card");
-		if (CardList.at(card)->isTapped == false)
+		if (CardList.at(card)->isTapped == false && castingcard != -1)
 		{
 			if (castingcost == 1) //last card to be tapped
 			{

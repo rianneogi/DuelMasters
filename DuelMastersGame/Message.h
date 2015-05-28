@@ -2,6 +2,8 @@
 
 #include "FileFunctions.h"
 
+enum PacketType { PACKET_MSG, PACKET_SETDECK, PACKET_SETSEED };
+
 class Message
 {
 public:
