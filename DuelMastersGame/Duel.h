@@ -91,6 +91,8 @@ public:
 	void resetChoice();
 	void clearCards();
 
+	void setMyPlayer(int p);
+
 	bool isThereUntappedManaOfCiv(int player, int civ);
 
 	Zone* getZone(int player, int zone);

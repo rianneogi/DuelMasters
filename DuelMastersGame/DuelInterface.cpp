@@ -5,7 +5,7 @@ DuelInterface::DuelInterface()
 	duelstate = DUELSTATE_MENU;
 	dueltype = DUELTYPE_SINGLE;
 
-	myPlayer = 0;
+	setMyPlayer(0);
 
 	endturnbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White, ZONEBORDERSIZE,
 		sf::Color(127, 127, 127), sf::Color::Black, "Multiplayer", 16);
@@ -232,14 +232,19 @@ void DuelInterface::render(sf::RenderWindow& window)
 	}
 	else if (duelstate == DUELSTATE_MULTI)
 	{
-		decklist.render(window);
-		infotext.setString("Choose deck:");
-		window.draw(infotext);
-
-		cancelbutton.setString("Join Game");
-		cancelbutton.render(window);
-		endturnbutton.setString("Host Game");
-		endturnbutton.render(window);
+		if (dueltype == DUELTYPE_MULTI)
+		{
+			decklist.render(window);
+			infotext.setString("Choose deck:");
+			window.draw(infotext);
+		}
+		else
+		{
+			cancelbutton.setString("Join Game");
+			cancelbutton.render(window);
+			endturnbutton.setString("Host Game");
+			endturnbutton.render(window);
+		}
 	}
 	else if (duelstate == DUELSTATE_MENU)
 	{
@@ -265,7 +270,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			if (duelstate == DUELSTATE_DUEL)
 			{
 				if (endturnbutton.collision(MouseX, MouseY) && duel.attackphase == PHASE_NONE && !(duel.isChoiceActive)
-					&& duel.castingcard == -1) //end turn
+					&& duel.castingcard == -1
+					&& duel.turn == myPlayer) //end turn
 				{
 					Message m("endturn");
 					m.addValue("player", duel.turn);
@@ -276,11 +282,15 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						Socket.send(createPacketFromMessage(m));
 					}
+					else if (dueltype == DUELTYPE_SINGLE)
+					{
+						setMyPlayer(getOpponent(myPlayer));
+					}
 				}
 
 				if (duel.isChoiceActive)
 				{
-					if (cancelbutton.collision(MouseX, MouseY)) //button1 press
+					if (cancelbutton.collision(MouseX, MouseY) && myPlayer == duel.choicePlayer) //button1 press
 					{
 						//choice.callskip(duel.choiceCard);
 						if (dueltype == DUELTYPE_MULTI)
@@ -297,7 +307,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							return RETURN_BUTTON1;
 						}
 					}
-					if (endturnbutton.collision(MouseX, MouseY)) //button2 press
+					if (endturnbutton.collision(MouseX, MouseY) && myPlayer == duel.choicePlayer) //button2 press
 					{
 						//choice.callskip(duel.choiceCard);
 						/*Message msg("choicebutton2");
@@ -320,7 +330,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						if ((*i)->Zone != ZONE_DECK && (*i)->Zone != ZONE_GRAVEYARD)
 						{
-							if (checkCollision((*i)->getBounds(), MouseX, MouseY))
+							if (checkCollision((*i)->getBounds(), MouseX, MouseY) && myPlayer == duel.choicePlayer)
 							{
 								if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
 								{
@@ -352,7 +362,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						cout << "cs returned " << cs << endl;
 						if (cs != -1)
 						{
-							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1)
+							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1 
+								&& myPlayer == duel.choicePlayer)
 							{
 								cout << "true " << endl;
 								/*Message msg("choiceselect");
@@ -406,7 +417,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_TARGET)
+				else if (duel.attackphase == PHASE_TARGET && duel.CardList.at(duel.attacker)->Owner == myPlayer)
 				{
 					for (vector<Card*>::iterator i = duel.shields[getOpponent(duel.turn)].cards.begin(); i != duel.shields[getOpponent(duel.turn)].cards.end(); i++)
 					{
@@ -423,7 +434,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_BLOCK) //block
+				else if (duel.attackphase == PHASE_BLOCK && duel.CardList.at(duel.defender)->Owner == myPlayer) //block
 				{
 					for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
 					{
@@ -447,7 +458,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							undoSelection();
 						}
 					}
-					if (cancelbutton.collision(MouseX, MouseY)) //skip block
+					if (cancelbutton.collision(MouseX, MouseY) && duel.CardList.at(duel.defender)->Owner == myPlayer) //skip block
 					{
 						Message m("blockskip");
 						duel.handleInterfaceInput(m);
@@ -459,7 +470,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						undoSelection();
 					}
 				}
-				else if (duel.castingcard != -1)
+				else if (duel.castingcard != -1 && duel.turn == myPlayer)
 				{
 					for (vector<Card*>::iterator i = duel.manazones[duel.turn].cards.begin(); i != duel.manazones[duel.turn].cards.end(); i++)
 					{
@@ -480,7 +491,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					for (vector<Card*>::iterator j = duel.hands[duel.turn].cards.begin(); j != duel.hands[duel.turn].cards.end(); j++)
 					{
 						if (checkCollision((*j)->getBounds(), MouseX, MouseY)
-							&& (duel.getCardCost((*j)->UniqueId) <= duel.manazones[duel.turn].getUntappedMana() || duel.manaUsed == 0))
+							&& (duel.getCardCost((*j)->UniqueId) <= duel.manazones[duel.turn].getUntappedMana() || duel.manaUsed == 0)
+							&& duel.turn == myPlayer)
 						{
 							selectedcard = (*j)->UniqueId;
 							selectedcardzone = ZONE_HAND;
@@ -497,7 +509,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					for (vector<Card*>::iterator j = duel.battlezones[duel.turn].cards.begin(); j != duel.battlezones[duel.turn].cards.end(); j++)
 					{
-						if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->isTapped == false && (*j)->summoningSickness == 0)
+						if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->isTapped == false && (*j)->summoningSickness == 0
+							&& duel.turn == myPlayer)
 						{
 							selectedcard = (*j)->UniqueId;
 							selectedcardzone = ZONE_BATTLE;
@@ -516,7 +529,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				}
 				else if (selectedcardzone == ZONE_HAND) //play a card
 				{
-					if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY)) //cast a card
+					if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY) && duel.turn == myPlayer) //cast a card
 					{
 						Message msg("cardplay");
 						msg.addValue("card", selectedcard);
@@ -528,7 +541,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 
 						undoSelection();
 					}
-					if (checkCollision(duel.manazones[duel.turn].getBounds(), MouseX, MouseY) && duel.manaUsed == 0) //put mana
+					if (checkCollision(duel.manazones[duel.turn].getBounds(), MouseX, MouseY) && duel.manaUsed == 0
+						&& duel.turn == myPlayer) //put mana
 					{
 						Message msg("cardmana");
 						msg.addValue("card", selectedcard);
@@ -550,7 +564,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					if (checkCollision(duel.shields[getOpponent(duel.turn)].getBounds(), MouseX, MouseY) //attack player
 						&& duel.getCreatureCanAttackPlayers(selectedcard) == 1
-						&& duel.CardList.at(selectedcard)->isTapped == false)
+						&& duel.CardList.at(selectedcard)->isTapped == false
+						&& duel.turn == myPlayer)
 					{
 						/*Message msg2("cardtap");
 						msg2.addValue("card", selectedcard);
@@ -579,7 +594,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						if (checkCollision((*i)->getBounds(), MouseX, MouseY) //attack creature
 							&& ((*i)->isTapped == true || duel.getCreatureCanAttackCreature(selectedcard, (*i)->UniqueId) == CANATTACK_UNTAPPED)
 							&& duel.getCreatureCanAttackCreature(selectedcard, (*i)->UniqueId) <= CANATTACK_UNTAPPED
-							&& duel.CardList.at(selectedcard)->isTapped == false)
+							&& duel.CardList.at(selectedcard)->isTapped == false
+							&& duel.turn == myPlayer)
 						{
 							/*Message msg2("cardtap");
 							msg2.addValue("card", selectedcard);
@@ -647,68 +663,77 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					deckschosen++;
 					if (deckschosen >= 2)
 					{
+						dueltype = DUELTYPE_SINGLE;
 						duelstate = DUELSTATE_DUEL;
+						myPlayer = 0;
 						duel.startDuel();
 					}
 				}
 			}
 			else if (duelstate == DUELSTATE_MULTI)
 			{
-				if (cancelbutton.collision(MouseX, MouseY)) //join game
+				if (dueltype == DUELTYPE_MULTI)
 				{
-					sf::Socket::Status status = Socket.connect("192.168.1.100", 53000);
-					Socket.setBlocking(false);
-					dueltype = DUELTYPE_MULTI;
-					cout << "game connected" << endl;
-					if (deckschosen >= 2)
+					int deck = decklist.getItemAtPos(MouseX, MouseY);
+					if (deck != -1)
 					{
-						duelstate = DUELSTATE_DUEL;
-						duel.startDuel();
+						duel.loadDeck("Decks\\My Decks\\" + decklist.items.at(deck) + DECKEXTENSION, deckschosen);
+						myPlayer = deckschosen;
+
+						sf::Packet p;
+						sf::Uint32 ptype = PACKET_SETDECK;
+						sf::Uint32 size = duel.decks[deckschosen].cards.size();
+						p << ptype << size;
+						for (vector<Card*>::iterator i = duel.decks[deckschosen].cards.begin(); i != duel.decks[deckschosen].cards.end(); i++)
+						{
+							p << (*i)->CardId;
+						}
+						Socket.send(p);
+						cout << "sent setdeck packet" << endl;
+
+						deckschosen++;
+
+						if (deckschosen >= 2 && dueltype == DUELTYPE_MULTI)
+						{
+							duelstate = DUELSTATE_DUEL;
+							duel.startDuel();
+						}
 					}
 				}
-				if (endturnbutton.collision(MouseX, MouseY))  //host game
+				else
 				{
-					sf::TcpListener listener;
-					listener.listen(53000);
-					listener.accept(Socket);
-					Socket.setBlocking(false);
-					dueltype = DUELTYPE_MULTI;
-					cout << "game connected" << endl;
-
-					int seed = time(0);
-					srand(seed);
-					sf::Packet packet;
-					packet << PACKET_SETSEED << seed;
-					Socket.send(packet);
-
-					if (deckschosen >= 2)
+					if (cancelbutton.collision(MouseX, MouseY)) //join game
 					{
-						duelstate = DUELSTATE_DUEL;
-						duel.startDuel();
+						sf::Socket::Status status = Socket.connect("192.168.1.100", 53000);
+						Socket.setBlocking(false);
+						dueltype = DUELTYPE_MULTI;
+						cout << "game connected" << endl;
+						if (deckschosen >= 2)
+						{
+							duelstate = DUELSTATE_DUEL;
+							duel.startDuel();
+						}
 					}
-				}
-				int deck = decklist.getItemAtPos(MouseX, MouseY);
-				if (deck != -1)
-				{
-					duel.loadDeck("Decks\\My Decks\\" + decklist.items.at(deck) + DECKEXTENSION, deckschosen);
-
-					sf::Packet p;
-					sf::Uint32 ptype = PACKET_SETDECK;
-					sf::Uint32 size = duel.decks[deckschosen].cards.size();
-					p << ptype << size;
-					for (vector<Card*>::iterator i = duel.decks[deckschosen].cards.begin(); i != duel.decks[deckschosen].cards.end(); i++)
+					if (endturnbutton.collision(MouseX, MouseY))  //host game
 					{
-						p << (*i)->CardId;
-					}
-					Socket.send(p);
-					cout << "sent setdeck packet" << endl;
+						sf::TcpListener listener;
+						listener.listen(53000);
+						listener.accept(Socket);
+						Socket.setBlocking(false);
+						dueltype = DUELTYPE_MULTI;
+						cout << "game connected" << endl;
 
-					deckschosen++;
+						int seed = time(0);
+						srand(seed);
+						sf::Packet packet;
+						packet << PACKET_SETSEED << seed;
+						Socket.send(packet);
 
-					if (deckschosen >= 2 && dueltype == DUELTYPE_MULTI)
-					{
-						duelstate = DUELSTATE_DUEL;
-						duel.startDuel();
+						if (deckschosen >= 2)
+						{
+							duelstate = DUELSTATE_DUEL;
+							duel.startDuel();
+						}
 					}
 				}
 			}
@@ -832,3 +857,13 @@ void DuelInterface::setDecklist()
 	}
 	deckfile.close();
 }
+
+void DuelInterface::setMyPlayer(int p)
+{
+	myPlayer = p;
+	duel.hands[0].myPlayer = p;
+	duel.hands[1].myPlayer = p;
+	duel.hands[0].flipAllCards();
+	duel.hands[1].flipAllCards();
+}
+

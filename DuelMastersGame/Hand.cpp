@@ -1,8 +1,13 @@
 #include "Hand.h"
 
-Hand::Hand()
+Hand::Hand() : myPlayer(0)
 {
 }
+
+Hand::Hand(int p) : myPlayer(p)
+{
+}
+
 
 Hand::~Hand()
 {
@@ -27,7 +32,14 @@ void Hand::handleEvent(sf::Event event)
 void Hand::addCard(Card* c)
 {
 	c->move(x + CARDZONEOFFSET + CARDORIGINOFFSET + cards.size() * CARDSEPERATION, y + CARDZONEOFFSET + CARDORIGINOFFSET);
-	c->unflip();
+	if (c->Owner == myPlayer)
+	{
+		c->unflip();
+	}
+	else
+	{
+		c->flip();
+	}
 	c->untap();
 	cards.push_back(c);
 }
@@ -47,5 +59,20 @@ void Hand::removeCard(Card* c)
 	for (int i = x; i < cards.size(); i++)
 	{
 		cards.at(i)->setPosition(cards.at(i)->x - CARDSEPERATION, cards.at(i)->y);
+	}
+}
+
+void Hand::flipAllCards()
+{
+	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+	{
+		if ((*i)->isFlipped == true)
+		{
+			(*i)->unflip();
+		}
+		else
+		{
+			(*i)->flip();
+		}
 	}
 }

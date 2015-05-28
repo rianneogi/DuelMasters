@@ -53,6 +53,7 @@ public:
 	void setDecklist();
 
 	void undoSelection();
+	void setMyPlayer(int p);
 };
 
 int mainLoop(sf::RenderWindow& window, int callback);
