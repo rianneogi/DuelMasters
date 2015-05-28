@@ -2,6 +2,7 @@
 
 int mainLoop(sf::RenderWindow& window, int callback)
 {
+	sf::Packet packet;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -26,6 +27,8 @@ int mainLoop(sf::RenderWindow& window, int callback)
 			}
 		}
 
+		Socket.receive(packet);
+
 		window.clear();
 
 		currentWindow->render(window);
@@ -37,6 +40,7 @@ int mainLoop(sf::RenderWindow& window, int callback)
 DuelInterface::DuelInterface()
 {
 	duelstate = DUELSTATE_MENU;
+	dueltype = DUELTYPE_SINGLE;
 
 	endturnbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White, ZONEBORDERSIZE,
 		sf::Color(127, 127, 127), sf::Color::Black, "Multiplayer", 16);
@@ -261,6 +265,17 @@ void DuelInterface::render(sf::RenderWindow& window)
 			window.draw(infotext);
 		}
 	}
+	else if (duelstate == DUELSTATE_MULTI)
+	{
+		decklist.render(window);
+		infotext.setString("Choose deck:");
+		window.draw(infotext);
+
+		cancelbutton.setString("Join Game");
+		cancelbutton.render(window);
+		endturnbutton.setString("Host Game");
+		endturnbutton.render(window);
+	}
 	else if (duelstate == DUELSTATE_MENU)
 	{
 		cancelbutton.setString("Single Player");
@@ -291,6 +306,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					m.addValue("player", duel.turn);
 					duel.handleInterfaceInput(m);
 					undoSelection();
+
+					if (dueltype == DUELTYPE_MULTI)
+					{
+						Socket.send(createPacketFromMessage(m));
+					}
 				}
 
 				if (duel.isChoiceActive)
@@ -373,6 +393,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 									Message msg("triggeruse");
 									msg.addValue("trigger", (*i)->UniqueId);
 									duel.handleInterfaceInput(msg);
+									if (dueltype == DUELTYPE_MULTI)
+									{
+										Socket.send(createPacketFromMessage(msg));
+									}
 								}
 							}
 						}
@@ -381,6 +405,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						Message m("triggerskip");
 						duel.handleInterfaceInput(m);
+						if (dueltype == DUELTYPE_MULTI)
+						{
+							Socket.send(createPacketFromMessage(m));
+						}
 					}
 				}
 				else if (duel.attackphase == PHASE_TARGET)
@@ -393,6 +421,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							m.addValue("attacker", duel.attacker);
 							m.addValue("shield", (*i)->UniqueId);
 							duel.handleInterfaceInput(m);
+							if (dueltype == DUELTYPE_MULTI)
+							{
+								Socket.send(createPacketFromMessage(m));
+							}
 						}
 					}
 				}
@@ -412,6 +444,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							msg.addValue("attacker", duel.attacker);
 							msg.addValue("blocker", (*i)->UniqueId);
 							duel.handleInterfaceInput(msg);
+							if (dueltype == DUELTYPE_MULTI)
+							{
+								Socket.send(createPacketFromMessage(msg));
+							}
 
 							undoSelection();
 						}
@@ -420,6 +456,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						Message m("blockskip");
 						duel.handleInterfaceInput(m);
+						if (dueltype == DUELTYPE_MULTI)
+						{
+							Socket.send(createPacketFromMessage(m));
+						}
 
 						undoSelection();
 					}
@@ -433,6 +473,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							Message m("manatap");
 							m.addValue("card", (*i)->UniqueId);
 							duel.handleInterfaceInput(m);
+							if (dueltype == DUELTYPE_MULTI)
+							{
+								Socket.send(createPacketFromMessage(m));
+							}
 						}
 					}
 				}
@@ -482,6 +526,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						Message msg("cardplay");
 						msg.addValue("card", selectedcard);
 						duel.handleInterfaceInput(msg);
+						if (dueltype == DUELTYPE_MULTI)
+						{
+							Socket.send(createPacketFromMessage(msg));
+						}
 
 						undoSelection();
 					}
@@ -490,6 +538,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						Message msg("cardmana");
 						msg.addValue("card", selectedcard);
 						duel.handleInterfaceInput(msg);
+						if (dueltype == DUELTYPE_MULTI)
+						{
+							Socket.send(createPacketFromMessage(msg));
+						}
 
 						undoSelection();
 						//manaUsed = 1;
@@ -520,6 +572,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						arrows.at(mousearrow).setTo((bounds.left * 2 + bounds.width) / 2, (bounds.top * 2 + bounds.height) / 2);
 						mousearrow = -1;
 
+						if (dueltype == DUELTYPE_MULTI)
+						{
+							Socket.send(createPacketFromMessage(msg));
+						}
+
 						//undoSelection();
 					}
 					for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
@@ -541,6 +598,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 
 							arrows.at(mousearrow).setTo((*i)->x, (*i)->y);
 							mousearrow = -1;
+
+							if (dueltype == DUELTYPE_MULTI)
+							{
+								Socket.send(createPacketFromMessage(msg));
+							}
 
 							//undoSelection();
 						}
@@ -595,11 +657,56 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 				}
 			}
+			else if (duelstate == DUELSTATE_MULTI)
+			{
+				if (cancelbutton.collision(MouseX, MouseY)) //join game
+				{
+					sf::Socket::Status status = Socket.connect("", 53000);
+					Socket.setBlocking(false);
+					dueltype = DUELTYPE_MULTI;
+					if (deckschosen >= 1)
+					{
+						duelstate = DUELSTATE_DUEL;
+						duel.startDuel();
+					}
+				}
+				if (quitbutton.collision(MouseX, MouseY))  //host game
+				{
+					sf::TcpListener listener;
+					listener.listen(53000);
+					listener.accept(Socket);
+					Socket.setBlocking(false);
+					dueltype = DUELTYPE_MULTI;
+					if (deckschosen >= 1)
+					{
+						duelstate = DUELSTATE_DUEL;
+						duel.startDuel();
+					}
+				}
+				int deck = decklist.getItemAtPos(MouseX, MouseY);
+				if (deck != -1)
+				{
+					duel.loadDeck("Decks\\My Decks\\" + decklist.items.at(deck) + DECKEXTENSION, deckschosen);
+					deckschosen++;
+					if (deckschosen >= 1 && dueltype == DUELTYPE_MULTI)
+					{
+						duelstate = DUELSTATE_DUEL;
+						duel.startDuel();
+					}
+				}
+			}
 			else if (duelstate == DUELSTATE_MENU)
 			{
-				if (cancelbutton.collision(MouseX, MouseY))
+				if (cancelbutton.collision(MouseX, MouseY)) //singleplayer
 				{
 					duelstate = DUELSTATE_SINGLE;
+					deckschosen = 0;
+					setDecklist();
+					duel.clearCards();
+				}
+				if (quitbutton.collision(MouseX, MouseY))  //multiplayer
+				{
+					duelstate = DUELSTATE_MULTI;
 					deckschosen = 0;
 					setDecklist();
 					duel.clearCards();
@@ -623,6 +730,16 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	}
 
 	return RETURN_NOTHING;
+}
+
+void DuelInterface::recievePacket(sf::Packet& packet)
+{
+	if (dueltype == DUELTYPE_MULTI)
+	{
+		Message msg;
+		packet >> msg;
+		duel.handleInterfaceInput(msg);
+	}
 }
 
 void DuelInterface::update(unsigned int deltatime)

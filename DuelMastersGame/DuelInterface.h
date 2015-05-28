@@ -3,12 +3,16 @@
 #include "Duel.h"
 
 enum DuelState { DUELSTATE_DUEL, DUELSTATE_MENU, DUELSTATE_SINGLE, DUELSTATE_MULTI };
+enum DuelType { DUELTYPE_SINGLE, DUELTYPE_MULTI, DUELTYPE_AI };
+
+extern sf::TcpSocket Socket;
 
 class DuelInterface : public GameWindow
 {
 public:
 	Duel duel;
 
+	int dueltype;
 	int duelstate;
 
 	int MouseX;
@@ -42,6 +46,7 @@ public:
 	void update(unsigned int deltatime);
 	void render(sf::RenderWindow& window);
 	int handleEvent(sf::Event event, int callback);
+	void recievePacket(sf::Packet& packet);
 
 	void setDecklist();
 

@@ -9,6 +9,8 @@ SoundManager* SoundMngr;
 
 sf::RenderWindow* Window;
 
+sf::TcpSocket Socket;
+
 int main()
 {
 	srand(time(0));

@@ -50,3 +50,40 @@ int Message::getInt(std::string key)
 		std::cout << "ERROR unable to access value " << key << " in message " << getType() << "\n";
 	return 0;
 }
+
+void Message::clear()
+{
+	map.clear();
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const Message& m)
+{
+	sf::Uint32 size = m.map.size();
+	packet << size;
+	for (map<string, string>::const_iterator i = m.map.begin(); i != m.map.end(); i++)
+	{
+		packet << i->first << i->second;
+	}
+	return packet;
+}
+
+sf::Packet& operator >>(sf::Packet& packet, Message& m)
+{
+	m.clear();
+	sf::Uint32 size;
+	packet >> size;
+	for (int i = 0; i < size; i++)
+	{
+		string a, b;
+		packet >> a >> b;
+		m.addValue(a, b);
+	}
+	return packet;
+}
+
+sf::Packet createPacketFromMessage(Message& m)
+{
+	sf::Packet p;
+	p << m;
+	return p;
+}

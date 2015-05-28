@@ -16,5 +16,10 @@ public:
 	std::string getType();
 	std::string getString(std::string key);
 	int getInt(std::string key);
+	void clear();
 };
+
+sf::Packet& operator <<(sf::Packet& packet, const Message& m);
+sf::Packet& operator >>(sf::Packet& packet, Message& m);
+sf::Packet createPacketFromMessage(Message& m);
 
