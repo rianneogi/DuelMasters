@@ -1635,7 +1635,7 @@ Cards["Pangaea's Song"] = {
     OnCast = function(id)
         createChoice("Choose a creature in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
 	    if(ch>=0) then
-            moveCard(sid,ZONE_MANA)
+            moveCard(ch,ZONE_MANA)
         end
         Actions.EndSpell(id)
     end

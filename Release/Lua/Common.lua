@@ -194,7 +194,7 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
 end
 
 Abils.onAttack = function(id,func)
-    if(getMessageType()=="") then
+    if(getMessageType()=="post creatureattack") then
         if(getMessageInt("attacker")==id) then
             func(id)
         end

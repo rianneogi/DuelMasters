@@ -17,7 +17,7 @@ Cards["Amber Piercer"] = {
 
 	HandleMessage = function(id)
         local func = function(att,def)
-            local ch = createChoice("Amber Piercer: Select creature in graveyard",1,att,getCardOwner(id),Checks.InYourGraveyard)
+            local ch = createChoice("Select creature in graveyard",1,att,getCardOwner(id),Checks.InYourGraveyard)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
@@ -42,7 +42,7 @@ Cards["Aqua Bouncer"] = {
 
 	HandleMessage = function(id)
         local func = function(id)
-            local ch = createChoice("Aqua Bouncer: Select creature in battle zone",1,att,getCardOwner(id),Checks.InBattle)
+            local ch = createChoice("Select creature in battle zone",1,att,getCardOwner(id),Checks.InBattle)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
@@ -255,7 +255,7 @@ Cards["Critical Blade"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        local ch = createChoice("Critical Blade: Choose opponent's blocker",0,id,getCardOwner(id),Checks.OppBlocker)
+        local ch = createChoice("Choose opponent's blocker",0,id,getCardOwner(id),Checks.OppBlocker)
         if(ch>=0) then
             destroyCard(ch)
         end
@@ -474,7 +474,7 @@ Cards["Fonch, the Oracle"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Fonch, the Oracle: Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
+            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
             if(ch>=0) then
                 tapCard(ch)
             end
@@ -499,10 +499,10 @@ Cards["Fortress Shell"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Fortress Shell: Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
+            local ch = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
             if(ch>=0) then
                 destroyCard(ch)
-                local ch2 = createChoice("Fortress Shell: Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
+                local ch2 = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
                 if(ch2>=0) then
                     destroyCard(ch2)
                 end
@@ -546,7 +546,13 @@ Cards["General Dark Fiend"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShield)
+            if(ch>=0) then
+                destroyCard(ch)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -644,7 +650,14 @@ Cards["King Nautilus"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        local owner = getCardOwner(id)
+        local size = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(size-1) do
+            local c = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardRace(c)=="Liquid People") then
+                Abils.cantBeBlocked(c)
+            end
+        end
 	end
 }
 
@@ -682,7 +695,17 @@ Cards["Laguna, Lightning Enforcer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local owner = getCardOwner(id)
+            openDeck(owner)
+	        local ch = createChoice("Choose a spell in your deck",0,id,owner,Checks.SpellInYourDeck)
+            closeDeck(owner)
+	        if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+                shuffleDeck(getCardOwner(ch))
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -736,7 +759,7 @@ Cards["Logic Cube"] = {
 	OnCast = function(id)
         local owner = getCardOwner(id)
         openDeck(owner)
-	    local ch = createChoice("Logic Cube: Choose a creature in your deck",0,id,owner,Checks.SpellInYourDeck)
+	    local ch = createChoice("Choose a spell in your deck",0,id,owner,Checks.SpellInYourDeck)
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
@@ -756,7 +779,12 @@ Cards["Lost Soul"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local owner = getOpponent(getCardOwner(id))
+        local size = getZoneSize(owner,ZONE_HAND)
+        for i=0,(size-1) do
+            destroyCard(getCardAt(owner,ZONE_HAND,i))
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -789,7 +817,7 @@ Cards["Mana Crisis"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        local ch = createChoice("Mana Crisis: Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
+        local ch = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
         if(ch>=0) then
             destroyCard(ch)
         end
@@ -831,7 +859,13 @@ Cards["Metalwing Skyterror"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose an opponent's blocker",1,id,getCardOwner(id),Checks.BlockerInOppBattle)
+            if(ch>=0) then
+                destroyCard(ch)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -1044,7 +1078,13 @@ Cards["Silver Axe"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local turn = getTurn()
+			local size = getZoneSize(turn,ZONE_BATTLE)
+			local c = getCardAt(turn,ZONE_DECK,size-1)
+			moveCard(c,ZONE_MANA)
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
