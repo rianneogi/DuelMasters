@@ -201,7 +201,6 @@ static int loadcard(lua_State* L)
 	std::cout << "Loading Card : " << name << "\n";
 	name = "Graphics\\" + set + "\\" + name + ".png";
 	CardTextures.push_back(sf::Texture());
-
 	if (!CardTextures.at(CardTextures.size() - 1).loadFromFile(name))
 	{
 		cout << "ERROR cant load texture " << CardNames.at(CardNames.size() - 1) << endl;

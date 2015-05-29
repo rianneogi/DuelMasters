@@ -73,7 +73,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 		}
 		else if (duel.isChoiceActive)
 		{
-			infotext.setString(duel.choice.infotext);
+			infotext.setString(duel.CardList.at(duel.choiceCard)->Name + ": " + duel.choice.infotext);
 			window.draw(infotext);
 			if (duel.choice.buttoncount >= 1)
 			{
@@ -229,6 +229,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 			infotext.setString("Choose deck for player 2");
 			window.draw(infotext);
 		}
+		quitbutton.render(window);
 	}
 	else if (duelstate == DUELSTATE_MULTI)
 	{
@@ -245,6 +246,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 			endturnbutton.setString("Host Game");
 			endturnbutton.render(window);
 		}
+		quitbutton.render(window);
 	}
 	else if (duelstate == DUELSTATE_MENU)
 	{
@@ -252,6 +254,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 		cancelbutton.render(window);
 		endturnbutton.setString("Multiplayer");
 		endturnbutton.render(window);
+		quitbutton.render(window);
 	}
 }
 

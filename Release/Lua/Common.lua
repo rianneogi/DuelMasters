@@ -193,10 +193,51 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
     Abils.onSummon(id,summon)
 end
 
+Abils.onAttack = function(id,func)
+    if(getMessageType()=="") then
+        if(getMessageInt("attacker")==id) then
+            func(id)
+        end
+    end
+end
+
+Abils.destroyOppManaOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            local ch = createChoice("Select a card in opponent's mana",0,id,getCardOwner(id),Checks.InOppMana)
+            if(ch>=0) then
+                destroyCard(ch)
+            end
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
+Abils.discardOppCardOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            discardCardAtRandom(getOpponent(getCardOwner(id)))
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
+Abils.returnCreatureFromGraveyardOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            local ch = createChoice("Select a creature in your graveyard",0,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
 Abils.untapAtEOT = function(id,name)
     if(getMessageType()=="pre endturn") then
 		if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE and isCardTapped(id)==1) then
-			local ch = createChoiceNoCheck(name..": Untap this creature?",2,id,getCardOwner(id),Checks.False)
+			local ch = createChoiceNoCheck("Untap this creature?",2,id,getCardOwner(id),Checks.False)
 			if(ch==RETURN_BUTTON1) then
                 untapCard(id)
             end
@@ -357,4 +398,15 @@ end
 
 Actions.EndSpell = function(id)
     moveCard(id,ZONE_GRAVEYARD)
+end
+
+Actions.countCreaturesInBattle = function(player)
+    local size = getZoneSize(player,ZONE_BATTLE)
+    local count = 0
+    for i=0,(size-1) do
+        if(getCardType(getCardAt(player,ZONE_BATTLE,i))==TYPE_CREATURE) then
+            count = count+1
+        end
+    end
+    return count
 end

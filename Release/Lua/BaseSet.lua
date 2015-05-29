@@ -55,10 +55,10 @@ Cards["Aqua Sniper"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Aqua Sniper: Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
+            local ch = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
             if(ch>=0) then   
                 moveCard(ch,ZONE_HAND)
-                local ch2 = createChoice("Aqua Sniper: Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
+                local ch2 = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
                 if(ch2>=0) then
                     moveCard(ch2,ZONE_HAND)
                 end
@@ -398,7 +398,7 @@ Cards["Burning Power"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-		local c = createChoice("Burning Power: Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
+		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(c>=0) then
             createModifier(c,3,"Cards","Burning Power","Modifier")
         end
@@ -439,7 +439,7 @@ Cards["Chaos Strike"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-		local c = createChoice("Chaos Strike: Choose creature",0,id,getCardOwner(id),Checks.InOppBattle)
+		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InOppBattle)
 		if(c>=0) then
             createModifier(c,3,"Cards","Chaos Strike","Modifier")
         end
@@ -541,7 +541,7 @@ Cards["Crimson Hammer"] = {
 		        return 0
 	        end
         end
-        local ch = createChoice("Crimson Hammer: Choose an opponent's creature",0,id,getCardOwner(id),valid)
+        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
 	    if(ch>=0) then
             destroyCard(ch)
         end
@@ -560,7 +560,7 @@ Cards["Crystal Memory"] = {
     OnCast = function(id)
         local owner = getCardOwner(id)
         openDeck(owner)
-	    local ch = createChoice("Crystal Memory: Choose a card in your deck",0,id,getCardOwner(id),Checks.InYourDeck)
+	    local ch = createChoice("Choose a card in your deck",0,id,owner,Checks.InYourDeck)
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
@@ -617,7 +617,7 @@ Cards["Dark Reversal"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Dark Reversal: Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.InYourGraveyard)
+        local ch = createChoice("Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.InYourGraveyard)
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
@@ -652,7 +652,7 @@ Cards["Death Smoke"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-	    local ch = createChoice("Death Smoke: Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
+	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
 	    if(ch>=0) then
             destroyCard(ch)
         end
@@ -727,7 +727,7 @@ Cards["Dimension Gate"] = {
     OnCast = function(id)
         local owner = getCardOwner(id)
         openDeck(owner)
-	    local ch = createChoice("Dimension Gate: Choose a creature in your deck",0,id,getCardOwner(id),Checks.CreatureInYourDeck)
+	    local ch = createChoice("Choose a creature in your deck",0,id,owner,Checks.CreatureInYourDeck)
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
@@ -809,10 +809,10 @@ Cards["Explosive Fighter Ucarn"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Explosive Fighter Ucarn: Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+            local ch = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
             if(ch>=0) then   
                 destroyCard(ch)
-                local ch2 = createChoice("Explosive Fighter Ucarn: Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+                local ch2 = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch2>=0) then
                     destroyCard(ch2)
                 end
@@ -941,7 +941,7 @@ Cards["Frei, Vizier of Air"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.untapAtEOT(id,"Frei, Vizier of Air")
+        Abils.untapAtEOT(id)
 	end
 }
 
@@ -994,13 +994,13 @@ Cards["Gigaberos"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Gigaberos: Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
+            local ch = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
                 if(ch==id) then
                     destroyCard(id)
                 else
                     destroyCard(ch)
-                    local ch2 = createChoice("Gigaberos: Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
+                    local ch2 = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
                     if(ch2>=0) then
                         destroyCard(ch2)
                     end
@@ -1046,10 +1046,10 @@ Cards["Gigargon"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Gigargon: Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
+            local ch = createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
-                local ch2 = createChoice("Gigargon: Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
+                local ch2 = createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
                 if(ch2>=0) then
                     moveCard(ch2,ZONE_HAND)
                 end
@@ -1358,10 +1358,10 @@ Cards["Laser Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Laser Wing: Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
+        local ch = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
         if(ch>=0) then
             createModifier(ch,3,"Cards","Laser Wing","Modifier")
-            local ch2 = createChoice("Laser Wing: Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
+            local ch2 = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch2>=0) then
                  createModifier(ch2,3,"Cards","Laser Wing","Modifier")
             end
@@ -1402,7 +1402,7 @@ Cards["Magma Gazer"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-		local ch = createChoice("Magma Gazer: Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
+		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(ch>=0) then
             createModifier(ch,3,"Cards","Magma Gazer","Modifier")
         end
@@ -1480,7 +1480,7 @@ Cards["Meteosaur"] = {
 		            return 0
 	            end
             end
-            local ch = createChoice("Meteosaur: Choose an opponent's creature",1,id,getCardOwner(id),valid)
+            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),valid)
             if(ch>=0) then
                 destroyCard(ch)
             end
@@ -1505,7 +1505,7 @@ Cards["Miele, Vizier of Lightning"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Miele, Vizier of Lightning: Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
+            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
             if(ch>=0) then
                 tapCard(ch)
             end
@@ -1542,10 +1542,10 @@ Cards["Moonlight Flash"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Moonlight Flash: Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
+        local ch = createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
         if(ch>=0) then
             tapCard(ch)
-            local ch2 = createChoice("Moonlight Flash: Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
+            local ch2 = createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
             if(ch2>=0) then
                 tapCard(ch2)
             end
@@ -1563,7 +1563,7 @@ Cards["Natural Snare"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Natural Snare: Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
+        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
         if(ch>=0) then
             moveCard(ch,ZONE_MANA)
         end
@@ -1633,7 +1633,7 @@ Cards["Pangaea's Song"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        createChoice("Pangaea's Song: Choose a creature in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
+        createChoice("Choose a creature in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
 	    if(ch>=0) then
             moveCard(sid,ZONE_MANA)
         end
@@ -1695,7 +1695,7 @@ Cards["Poisonous Mushroom"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Poisonous Mushroom: Choose a card in your hand",1,id,getCardOwner(id),Checks.InYourHand)
+            local ch = createChoice("Choose a card in your hand",1,id,getCardOwner(id),Checks.InYourHand)
             if(ch>=0) then
                 moveCard(ch,ZONE_MANA)
             end
@@ -1722,7 +1722,7 @@ Cards["Rayla, Truth Enforcer"] = {
         summon = function(id)
             local owner = getCardOwner(id)
             openDeck(owner)
-            local ch = createChoice("Rayla, Truth Enforcer: Choose a spell in your deck",1,id,getCardOwner(id),Checks.SpellInYourDeck)
+            local ch = createChoice("Choose a spell in your deck",1,id,owner,Checks.SpellInYourDeck)
             closeDeck(owner)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
@@ -1823,10 +1823,10 @@ Cards["Rothus, the Traveler"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local ch = createChoice("Rothus, the Traveler: Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
+            local ch = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
                 destroyCard(ch)
-                local ch2 = createChoice("Rothus, the Traveler: Select creature to destroy",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
+                local ch2 = createChoice("Select creature to destroy",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
                 if(ch2>=0) then
                     destroyCard(ch2)
                 end
@@ -1850,7 +1850,7 @@ Cards["Ruby Grass"] = {
 	power = 3000,
 
     HandleMessage = function(id)
-        Abils.untapAtEOT(id,"Ruby Grass")
+        Abils.untapAtEOT(id)
         Abils.cantAttackPlayers(id)
 	end
 }
@@ -1996,7 +1996,7 @@ Cards["Solar Ray"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Solar Ray: Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
+        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
         if(ch>=0) then
             tapCard(ch)
         end
@@ -2013,7 +2013,7 @@ Cards["Sonic Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-		local ch = createChoice("Sonic Wing: Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
+		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(ch>=0) then
             createModifier(ch,3,"Cards","Sonic Wing","Modifier")
         end
@@ -2035,7 +2035,7 @@ Cards["Spiral Gate"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Spiral Gate: Choose a creature",0,id,getCardOwner(id),Checks.InBattle)
+        local ch = createChoice("Choose a creature",0,id,getCardOwner(id),Checks.InBattle)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
@@ -2098,7 +2098,7 @@ Cards["Stinger Worm"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Stinger Worm: Destroy a creature",0,id,getCardOwner(id),Checks.InYourBattle)
+            local ch = createChoice("Destroy a creature",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
                 destroyCard(ch)
             end
@@ -2142,7 +2142,7 @@ Cards["Storm Shell"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Storm Shell: Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
+            local ch = createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
             if(ch>=0) then
                 moveCard(ch,ZONE_MANA)
             end
@@ -2191,7 +2191,7 @@ Cards["Swamp Worm"] = {
 
 	HandleMessage = function(id)
 		summon = function(id)
-            local ch = createChoice("Swamp Worm: Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
+            local ch = createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
             if(ch>=0) then
                 destroyCard(ch)
             end
@@ -2228,10 +2228,10 @@ Cards["Teleportation"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Teleportation: Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
+        local ch = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
-            local ch2 = createChoice("Teleportation: Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
+            local ch2 = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
             if(ch2>=0) then
                 moveCard(ch2,ZONE_HAND)
             end
@@ -2249,7 +2249,7 @@ Cards["Terror Pit"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-	    local ch = createChoice("Terror Pit: Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
+	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
 	    if(ch>=0) then
             destroyCard(ch)
         end
@@ -2281,7 +2281,7 @@ Cards["Thorny Mandra"] = {
             end
 		end
         summon = function(id)
-            local ch = createChoice("Thorny Mandra: Select card in graveyard",1,id,getCardOwner(id),Checks.InYourGraveyard)
+            local ch = createChoice("Select card in graveyard",1,id,getCardOwner(id),Checks.InYourGraveyard)
             if(ch>=0) then
                 moveCard(ch,ZONE_MANA)
             end
@@ -2307,7 +2307,7 @@ Cards["Toel, Vizier of Hope"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="pre endturn") then
 		    if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE) then
-			    local ch = createChoiceNoCheck("Toel, Vizier of Hope: Untap creatures?",2,id,getCardOwner(id),Checks.False)
+			    local ch = createChoiceNoCheck("Untap creatures?",2,id,getCardOwner(id),Checks.False)
 			    if(ch==RETURN_BUTTON1) then
                     local owner = getCardOwner(cid)
 		            local size = getZoneSize(owner,ZONE_BATTLE)-1
@@ -2337,7 +2337,7 @@ Cards["Tornado Flame"] = {
 		        return 0
 	        end
         end
-        local ch = createChoice("Tornado Flame: Choose an opponent's creature",0,id,getCardOwner(id),valid)
+        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
 	    if(ch>=0) then
             destroyCard(ch)
         end
@@ -2442,7 +2442,7 @@ Cards["Unicorn Fish"] = {
 
 	HandleMessage = function(id)
         summon = function(id)
-            local ch = createChoice("Unicorn Fish: Choose a creature",1,id,getCardOwner(id),Checks.InBattle)
+            local ch = createChoice("Choose a creature",1,id,getCardOwner(id),Checks.InBattle)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
@@ -2466,7 +2466,7 @@ Cards["Urth, Purifying Elemental"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.untapAtEOT(id,"Urth, Purifying Elemental")
+        Abils.untapAtEOT(id)
 	end
 }
 
@@ -2518,7 +2518,7 @@ Cards["Virtual Tripwire"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Virtual Tripwire: Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
+        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
 	    if(ch>=0) then
             tapCard(ch)
         end

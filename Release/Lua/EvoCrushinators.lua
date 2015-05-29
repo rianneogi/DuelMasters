@@ -157,8 +157,26 @@ Cards["Bombersaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.destroyYourManaOnSummon(id,2)
-        Abils.destroyOppManaOnSummon(id,2)
+        if(getMessageType()=="post carddestroy") then
+            if(getMessageInt("card")==id) then
+                local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+                ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+                ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+                ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+            end
+        end
 	end
 }
 
@@ -368,8 +386,18 @@ Cards["Engineer Kipo"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        Abils.destroyYourManaOnSummon(id,1)
-        Abils.destroyOppManaOnSummon(id,1)
+        if(getMessageType()=="post carddestroy") then
+            if(getMessageInt("card")==id) then
+                local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+                ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
+                if(ch>=0) then
+                    destroyCard(ch)
+                end
+            end
+        end
     end
 }
 
@@ -594,7 +622,10 @@ Cards["Hypersquid Walter"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            drawCards(getCardOwner(id),1)
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -705,7 +736,7 @@ Cards["Logic Cube"] = {
 	OnCast = function(id)
         local owner = getCardOwner(id)
         openDeck(owner)
-	    local ch = createChoice("Logic Cube: Choose a creature in your deck",0,id,getCardOwner(id),Checks.SpellInYourDeck)
+	    local ch = createChoice("Logic Cube: Choose a creature in your deck",0,id,owner,Checks.SpellInYourDeck)
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
@@ -858,7 +889,10 @@ Cards["Plasma Chaser"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            drawCards(getCardOwner(id),Actions.countCreaturesInBattle(getOpponent(getCardOwner(id))))
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -891,7 +925,14 @@ Cards["Rainbow Stone"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local owner = getCardOwner(id)
+        openDeck(owner) 
+        local ch = createChoice("Choose a card in your deck",0,id,owner,Checks.InYourDeck)
+        closeDeck(owner)
+        if(ch>=0) then
+            moveCard(ch,ZONE_MANA)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -956,7 +997,17 @@ Cards["Rumbling Terahorn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        func = function(id)
+            local owner = getCardOwner(id)
+            openDeck(owner)
+	        local ch = createChoice("Choose a creature in your deck",0,id,owner,Checks.CreatureInYourDeck)
+            closeDeck(owner)
+	        if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+                shuffleDeck(getCardOwner(ch))
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -993,6 +1044,7 @@ Cards["Silver Axe"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        --todo
 	end
 }
 
