@@ -345,6 +345,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "getCardOwner", getCardOwner);
 	lua_register(L, "getCreaturePower", getCreaturePower);
 	lua_register(L, "getCreatureCanBlock", getCreatureCanBlock);
+	lua_register(L, "getCreatureIsBlocker", getCreatureIsBlocker);
 	lua_register(L, "isCardTapped", isCardTapped);
 	lua_register(L, "getAttacker", getAttacker);
 	lua_register(L, "getDefender", getDefender);

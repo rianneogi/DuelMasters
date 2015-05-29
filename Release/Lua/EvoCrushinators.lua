@@ -16,13 +16,7 @@ Cards["Amber Piercer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local func = function(att,def)
-            local ch = createChoice("Select creature in graveyard",1,att,getCardOwner(id),Checks.InYourGraveyard)
-            if(ch>=0) then
-                moveCard(ch,ZONE_HAND)
-            end
-        end
-		Abils.onAttack(id,func)
+        Abils.returnCreatureFromGraveyardOnAttack(id,1)
 	end
 }
 
@@ -189,9 +183,17 @@ Cards["Burst Shot"] = {
 
 	shieldtrigger = 1,
 
-	HandleMessage = function(id)
+	OnCast = function(id)
         local owner = getCardOwner(id)
         local size = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(size-1) do
+            local card = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCreaturePower(card)<=2000) then
+                destroyCard(card)
+            end
+        end
+        owner = getOpponent(owner)
+        size = getZoneSize(owner,ZONE_BATTLE)
         for i=0,(size-1) do
             local card = getCardAt(owner,ZONE_BATTLE,i)
             if(getCreaturePower(card)<=2000) then
@@ -255,7 +257,7 @@ Cards["Critical Blade"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        local ch = createChoice("Choose opponent's blocker",0,id,getCardOwner(id),Checks.OppBlocker)
+        local ch = createChoice("Choose opponent's blocker",0,id,getCardOwner(id),Checks.BlockerInOppBattle)
         if(ch>=0) then
             destroyCard(ch)
         end
@@ -527,7 +529,10 @@ Cards["Galsaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(Actions.countCreaturesInBattle(getCardOwner(id))<=1 and getCardZone(id)==ZONE_BATTLE) then
+            Abils.PowerAttacker(id,4000)
+            Abils.Breaker(id,2)
+        end
 	end
 }
 
@@ -609,7 +614,7 @@ Cards["Horrid Worm"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.discardOppCardOnAttack(id,1)
 	end
 }
 
@@ -650,12 +655,14 @@ Cards["King Nautilus"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        local owner = getCardOwner(id)
-        local size = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(size-1) do
-            local c = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardRace(c)=="Liquid People") then
-                Abils.cantBeBlocked(c)
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local size = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(size-1) do
+                local c = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardRace(c)=="Liquid People") then
+                    Abils.cantBeBlocked(c)
+                end
             end
         end
 	end
@@ -803,7 +810,7 @@ Cards["Magris, Vizier of Magnetism"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.drawOnSummon(id,1)
 	end
 }
 
