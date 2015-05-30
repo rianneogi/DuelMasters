@@ -9,8 +9,7 @@ class MainMenu : public GameWindow
 {
 public:
 	sf::Text title;
-	Button singleplayer;
-	Button multiplayer;
+	Button play;
 	Button deckbuilder;
 	Button exit;
 

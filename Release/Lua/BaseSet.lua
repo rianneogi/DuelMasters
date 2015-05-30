@@ -2364,8 +2364,8 @@ Cards["Tower Shell"] = {
 	end
 }
 
-Cards["Tri-Horn Shepherd"] = {
-	name = "Tri-Horn Shepherd",
+Cards["Tri-horn Shepherd"] = {
+	name = "Tri-horn Shepherd",
 	set = "Base Set",
 	type = TYPE_CREATURE,
 	civilization = CIV_NATURE,
