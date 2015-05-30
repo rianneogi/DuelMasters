@@ -170,6 +170,7 @@ int Duel::handleMessage(Message& msg)
 		attacker = msg.getInt("attacker");
 		defender = msg.getInt("defender");
 		defendertype = msg.getInt("defendertype");
+		cout << "attack " << attacker << " " << defender << " " << defendertype << endl;
 		//attackphase = PHASE_BLOCK;
 		Message m("changeattackphase");
 		m.addValue("phase", PHASE_BLOCK);
@@ -319,10 +320,10 @@ int Duel::handleInterfaceInput(Message& msg)
 			if (getCreatureCanAttackPlayers(attck) == 1
 				&& CardList.at(attck)->isTapped == false)
 			{
-				MsgMngr.sendMessage(msg);
 				Message msg2("cardtap");
 				msg2.addValue("card", msg.getInt("attacker"));
 				MsgMngr.sendMessage(msg2);
+				MsgMngr.sendMessage(msg);
 			}
 		}
 		else if (msg.getInt("defendertype") == DEFENDER_CREATURE)
@@ -332,10 +333,10 @@ int Duel::handleInterfaceInput(Message& msg)
 				//&& getCreatureCanBeAttacked(attck, defen)
 				&& CardList.at(attck)->isTapped == false)
 			{
-				MsgMngr.sendMessage(msg);
 				Message msg2("cardtap");
 				msg2.addValue("card", msg.getInt("attacker"));
 				MsgMngr.sendMessage(msg2);
+				MsgMngr.sendMessage(msg);
 			}
 		}
 	}

@@ -129,7 +129,8 @@ void DuelInterface::render(sf::RenderWindow& window)
 			vector<Card*>::iterator j;
 			for (j = duel.hands[i].cards.begin(); j != duel.hands[i].cards.end(); j++)
 			{
-				if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->UniqueId != selectedcard)
+				if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->UniqueId != selectedcard
+					&& (dueltype == DUELTYPE_SINGLE || myPlayer == i))
 				{
 					hovercard.setTexture(CardTextures.at((*j)->CardId), true);
 					window.draw(hovercard);
@@ -274,7 +275,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			{
 				if (endturnbutton.collision(MouseX, MouseY) && duel.attackphase == PHASE_NONE && !(duel.isChoiceActive)
 					&& duel.castingcard == -1
-					&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI)) //end turn
+					&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //end turn
 				{
 					Message m("endturn");
 					m.addValue("player", duel.turn);
@@ -293,7 +294,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 
 				if (duel.isChoiceActive)
 				{
-					if (cancelbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype != DUELTYPE_MULTI)) //button1 press
+					if (cancelbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE)) //button1 press
 					{
 						//choice.callskip(duel.choiceCard);
 						if (dueltype == DUELTYPE_MULTI)
@@ -310,7 +311,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							return RETURN_BUTTON1;
 						}
 					}
-					if (endturnbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype != DUELTYPE_MULTI)) //button2 press
+					if (endturnbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE)) //button2 press
 					{
 						//choice.callskip(duel.choiceCard);
 						/*Message msg("choicebutton2");
@@ -333,7 +334,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						if ((*i)->Zone != ZONE_DECK && (*i)->Zone != ZONE_GRAVEYARD)
 						{
-							if (checkCollision((*i)->getBounds(), MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype != DUELTYPE_MULTI))
+							if (checkCollision((*i)->getBounds(), MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
 								if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
 								{
@@ -366,7 +367,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						if (cs != -1)
 						{
 							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1 
-								&& (duel.choicePlayer == myPlayer || dueltype != DUELTYPE_MULTI))
+								&& (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
 								cout << "true " << endl;
 								/*Message msg("choiceselect");
@@ -389,12 +390,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_TRIGGER) //use shield triggers
+				else if (duel.attackphase == PHASE_TRIGGER && (dueltype == DUELTYPE_SINGLE || duel.defender == myPlayer)) //use shield triggers
 				{
 					for (vector<Card*>::iterator i = duel.hands[getOpponent(duel.turn)].cards.begin(); i != duel.hands[getOpponent(duel.turn)].cards.end(); i++)
 					{
-						if (checkCollision((*i)->getBounds(), MouseX, MouseY)
-							&& (duel.turn == getOpponent(myPlayer) || dueltype != DUELTYPE_MULTI))
+						if (checkCollision((*i)->getBounds(), MouseX, MouseY))
 						{
 							for (vector<int>::iterator j = duel.shieldtargets.begin(); j != duel.shieldtargets.end(); j++)
 							{
@@ -421,7 +421,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_TARGET && (duel.CardList.at(duel.attacker)->Owner == myPlayer || dueltype != DUELTYPE_MULTI))
+				else if (duel.attackphase == PHASE_TARGET && (duel.CardList.at(duel.attacker)->Owner == myPlayer || dueltype == DUELTYPE_SINGLE))
 				{
 					for (vector<Card*>::iterator i = duel.shields[getOpponent(duel.turn)].cards.begin(); i != duel.shields[getOpponent(duel.turn)].cards.end(); i++)
 					{
@@ -438,7 +438,9 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_BLOCK && (duel.CardList.at(duel.defender)->Owner == myPlayer || dueltype != DUELTYPE_MULTI)) //block
+				else if (duel.attackphase == PHASE_BLOCK && (dueltype == DUELTYPE_SINGLE
+					|| (duel.CardList.at(duel.defender)->Owner == myPlayer && duel.defendertype == DEFENDER_CREATURE)
+					|| (duel.defender == myPlayer && duel.defendertype == DEFENDER_PLAYER))) //block
 				{
 					for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
 					{
@@ -462,7 +464,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							undoSelection();
 						}
 					}
-					if (cancelbutton.collision(MouseX, MouseY) && (duel.CardList.at(duel.defender)->Owner == myPlayer || dueltype != DUELTYPE_MULTI)) //skip block
+					if (cancelbutton.collision(MouseX, MouseY)) //skip block
 					{
 						Message m("blockskip");
 						duel.handleInterfaceInput(m);
@@ -474,7 +476,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						undoSelection();
 					}
 				}
-				else if (duel.castingcard != -1 && (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
+				else if (duel.castingcard != -1 && (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE))
 				{
 					for (vector<Card*>::iterator i = duel.manazones[duel.turn].cards.begin(); i != duel.manazones[duel.turn].cards.end(); i++)
 					{
@@ -496,7 +498,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					{
 						if (checkCollision((*j)->getBounds(), MouseX, MouseY)
 							&& (duel.getCardCost((*j)->UniqueId) <= duel.manazones[duel.turn].getUntappedMana() || duel.manaUsed == 0)
-							&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
+							&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE))
 						{
 							selectedcard = (*j)->UniqueId;
 							selectedcardzone = ZONE_HAND;
@@ -534,7 +536,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				else if (selectedcardzone == ZONE_HAND) //play a card
 				{
 					if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY) 
-						&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI)) //cast a card
+						&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //cast a card
 					{
 						Message msg("cardplay");
 						msg.addValue("card", selectedcard);
@@ -600,7 +602,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							&& ((*i)->isTapped == true || duel.getCreatureCanAttackCreature(selectedcard, (*i)->UniqueId) == CANATTACK_UNTAPPED)
 							&& duel.getCreatureCanAttackCreature(selectedcard, (*i)->UniqueId) <= CANATTACK_UNTAPPED
 							&& duel.CardList.at(selectedcard)->isTapped == false
-							&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
+							&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE))
 						{
 							/*Message msg2("cardtap");
 							msg2.addValue("card", selectedcard);
