@@ -350,7 +350,8 @@ Cards["Dogarn, the Marauder"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        --todo
+        local c = Actions.countTappedCreaturesInBattle(getCardOwner(id))-1
+        Abils.PowerAttacker(id,c*2000)
     end
 }
 
@@ -369,7 +370,16 @@ Cards["Elf-X"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get cardcost") then
+            if(getCardZone(id)==ZONE_BATTLE) then
+                if(getCardType(getMessageInt("card"))==TYPE_CREATURE) then
+                    local cost = getMessageInt("cost")
+                    if(cost>1) then
+                        setMessageInt("cost",cost-1)
+                    end
+                end
+            end
+        end
     end
 }
 
@@ -418,7 +428,16 @@ Cards["Essence Elf"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get cardcost") then
+            if(getCardZone(id)==ZONE_BATTLE) then
+                if(getCardType(getMessageInt("card"))==TYPE_SPELL) then
+                    local cost = getMessageInt("cost")
+                    if(cost>1) then
+                        setMessageInt("cost",cost-1)
+                    end
+                end
+            end
+        end
     end
 }
 
@@ -750,7 +769,8 @@ Cards["Leaping Tornado Horn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local c = Actions.countCreaturesInBattle(getCardOwner(id))-1
+        Abils.PowerAttacker(id,c*1000)
 	end
 }
 

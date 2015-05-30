@@ -408,6 +408,38 @@ Actions.EndSpell = function(id)
     moveCard(id,ZONE_GRAVEYARD)
 end
 
+Actions.execute = function(id,check,func)
+    local x = getTotalCardCount()
+    for i=0,(x-1) do
+        if(check(id,i)==1) then
+            func(id,i)
+        end
+    end
+end
+
+Actions.count = function(id,check)
+    local x = getTotalCardCount()
+    local count = 0
+    for i=0,(x-1) do
+        if(check(id,i)==1) then
+            count=count+1
+        end
+    end
+    return count
+end
+
+Actions.countTappedCreaturesInBattle = function(player)
+    local size = getZoneSize(player,ZONE_BATTLE)
+    local count = 0
+    for i=0,(size-1) do
+        local sid = getCardAt(player,ZONE_BATTLE,i)
+        if(getCardType(sid)==TYPE_CREATURE and isCardTapped(sid)==1) then
+            count = count+1
+        end
+    end
+    return count
+end
+
 Actions.countCreaturesInBattle = function(player)
     local size = getZoneSize(player,ZONE_BATTLE)
     local count = 0

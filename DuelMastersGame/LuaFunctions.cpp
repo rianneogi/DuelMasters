@@ -214,6 +214,12 @@ static int getCardAt(lua_State* L)
 	return 1;
 }
 
+static int getTotalCardCount(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.nextUniqueId);
+	return 1;
+}
+
 static int getZoneSize(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
@@ -335,6 +341,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "closeDeck", closeDeck);
 
 	lua_register(L, "getCardAt", getCardAt);
+	lua_register(L, "getTotalCardCount", getTotalCardCount);
 	lua_register(L, "getZoneSize", getZoneSize);
 	lua_register(L, "getTurn", getTurn);
 	lua_register(L, "getCardName", getCardName);
