@@ -7,12 +7,14 @@ extern lua_State* LuaCards;
 class Modifier
 {
 public:
-	vector<string> func;
+	//vector<string> func;
+	int funcref;
 
 	Modifier();
+	Modifier(int ref);
 	~Modifier();
 
-	void pushfunc(string s);
+	void setfunc(int ref);
 	int handleMessage(int cid, int mid, Message& msg);
 };
 

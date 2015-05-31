@@ -171,8 +171,11 @@ void DuelInterface::render(sf::RenderWindow& window)
 			int cs = cardsearch.getCardAtPos(MouseX, MouseY);
 			if (cs != -1)
 			{
-				hovercard.setTexture(CardTextures.at(cardsearch.zone->cards.at(cs)->CardId), true);
-				window.draw(hovercard);
+				if (cs < cardsearch.zone->cards.size())
+				{
+					hovercard.setTexture(CardTextures.at(cardsearch.zone->cards.at(cs)->CardId), true);
+					window.draw(hovercard);
+				}
 			}
 		}
 

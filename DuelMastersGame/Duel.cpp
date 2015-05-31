@@ -248,10 +248,20 @@ int Duel::handleMessage(Message& msg)
 		//MsgMngr.sendMessage(m);
 		drawCards(plyr, 1);
 	}
+	else if (msg.getType() == "modifiercreate")
+	{
+		int uid = msg.getInt("card");
+		int ref = msg.getInt("funcref");
+		Modifier* modifier = new Modifier(ref);
+		CardList.at(uid)->modifiers.push_back(modifier);
+	}
 	else if (msg.getType() == "modifierdestroy")
 	{
 		int uid = msg.getInt("card");
-		CardList.at(uid)->modifiers.erase(CardList.at(uid)->modifiers.begin() + msg.getInt("modifier"));
+		int mid = msg.getInt("modifier");
+		Modifier* modifier = CardList.at(uid)->modifiers.at(mid);
+		CardList.at(uid)->modifiers.erase(CardList.at(uid)->modifiers.begin() + mid);
+		delete modifier;
 	}
 	else if (msg.getType() == "changeattackphase")
 	{
@@ -476,7 +486,7 @@ int Duel::handleInterfaceInput(Message& msg)
 			}
 		}
 	}
-	else if (type == "choiceselect")
+	/*else if (type == "choiceselect")
 	{
 		int sid = msg.getInt("selection");
 		if (choiceCanBeSelected(sid) == 1)
@@ -503,7 +513,7 @@ int Duel::handleInterfaceInput(Message& msg)
 			resetChoice();
 			choice.callbutton2(chcard);
 		}
-	}
+	}*/
 	return 0;
 }
 

@@ -15,7 +15,7 @@ public:
 	int x;
 	int y;
 
-	vector<Modifier> modifiers;
+	vector<Modifier*> modifiers;
 
 	string Name;
 	string Race;

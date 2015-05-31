@@ -244,6 +244,13 @@ Cards["Corile"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        local func = function(id)
+            local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
+            if(ch>=0) then
+                moveCard(ch,ZONE_DECK)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -372,7 +379,8 @@ Cards["Elf-X"] = {
     HandleMessage = function(id)
         if(getMessageType()=="get cardcost") then
             if(getCardZone(id)==ZONE_BATTLE) then
-                if(getCardType(getMessageInt("card"))==TYPE_CREATURE) then
+                local card = getMessageInt("card")
+                if(getCardType(card==TYPE_CREATURE) and getCardOwner(id)==getCardOwner(card)) then
                     local cost = getMessageInt("cost")
                     if(cost>1) then
                         setMessageInt("cost",cost-1)
@@ -430,7 +438,8 @@ Cards["Essence Elf"] = {
     HandleMessage = function(id)
         if(getMessageType()=="get cardcost") then
             if(getCardZone(id)==ZONE_BATTLE) then
-                if(getCardType(getMessageInt("card"))==TYPE_SPELL) then
+                local card = getMessageInt("card")
+                if(getCardType(card)==TYPE_SPELL and getCardOwner(id)==getCardOwner(card)) then
                     local cost = getMessageInt("cost")
                     if(cost>1) then
                         setMessageInt("cost",cost-1)
@@ -1182,7 +1191,11 @@ Cards["Thought Probe"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local count = Actions.countCreaturesInBattle(getOpponent(getCardOwner(id)))
+        if(count>=3) then
+            drawCards(getCardOwner(id),3)
+        end
+        Actions.EndSpell(id)
 	end
 }
 

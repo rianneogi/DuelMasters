@@ -111,9 +111,9 @@ int Card::handleMessage(Message& msg)
 	lua_pop(LuaCards, 1);
 
 	int cnt = 0;
-	for (vector<Modifier>::iterator i = modifiers.begin(); i != modifiers.end(); i++, cnt++)
+	for (vector<Modifier*>::iterator i = modifiers.begin(); i != modifiers.end(); i++, cnt++)
 	{
-		(*i).handleMessage(UniqueId, cnt, msg);
+		(*i)->handleMessage(UniqueId, cnt, msg);
 	}
 
 	return 0;

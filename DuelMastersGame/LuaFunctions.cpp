@@ -165,13 +165,14 @@ static int drawCards(lua_State* L)
 static int createModifier(lua_State* L)
 {
 	int uid = lua_tointeger(L, 1);
-	int count = lua_tointeger(L, 2);
-	Modifier m;
-	for (int i = 3; i <= count + 2; i++)
-	{
-		m.pushfunc(lua_tostring(L, i));
-	}
-	ActiveDuel->duel.CardList.at(uid)->modifiers.push_back(m);
+	lua_pushvalue(L, 2);
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+	/*Modifier m(ref);
+	ActiveDuel->duel.CardList.at(uid)->modifiers.push_back(m);*/
+	Message msg("modifiercreate");
+	msg.addValue("card", uid);
+	msg.addValue("funcref", ref);
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
 	return 0;
 }
 

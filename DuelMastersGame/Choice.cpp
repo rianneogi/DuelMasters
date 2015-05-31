@@ -6,14 +6,14 @@ Choice::Choice() : infotext(""), buttoncount(0)
 
 Choice::Choice(string info, int bcount, int vr) : infotext(info), buttoncount(bcount), validref(vr)
 {
-	cout << "refch: " << vr << endl;
+	cout << "ref choice: " << vr << endl;
 }
 
 Choice::~Choice()
 {
 }
 
-void Choice::pushselect(string s)
+/*void Choice::pushselect(string s)
 {
 	selectfunc.push_back(s);
 }
@@ -89,7 +89,7 @@ void Choice::callbutton2(int cid)
 			lua_pop(LuaCards, 1);
 		}
 	}
-}
+}*/
 
 int Choice::callvalid(int cid, int sid)
 {

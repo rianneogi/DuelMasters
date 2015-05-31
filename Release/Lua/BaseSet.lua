@@ -182,17 +182,16 @@ Cards["Aura Blast"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.PowerAttacker(cid,2000)
+		Abils.destroyModAtEOT(cid,mid)
+        end
 		local owner = getCardOwner(id)
 		local size = getZoneSize(owner,ZONE_BATTLE)-1
 		for i=0,size,1 do
-			createModifier(getCardAt(owner,ZONE_BATTLE,i),3,"Cards","Aura Blast","Modifier")
+			createModifier(getCardAt(owner,ZONE_BATTLE,i),mod)
 		end
         Actions.EndSpell(id)
-	end,
-
-	Modifier = function(cid,mid)
-        Abils.PowerAttacker(cid,2000)
-		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -398,16 +397,15 @@ Cards["Burning Power"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.PowerAttacker(cid,2000)
+		    Abils.destroyModAtEOT(cid,mid)
+        end
 		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(c>=0) then
-            createModifier(c,3,"Cards","Burning Power","Modifier")
+            createModifier(c,mod)
         end
         Actions.EndSpell(id)
-	end,
-
-	Modifier = function(cid,mid)
-		Abils.PowerAttacker(cid,2000)
-		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -439,20 +437,19 @@ Cards["Chaos Strike"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod = function(cid,mid)
+            if(getMessageType()=="get creaturecanattackcreature") then
+			    if(getMessageInt("defender")==cid) then
+				    setMessageInt("canattack",CANATTACK_UNTAPPED)
+			    end
+		    end
+		    Abils.destroyModAtEOT(cid,mid)
+        end
 		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InOppBattle)
 		if(c>=0) then
-            createModifier(c,3,"Cards","Chaos Strike","Modifier")
+            createModifier(c,mod)
         end
         Actions.EndSpell(id)
-	end,
-
-	Modifier = function(cid,mid)
-		if(getMessageType()=="get creaturecanattackcreature") then
-			if(getMessageInt("defender")==cid) then
-				setMessageInt("canattack",CANATTACK_UNTAPPED)
-			end
-		end
-		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -503,26 +500,24 @@ Cards["Creeping Plague"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod1 = function(cid,mid)
+            local mod2 = function(cid,mid)
+                Abils.Slayer(cid)
+                Abils.destroyModAtEOT(cid,mid)
+            end
+            if(getMessageType()=="creatureblock") then
+                if(getMessageInt("attacker")==cid) then
+                    createModifier(cid,mod2)
+                end
+            end
+		    Abils.destroyModAtEOT(cid,mid)
+        end
 		local owner = getCardOwner(id)
 		local size = getZoneSize(owner,ZONE_BATTLE)-1
 		for i=0,size,1 do
-			createModifier(getCardAt(owner,ZONE_BATTLE,i),3,"Cards","Creeping Plague","Modifier1")
+			createModifier(getCardAt(owner,ZONE_BATTLE,i),mod1)
 		end
-	end,
-
-	Modifier1 = function(cid,mid)
-        if(getMessageType()=="creatureblock") then
-            if(getMessageInt("attacker")==cid) then
-                createModifier(cid,3,"Cards","Creeping Plague","Modifier2")
-            end
-        end
-		Abils.destroyModAtEOT(cid,mid)
-	end,
-
-    Modifier2 = function(cid,mid)
-        Abils.Slayer(cid)
-        Abils.destroyModAtEOT(cid,mid)
-    end
+	end
 }
 
 Cards["Crimson Hammer"] = {
@@ -1358,20 +1353,19 @@ Cards["Laser Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.cantBeBlocked(cid)
+	        Abils.destroyModAtEOT(cid,mid)
+        end
         local ch = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
         if(ch>=0) then
-            createModifier(ch,3,"Cards","Laser Wing","Modifier")
+            createModifier(ch,mod)
             local ch2 = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch2>=0) then
-                 createModifier(ch2,3,"Cards","Laser Wing","Modifier")
+                 createModifier(ch2,mod)
             end
         end
         Actions.EndSpell(id)
-	end,
-
-    Modifier = function(cid,mid)
-		Abils.cantBeBlocked(cid)
-	    Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -1402,17 +1396,16 @@ Cards["Magma Gazer"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.PowerAttacker(cid,4000)
+            Abils.Breaker(cid,2)
+		    Abils.destroyModAtEOT(cid,mid)
+        end
 		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(ch>=0) then
-            createModifier(ch,3,"Cards","Magma Gazer","Modifier")
+            createModifier(ch,mod)
         end
         Actions.EndSpell(id)
-	end,
-
-	Modifier = function(cid,mid)
-		Abils.PowerAttacker(cid,4000)
-        Abils.Breaker(cid,2)
-		Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
@@ -2013,16 +2006,15 @@ Cards["Sonic Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.cantBeBlocked(cid)
+	        Abils.destroyModAtEOT(cid,mid)
+        end
 		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
 		if(ch>=0) then
-            createModifier(ch,3,"Cards","Sonic Wing","Modifier")
+            createModifier(ch,mod)
         end
         Actions.EndSpell(id)
-	end,
-
-	Modifier = function(cid,mid)
-        Abils.cantBeBlocked(cid)
-	    Abils.destroyModAtEOT(cid,mid)
 	end
 }
 
