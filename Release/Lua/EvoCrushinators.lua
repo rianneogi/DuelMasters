@@ -1016,7 +1016,17 @@ Cards["Recon Operation"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        for i=1,3 do
+            local ch = createChoice("Choose an opponent's shield",1,id,getCardOwner(id),Checks.InOppShield)
+            if(ch>=0) then
+                --todo flip card here
+            end
+            if(ch==-1) then
+                break
+            end
+        end
+        local ch = createChoiceNoCheck("Ok",1,id,getCardOwner(id),Checks.False)
+        --todo unflip here
 	end
 }
 
@@ -1048,7 +1058,16 @@ Cards["Rumble Gate"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local func = function(cid,sid)
+            local mod = function(cid,mid)
+                Abils.bonusPower(cid,1000)
+                Abils.canAttackUntappedCreatures(cid)
+                Abils.destroyModAtEOT(cid,mid)
+            end
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
 	end
 }
 
@@ -1177,7 +1196,19 @@ Cards["Stained Glass"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and (getCardCiv(sid)==CIV_FIRE or getCardCiv(sid)==CIV_NATURE)) then
+		            return 1
+	            else
+		            return 0
+	            end
+            end
+            local ch = createChoice("Choose an opponent's fire or nature creature",1,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
 	end
 }
 

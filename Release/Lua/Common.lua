@@ -38,6 +38,14 @@ getOpponent = function(p)
 	end
 end
 
+Abils.bonusPower = function(id, power)
+    if(getMessageType()=="get creaturepower") then
+		if(getMessageInt("creature")==id) then
+			setMessageInt("power",getMessageInt("power")+power)
+		end
+	end
+end
+
 Abils.PowerAttacker = function(id, power)
 	if(getMessageType()=="get creaturepower") then
 		if(getMessageInt("creature")==id and getAttacker()==id) then
@@ -387,6 +395,22 @@ Checks.CreatureInYourDeck = function(cid,sid)
 	end
 end
 
+Checks.InYourShields = function(cid,sid)
+    if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_SHIELD) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.InOppShields = function(cid,sid)
+    if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_SHIELD) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.True = function(cid,sid)
     return 1
 end
@@ -413,6 +437,16 @@ Actions.execute = function(id,check,func)
     for i=0,(x-1) do
         if(check(id,i)==1) then
             func(id,i)
+        end
+    end
+end
+
+Actions.executeForCreaturesInBattle = function(id,player,func)
+    local s = getZoneSize(player,ZONE_BATTLE)
+    for i=0,(s-1) do
+        local c = getCardAt(player,ZONE_BATTLE,i)
+        if(getCardType(c)==TYPE_CREATURE) then
+            func(id,c)
         end
     end
 end
