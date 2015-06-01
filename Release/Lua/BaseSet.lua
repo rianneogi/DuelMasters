@@ -2322,7 +2322,7 @@ Cards["Tornado Flame"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        valid = function(cid,sid)
+        local valid = function(cid,sid)
             if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=4000) then
 		        return 1
 	        else

@@ -323,7 +323,7 @@ Cards["Dark Titan Maginn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.discardOppCardOnAttack(id,1)
 	end
 }
 
@@ -604,7 +604,15 @@ Cards["Gigastand"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="post carddestroy") then
+            if(getMessageInt("card")==id) then
+                local ch = createChoice("Choose card in hand",1,id,getCardOwner(id),Checks.InYourHand)
+                if(ch>=0) then
+                    moveCard(id,ZONE_HAND)
+                    moveCard(ch,ZONE_GRAVEYARD)
+                end
+            end
+        end
 	end
 }
 
@@ -876,7 +884,12 @@ Cards["Marrow Ooze, the Twister"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            if(getMessageInt("defendertype")==DEFENDER_PLAYER) then
+                destroyCard(id)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -940,7 +953,13 @@ Cards["Phal Eega, Dawn Guardian"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a spell from your graveyard",1,id,getCardOwner(id),Checks.SpellInYourGraveyard)
+            if(ch>=0) 
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onSummon(func)
 	end
 }
 
@@ -981,7 +1000,17 @@ Cards["Poison Worm"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=2000) then
+		        return 1
+	        else
+		        return 0
+	        end
+        end
+        local ch = createChoice("Destroy a creature in your battlezone",0,id,getCardOwner(id),valid)
+        if(ch>=0) then
+            destroyCard(ch)
+        end
 	end
 }
 
@@ -1177,7 +1206,7 @@ Cards["Spiral Grass"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.untapAfterBlock(id)
 	end
 }
 
