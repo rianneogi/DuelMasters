@@ -111,12 +111,59 @@ static int getChoice(lua_State* L)
 	return 1;
 }
 
-static int destroyCard(lua_State* L)
+//static int destroyCard(lua_State* L)
+//{
+//	Message msg("carddestroy");
+//	msg.addValue("card", lua_tointeger(L, 1));
+//	msg.addValue("zoneto", ZONE_GRAVEYARD);
+//	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+//	return 0;
+//}
+
+static int destroyCreature(lua_State* L)
 {
+	int cid = lua_tointeger(L, 1);
 	Message msg("carddestroy");
-	msg.addValue("card", lua_tointeger(L, 1));
+	msg.addValue("card", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_BATTLE)
+	{
+		cout << "WARNING: destroyCreature called on creature that is not in battle zone" << endl;
+	}
+	if (ActiveDuel->duel.CardList.at(cid)->Type != TYPE_CREATURE)
+	{
+		cout << "WARNING: destroyCreature called on card that is not a creature" << endl;
+	}
+
+	return 0;
+}
+
+static int discardCard(lua_State* L)
+{
+	int cid = lua_tointeger(L, 1);
+	Message msg("carddestroy");
+	msg.addValue("card", cid);
+	msg.addValue("zoneto", ZONE_GRAVEYARD);
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_HAND)
+	{
+		cout << "WARNING: discardCard called on card that is not in hand" << endl;
+	}
+	return 0;
+}
+
+static int destroyMana(lua_State* L)
+{
+	int cid = lua_tointeger(L, 1);
+	Message msg("carddestroy");
+	msg.addValue("card", cid);
+	msg.addValue("zoneto", ZONE_GRAVEYARD);
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_MANA)
+	{
+		cout << "WARNING: destroyMana called on card that is not in mana zone" << endl;
+	}
 	return 0;
 }
 
@@ -329,7 +376,9 @@ void registerLua(lua_State* L)
 	lua_register(L, "createModifier", createModifier);
 	lua_register(L, "destroyModifier", destroyModifier);
 	
-	lua_register(L, "destroyCard", destroyCard);
+	lua_register(L, "destroyCreature", destroyCreature);
+	lua_register(L, "discardCard", discardCard);
+	lua_register(L, "destroyMana", destroyMana);
 	lua_register(L, "discardCardAtRandom", discardCardAtRandom);
 	lua_register(L, "moveCard", moveCard);
 	lua_register(L, "tapCard", tapCard);
