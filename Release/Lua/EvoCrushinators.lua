@@ -140,7 +140,7 @@ Cards["Bombersaur"] = {
 	name = "Bombersaur",
 	set = "Evo-Crushinators of Doom",
 	type = TYPE_CREATURE,
-	civilization = CIV_FIRE,
+	civilization = CIV_FIRE
 	race = "Rock Beast",
 	cost = 5,
 
@@ -151,23 +151,23 @@ Cards["Bombersaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        if(getMessageType()=="post carddestroy") then
+        if(getMessageType()=="post creaturedestroy") then
             if(getMessageInt("card")==id) then
                 local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
                 ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
                 ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
                 ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
             end
         end
@@ -189,7 +189,7 @@ Cards["Burst Shot"] = {
         for i=0,(size-1) do
             local card = getCardAt(owner,ZONE_BATTLE,i)
             if(getCreaturePower(card)<=2000) then
-                destroyCard(card)
+                destroyCreature(card)
             end
         end
         owner = getOpponent(owner)
@@ -197,7 +197,7 @@ Cards["Burst Shot"] = {
         for i=0,(size-1) do
             local card = getCardAt(owner,ZONE_BATTLE,i)
             if(getCreaturePower(card)<=2000) then
-                destroyCard(card)
+                destroyCreature(card)
             end
         end
         Actions.EndSpell(id)
@@ -266,7 +266,7 @@ Cards["Critical Blade"] = {
 	OnCast = function(id)
         local ch = createChoice("Choose opponent's blocker",0,id,getCardOwner(id),Checks.BlockerInOppBattle)
         if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -406,15 +406,15 @@ Cards["Engineer Kipo"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        if(getMessageType()=="post carddestroy") then
+        if(getMessageType()=="post creaturedestroy") then
             if(getMessageInt("card")==id) then
                 local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
                 ch = createChoice("Destroy a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
                 if(ch>=0) then
-                    destroyCard(ch)
+                    destroyMana(ch)
                 end
             end
         end
@@ -531,10 +531,10 @@ Cards["Fortress Shell"] = {
         summon = function(id)
             local ch = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyMana(ch)
                 local ch2 = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
                 if(ch2>=0) then
-                    destroyCard(ch2)
+                    destroyMana(ch2)
                 end
             end
         end
@@ -582,7 +582,7 @@ Cards["General Dark Fiend"] = {
         local func = function(id)
             local ch = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShield)
             if(ch>=0) then
-                destroyCard(ch)
+                moveCard(ch,ZONE_GRAVEYARD)
             end
         end
         Abils.onAttack(id,func)
@@ -604,7 +604,7 @@ Cards["Gigastand"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        if(getMessageType()=="post carddestroy") then
+        if(getMessageType()=="post creaturedestroy") then
             if(getMessageInt("card")==id) then
                 local ch = createChoice("Choose card in hand",1,id,getCardOwner(id),Checks.InYourHand)
                 if(ch>=0) then
@@ -826,7 +826,7 @@ Cards["Lost Soul"] = {
         local owner = getOpponent(getCardOwner(id))
         local size = getZoneSize(owner,ZONE_HAND)
         for i=0,(size-1) do
-            destroyCard(getCardAt(owner,ZONE_HAND,i))
+            discardCard(getCardAt(owner,ZONE_HAND,i))
         end
         Actions.EndSpell(id)
 	end
@@ -863,7 +863,7 @@ Cards["Mana Crisis"] = {
 	OnCast = function(id)
         local ch = createChoice("Choose a card in your opponent's mana zone",0,id,getCardOwner(id),Checks.InOppMana)
         if(ch>=0) then
-            destroyCard(ch)
+            destroyMana(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -886,7 +886,7 @@ Cards["Marrow Ooze, the Twister"] = {
 	HandleMessage = function(id)
         local func = function(id)
             if(getMessageInt("defendertype")==DEFENDER_PLAYER) then
-                destroyCard(id)
+                destroyCreature(id)
             end
         end
         Abils.onAttack(id,func)
@@ -911,7 +911,7 @@ Cards["Metalwing Skyterror"] = {
         local func = function(id)
             local ch = createChoice("Choose an opponent's blocker",1,id,getCardOwner(id),Checks.BlockerInOppBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
         Abils.onAttack(id,func)
@@ -1009,7 +1009,7 @@ Cards["Poison Worm"] = {
         end
         local ch = createChoice("Destroy a creature in your battlezone",0,id,getCardOwner(id),valid)
         if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
 	end
 }

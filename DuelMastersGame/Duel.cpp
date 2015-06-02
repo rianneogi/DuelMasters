@@ -111,7 +111,21 @@ int Duel::handleMessage(Message& msg)
 			winner = getOpponent(turn);
 		}
 	}
-	else if (msg.getType() == "carddestroy")
+	else if (msg.getType() == "creaturedestroy")
+	{
+		Message m("cardmove");
+		m.addValue("card", msg.getInt("creature"));
+		m.addValue("to", msg.getInt("zoneto"));
+		MsgMngr.sendMessage(m);
+	}
+	else if (msg.getType() == "carddiscard")
+	{
+		Message m("cardmove");
+		m.addValue("card", msg.getInt("card"));
+		m.addValue("to", msg.getInt("zoneto"));
+		MsgMngr.sendMessage(m);
+	}
+	else if (msg.getType() == "manadestroy")
 	{
 		Message m("cardmove");
 		m.addValue("card", msg.getInt("card"));
@@ -633,14 +647,14 @@ void Duel::battle(int att, int def)
 	int p2 = getCreaturePower(d->UniqueId);
 	if (p1 >= p2)
 	{
-		Message msg("carddestroy");
+		Message msg("creaturedestroy");
 		msg.addValue("card", def);
 		msg.addValue("zoneto", ZONE_GRAVEYARD);
 		MsgMngr.sendMessage(msg);
 	}
 	if (p2 >= p1)
 	{
-		Message msg("carddestroy");
+		Message msg("creaturedestroy");
 		msg.addValue("card", att);
 		msg.addValue("zoneto", ZONE_GRAVEYARD);
 		MsgMngr.sendMessage(msg);

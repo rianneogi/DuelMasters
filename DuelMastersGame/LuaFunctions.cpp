@@ -123,8 +123,8 @@ static int getChoice(lua_State* L)
 static int destroyCreature(lua_State* L)
 {
 	int cid = lua_tointeger(L, 1);
-	Message msg("carddestroy");
-	msg.addValue("card", cid);
+	Message msg("creaturedestroy");
+	msg.addValue("creature", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
 	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_BATTLE)
@@ -142,7 +142,7 @@ static int destroyCreature(lua_State* L)
 static int discardCard(lua_State* L)
 {
 	int cid = lua_tointeger(L, 1);
-	Message msg("carddestroy");
+	Message msg("carddiscard");
 	msg.addValue("card", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
@@ -156,7 +156,7 @@ static int discardCard(lua_State* L)
 static int destroyMana(lua_State* L)
 {
 	int cid = lua_tointeger(L, 1);
-	Message msg("carddestroy");
+	Message msg("manadestroy");
 	msg.addValue("card", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);

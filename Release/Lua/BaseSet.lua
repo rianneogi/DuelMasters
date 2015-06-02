@@ -213,10 +213,10 @@ Cards["Black Feather, Shadow of Rage"] = {
         summon = function(id)
             local c = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
             if(c>=0) then
-                destroyCard(c)
+                destroyCreature(c)
             end
             if(c==RETURN_NOVALID or c==RETURN_SKIP) then
-                destroyCard(id)
+                destroyCreature(id)
             end
         end
         Abils.onSummon(id,summon)
@@ -538,7 +538,7 @@ Cards["Crimson Hammer"] = {
         end
         local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
 	    if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -649,7 +649,7 @@ Cards["Death Smoke"] = {
 	OnCast = function(id)
 	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
 	    if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -806,10 +806,10 @@ Cards["Explosive Fighter Ucarn"] = {
         local summon = function(id)
             local ch = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
             if(ch>=0) then   
-                destroyCard(ch)
+                destroyMana(ch)
                 local ch2 = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch2>=0) then
-                    destroyCard(ch2)
+                    destroyMana(ch2)
                 end
             end
         end
@@ -992,12 +992,12 @@ Cards["Gigaberos"] = {
             local ch = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
                 if(ch==id) then
-                    destroyCard(id)
+                    destroyCreature(id)
                 else
-                    destroyCard(ch)
+                    destroyCreature(ch)
                     local ch2 = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
                     if(ch2>=0) then
-                        destroyCard(ch2)
+                        destroyCreature(ch2)
                     end
                 end
             end
@@ -1475,7 +1475,7 @@ Cards["Meteosaur"] = {
             end
             local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),valid)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
         Abils.onSummon(id,summon)
@@ -1818,10 +1818,10 @@ Cards["Rothus, the Traveler"] = {
         local summon = function(id)
             local ch = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
                 local ch2 = createChoice("Select creature to destroy",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
                 if(ch2>=0) then
-                    destroyCard(ch2)
+                    destroyCreature(ch2)
                 end
             end
         end
@@ -1908,7 +1908,7 @@ Cards["Scarlet Skyterror"] = {
 				for i=0,size,1 do
 					local cid = getCardAt(owner,ZONE_BATTLE,i)
 					if(getCreatureCanBlock(cid)==1) then
-						destroyCard(cid)
+						destroyCreature(cid)
 					end
 				end
 
@@ -1917,7 +1917,7 @@ Cards["Scarlet Skyterror"] = {
 				for i=0,size,1 do
 					local cid = getCardAt(owner,ZONE_BATTLE,i)
 					if(getCreatureCanBlock(cid)==1) then
-						destroyCard(cid)
+						destroyCreature(cid)
 					end
 				end
 			end
@@ -2092,7 +2092,7 @@ Cards["Stinger Worm"] = {
         summon = function(id)
             local ch = createChoice("Destroy a creature",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
         Abils.onSummon(id,summon)
@@ -2185,7 +2185,7 @@ Cards["Swamp Worm"] = {
 		summon = function(id)
             local ch = createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
         Abils.onSummon(id,summon)
@@ -2243,7 +2243,7 @@ Cards["Terror Pit"] = {
     OnCast = function(id)
 	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
 	    if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -2331,7 +2331,7 @@ Cards["Tornado Flame"] = {
         end
         local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
 	    if(ch>=0) then
-            destroyCard(ch)
+            destroyCreature(ch)
         end
         Actions.EndSpell(id)
 	end
@@ -2484,7 +2484,7 @@ Cards["Vampire Silphy"] = {
 				for i=0,size,1 do
 					local cid = getCardAt(owner,ZONE_BATTLE,i)
 					if(getCreaturePower(cid)<=3000) then
-						destroyCard(cid)
+						destroyCreature(cid)
 					end
 				end
 
@@ -2493,7 +2493,7 @@ Cards["Vampire Silphy"] = {
 				for i=0,size,1 do
 					local cid = getCardAt(owner,ZONE_BATTLE,i)
 					if(getCreaturePower(cid)<=3000) then
-						destroyCard(cid)
+						destroyCreature(cid)
 					end
 				end
 			end

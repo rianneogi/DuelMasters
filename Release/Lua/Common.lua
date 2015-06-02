@@ -70,12 +70,12 @@ Abils.Slayer = function(id)
 		local def = getMessageInt("defender")
 		if(att==id) then
 			if(getCardZone(def)==ZONE_BATTLE) then
-				destroyCard(def)
+				destroyCreature(def)
 			end
 		end
 		if(def==id) then
 			if(getCardZone(att)==ZONE_BATTLE) then
-				destroyCard(att)
+				destroyCreature(att)
 			end
 		end
 	end
@@ -140,14 +140,14 @@ Abils.destroyAfterBattle = function(id)
 	if(getMessageType()=="post creaturebattle") then
 		if(getMessageInt("attacker")==id or getMessageInt("defender")==id) then
 			if(getCardZone(id)==ZONE_BATTLE) then
-				destroyCard(id)
+				destroyCreature(id)
 			end
 		end
 	end
 end
 
 Abils.returnAfterDestroyed = function(id)
-	if(getMessageType()=="mod carddestroy") then
+	if(getMessageType()=="mod creaturedestroy") then
 		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_HAND)
 		end
@@ -155,7 +155,7 @@ Abils.returnAfterDestroyed = function(id)
 end
 
 Abils.manaAfterDestroyed = function(id)
-	if(getMessageType()=="mod carddestroy") then
+	if(getMessageType()=="mod creaturedestroy") then
 		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_MANA)
 		end
@@ -182,7 +182,7 @@ Abils.destroyYourManaOnSummon = function(id, count)
         for i=1,count do
             local ch = createChoice("Select mana to destroy",0,id,getCardOwner(id),Checks.InYourMana)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyMana(ch)
             end
         end
     end
@@ -194,7 +194,7 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
         for i=1,count do
             local ch = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
     end
@@ -214,7 +214,7 @@ Abils.destroyOppManaOnAttack = function(id,count)
         for i=1,count do
             local ch = createChoice("Select a card in opponent's mana",0,id,getCardOwner(id),Checks.InOppMana)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyMana(ch)
             end
         end
     end
