@@ -140,7 +140,7 @@ Cards["Bombersaur"] = {
 	name = "Bombersaur",
 	set = "Evo-Crushinators of Doom",
 	type = TYPE_CREATURE,
-	civilization = CIV_FIRE
+	civilization = CIV_FIRE,
 	race = "Rock Beast",
 	cost = 5,
 
@@ -955,7 +955,7 @@ Cards["Phal Eega, Dawn Guardian"] = {
 	HandleMessage = function(id)
         local func = function(id)
             local ch = createChoice("Choose a spell from your graveyard",1,id,getCardOwner(id),Checks.SpellInYourGraveyard)
-            if(ch>=0) 
+            if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
         end
