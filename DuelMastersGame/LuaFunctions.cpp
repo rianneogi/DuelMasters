@@ -169,7 +169,7 @@ static int destroyMana(lua_State* L)
 
 static int discardCardAtRandom(lua_State* L)
 {
-	Message msg("carddiscard");
+	Message msg("carddiscardatrandom");
 	msg.addValue("player", lua_tointeger(L, 1));
 	ActiveDuel->duel.MsgMngr.sendMessage(msg);
 	return 0;

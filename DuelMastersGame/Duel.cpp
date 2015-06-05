@@ -289,7 +289,7 @@ int Duel::handleMessage(Message& msg)
 	{
 		decks[msg.getInt("player")].shuffle();
 	}
-	else if (msg.getType() == "carddiscard")
+	else if (msg.getType() == "carddiscardatrandom")
 	{
 		int plyr = msg.getInt("player");
 		if (hands[plyr].cards.size() > 0)
@@ -648,14 +648,14 @@ void Duel::battle(int att, int def)
 	if (p1 >= p2)
 	{
 		Message msg("creaturedestroy");
-		msg.addValue("card", def);
+		msg.addValue("creature", def);
 		msg.addValue("zoneto", ZONE_GRAVEYARD);
 		MsgMngr.sendMessage(msg);
 	}
 	if (p2 >= p1)
 	{
 		Message msg("creaturedestroy");
-		msg.addValue("card", att);
+		msg.addValue("creature", att);
 		msg.addValue("zoneto", ZONE_GRAVEYARD);
 		MsgMngr.sendMessage(msg);
 	}
