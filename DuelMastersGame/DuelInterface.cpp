@@ -510,7 +510,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							float cx = (bounds.left + bounds.left + bounds.width) / 2;
 							float cy = (bounds.top + bounds.top + bounds.height) / 2;
 							arrows.at(arrows.size() - 1).setFrom(cx, cy);
-							arrows.at(arrows.size() - 1).setColor(sf::Color(0, 255, 0, 128));
+							arrows.at(arrows.size() - 1).setColor(SUMMONARROWCOLOR);
 							mousearrow = arrows.size() - 1;
 
 							break;
@@ -529,7 +529,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							float cx = (bounds.left + bounds.left + bounds.width) / 2;
 							float cy = (bounds.top + bounds.top + bounds.height) / 2;*/
 							arrows.at(arrows.size() - 1).setFrom(duel.CardList.at(selectedcard)->x, duel.CardList.at(selectedcard)->y);
-							arrows.at(arrows.size() - 1).setColor(sf::Color(255, 0, 0, 128));
+							arrows.at(arrows.size() - 1).setColor(ATTACKARROWCOLOR);
 							mousearrow = arrows.size() - 1;
 
 							break;
@@ -590,13 +590,21 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						sf::FloatRect bounds = duel.shields[getOpponent(duel.turn)].getBounds();
 
 						arrows.at(mousearrow).setTo((bounds.left * 2 + bounds.width) / 2, (bounds.top * 2 + bounds.height) / 2);
-						mousearrow = -1;
 
 						if (dueltype == DUELTYPE_MULTI)
 						{
 							Socket.send(createPacketFromMessage(msg));
-						}
 
+							sf::Packet p;
+							sf::Uint32 ptype = PACKET_ADDARROW;
+							sf::Uint32 fx = arrows.at(mousearrow).fromx;
+							sf::Uint32 fy = arrows.at(mousearrow).fromy;
+							sf::Uint32 tx = arrows.at(mousearrow).tox;
+							sf::Uint32 ty = arrows.at(mousearrow).toy;
+							p << ptype << fx << fy << tx << ty;
+							Socket.send(p);
+						}
+						mousearrow = -1;
 						//undoSelection();
 					}
 					for (vector<Card*>::iterator i = duel.battlezones[getOpponent(duel.turn)].cards.begin(); i != duel.battlezones[getOpponent(duel.turn)].cards.end(); i++)
@@ -618,12 +626,21 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							duel.handleInterfaceInput(msg);
 
 							arrows.at(mousearrow).setTo((*i)->x, (*i)->y);
-							mousearrow = -1;
 
 							if (dueltype == DUELTYPE_MULTI)
 							{
 								Socket.send(createPacketFromMessage(msg));
+
+								sf::Packet p;
+								sf::Uint32 ptype = PACKET_ADDARROW;
+								sf::Uint32 fx = arrows.at(mousearrow).fromx;
+								sf::Uint32 fy = arrows.at(mousearrow).fromy;
+								sf::Uint32 tx = arrows.at(mousearrow).tox;
+								sf::Uint32 ty = arrows.at(mousearrow).toy;
+								p << ptype << fx << fy << tx << ty;
+								Socket.send(p);
 							}
+							mousearrow = -1;
 
 							//undoSelection();
 						}
@@ -714,7 +731,14 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					if (cancelbutton.collision(MouseX, MouseY)) //join game
 					{
-						sf::Socket::Status status = Socket.connect("192.168.1.100", 53000);
+						fstream ipfile;
+						ipfile.open("ip.txt", ios::in | ios::out);
+						string ipadd;
+						string port;
+						getline(ipfile, ipadd);
+						getline(ipfile, port);
+						ipfile.close();
+						sf::Socket::Status status = Socket.connect(ipadd, atoi(port.c_str()));
 						Socket.setBlocking(false);
 						dueltype = DUELTYPE_MULTI;
 						cout << "game connected" << endl;
@@ -726,8 +750,15 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					if (endturnbutton.collision(MouseX, MouseY))  //host game
 					{
+						fstream ipfile;
+						ipfile.open("ip.txt", ios::in | ios::out);
+						string ipadd;
+						string port;
+						getline(ipfile, ipadd);
+						getline(ipfile, port);
+						ipfile.close();
 						sf::TcpListener listener;
-						listener.listen(53000);
+						listener.listen(atoi(port.c_str()));
 						listener.accept(Socket);
 						Socket.setBlocking(false);
 						dueltype = DUELTYPE_MULTI;
@@ -792,9 +823,9 @@ int DuelInterface::receivePacket(sf::Packet& packet, int callback)
 		packet >> ptype;
 		if (ptype == PACKET_MSG)
 		{
-			cout << "received msg packet" << endl;
 			Message msg;
 			packet >> msg;
+			cout << "received msg packet : " << msg.getType() << endl;
 			duel.handleInterfaceInput(msg);
 		}
 		else if (ptype == PACKET_SETDECK)
@@ -826,13 +857,30 @@ int DuelInterface::receivePacket(sf::Packet& packet, int callback)
 			sf::Uint32 x;
 			packet >> x;
 			std::srand(x);
+			cout << "set seed packet received : " << x << endl;
 		}
 		else if (ptype == PACKET_CHOICESELECT)
 		{
 			sf::Uint32 x;
 			packet >> x;
 			duel.resetChoice();
+			cout << "choice select packet received : " << x << endl;
 			return x;
+		}
+		else if (ptype == PACKET_ADDARROW)
+		{
+			arrows.push_back(Arrow());
+			sf::Uint32 fx, fy, tx, ty;
+			packet >> fx >> fy >> tx >> ty;
+			arrows.at(arrows.size() - 1).setColor(ATTACKARROWCOLOR);
+			arrows.at(arrows.size() - 1).setFrom(fx,fy);
+			arrows.at(arrows.size() - 1).setTo(tx, ty);
+			cout << "add arrow packet received" << endl;
+		}
+		else if (ptype == PACKET_CLEARARROWS)
+		{
+			arrows.clear();
+			cout << "clear arrows packet received" << endl;
 		}
 	}
 	return RETURN_NOTHING;
@@ -848,6 +896,14 @@ void DuelInterface::undoSelection()
 	selectedcard = -1;
 	selectedcardzone = -1;
 	arrows.clear();
+	if (dueltype == DUELTYPE_MULTI)
+	{
+		sf::Packet p;
+		sf::Uint32 ptype = PACKET_CLEARARROWS;
+		p << ptype;
+		Socket.send(p);
+		cout << "clear arrows packet sent" << endl;
+	}
 }
 
 void DuelInterface::setDecklist()

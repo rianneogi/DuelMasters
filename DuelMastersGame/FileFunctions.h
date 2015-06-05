@@ -25,6 +25,9 @@ const string DECKEXTENSION = ".txt";
 enum SpriteId { TEXTURE_CARDBACK };
 enum SoundId { SOUND_ENDTURN, SOUND_DRAW, SOUND_TAP, SOUND_UNTAP, SOUND_PLAY, SOUND_SHUFFLE };
 
+const sf::Color ATTACKARROWCOLOR(255, 0, 0, 128);
+const sf::Color SUMMONARROWCOLOR(0, 255, 0, 128);
+
 const string SoundPaths[] = { "Graphics\\Sounds\\endturn.wav", "Graphics\\Sounds\\draw.wav", "Graphics\\Sounds\\tap.wav",
 "Graphics\\Sounds\\untap.wav", "Graphics\\Sounds\\playcard.wav", "Graphics\\Sounds\\shuffle.wav" };
 const int SoundCount = 6;
