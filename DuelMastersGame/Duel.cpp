@@ -96,14 +96,20 @@ int Duel::handleMessage(Message& msg)
 {
 	if (msg.getType() == "cardmove")
 	{
-		Card* c = CardList.at(msg.getInt("card"));
+		int cid = msg.getInt("card");
+		int tozone = msg.getInt("to");
+		Card* c = CardList.at(cid);
 		int owner = c->Owner;
 		getZone(owner, c->Zone)->removeCard(c);
-		getZone(owner, msg.getInt("to"))->addCard(c);
-		c->Zone = msg.getInt("to");
+		getZone(owner, tozone)->addCard(c);
+		c->Zone = tozone;
 		if (c->Zone == ZONE_BATTLE && c->Type == TYPE_SPELL)
 		{
 			c->callOnCast(); //cast the spell
+			Message m("cardmove");
+			m.addValue("card", cid);
+			m.addValue("to", ZONE_GRAVEYARD);
+			MsgMngr.sendMessage(m);
 		}
 		if (decks[owner].cards.size() == 0)
 		{

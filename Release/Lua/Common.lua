@@ -148,7 +148,7 @@ end
 
 Abils.returnAfterDestroyed = function(id)
 	if(getMessageType()=="mod creaturedestroy") then
-		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
+		if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_HAND)
 		end
 	end
@@ -156,7 +156,7 @@ end
 
 Abils.manaAfterDestroyed = function(id)
 	if(getMessageType()=="mod creaturedestroy") then
-		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
+		if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_MANA)
 		end
 	end
@@ -424,12 +424,12 @@ Actions.SkipChoice = function(cid)
 end
 
 Actions.EndChoiceSpell = function(cid)
-    setChoiceActive(0)
-    moveCard(cid,ZONE_GRAVEYARD)
+    --setChoiceActive(0)
+    --moveCard(cid,ZONE_GRAVEYARD)
 end
 
 Actions.EndSpell = function(id)
-    moveCard(id,ZONE_GRAVEYARD)
+    --moveCard(id,ZONE_GRAVEYARD)
 end
 
 Actions.execute = function(id,check,func)
