@@ -33,6 +33,29 @@ void BattleZone::addCard(Card* c)
 	cards.push_back(c);
 }
 
+void BattleZone::addEvoCard(Card* c, int evobait)
+{
+	Card* eb = NULL;
+	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+	{
+		if ((*i)->UniqueId == evobait)
+		{
+			eb = *i;
+		}
+	}
+	if (eb == NULL)
+	{
+		cout << "ERROR: attempting to evolve on card not in battlezone, cid: " << evobait << endl;
+		return;
+	}
+	sf::FloatRect r = eb->sprite.getGlobalBounds();
+	c->move(r.left + r.width*2, r.top + r.height/2);
+	c->unflip();
+	c->untap();
+	c->summoningSickness = 0;
+	cards.push_back(c);
+}
+
 void BattleZone::removeCard(Card* c)
 {
 	int x = 0;

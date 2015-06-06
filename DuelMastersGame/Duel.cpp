@@ -101,8 +101,34 @@ int Duel::handleMessage(Message& msg)
 		Card* c = CardList.at(cid);
 		int owner = c->Owner;
 		getZone(owner, c->Zone)->removeCard(c);
-		getZone(owner, tozone)->addCard(c);
+		if (tozone == ZONE_BATTLE && getIsEvolution(cid) == 1) //evolution creatures
+		{
+			int evobait = msg.getInt("evobait");
+			if (evobait == -1)
+			{
+				getZone(owner, tozone)->addCard(c);
+			}
+			else
+			{
+				battlezones[owner].addEvoCard(c, evobait);
+			}
+		}
+		else
+		{
+			getZone(owner, tozone)->addCard(c);
+		}
 		c->Zone = tozone;
+		if (tozone != ZONE_BATTLE)
+		{
+			for (int i = c->evostack.size()-1; i >= 0; i--) //move all cards in stack to the zone seperately
+			{
+				Message m("cardmove");
+				m.addValue("card", c->evostack.at(i)->UniqueId);
+				m.addValue("to", tozone);
+				MsgMngr.sendMessage(m);
+				c->evostack.pop_back();
+			}
+		}
 		if (c->Zone == ZONE_BATTLE && c->Type == TYPE_SPELL)
 		{
 			c->callOnCast(); //cast the spell
@@ -155,11 +181,22 @@ int Duel::handleMessage(Message& msg)
 	}*/
 	else if (msg.getType() == "cardplay")
 	{
+		int cid = msg.getInt("card");
+		int eb = msg.getInt("evobait");
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("card"));
+		m.addValue("card", cid);
 		m.addValue("to", ZONE_BATTLE);
+		m.addValue("evobait", eb);
 		MsgMngr.sendMessage(m);
 		SoundMngr->playSound(SOUND_PLAY);
+
+		if (eb != -1)
+		{
+			Message msg4("creatureevolve");
+			msg4.addValue("evolution", cid);
+			msg4.addValue("evobait", eb);
+			MsgMngr.sendMessage(msg4);
+		}
 	}
 	else if (msg.getType() == "cardmana")
 	{
@@ -226,6 +263,13 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "creaturebattle")
 	{
 		battle(msg.getInt("attacker"), msg.getInt("defender"));
+	}
+	else if (msg.getType() == "creatureevolve")
+	{
+		int eb = msg.getInt("evobait");
+		Card* cid = CardList.at(eb);
+		getZone(cid->Owner, cid->Zone)->removeCard(cid);
+		CardList.at(msg.getInt("evolution"))->evostack.push_back(cid);
 	}
 	else if (msg.getType() == "cardtap")
 	{
@@ -300,10 +344,9 @@ int Duel::handleMessage(Message& msg)
 		int plyr = msg.getInt("player");
 		if (hands[plyr].cards.size() > 0)
 		{
-			Message m("cardmove");
+			Message m("carddiscard");
 			m.addValue("card", hands[plyr].cards.at(rand() % hands[plyr].cards.size())->UniqueId);
-			m.addValue("from", ZONE_HAND);
-			m.addValue("to", ZONE_GRAVEYARD);
+			m.addValue("zoneto", ZONE_GRAVEYARD);
 			MsgMngr.sendMessage(m);
 		}
 	}
@@ -324,6 +367,7 @@ int Duel::handleInterfaceInput(Message& msg)
 			castingciv = getCardCivilization(castingcard);
 			castingcost = getCardCost(castingcard);
 			castingcivtapped = false;
+			castingevobait = msg.getInt("evobait");
 			//MsgMngr.sendMessage(msg);
 		}
 	}
@@ -489,7 +533,9 @@ int Duel::handleInterfaceInput(Message& msg)
 
 					Message msg3("cardplay");
 					msg3.addValue("card", castingcard);
+					msg3.addValue("evobait", castingevobait);
 					MsgMngr.sendMessage(msg3);
+
 					resetCasting();
 				}
 			}
@@ -919,6 +965,23 @@ int Duel::getIsShieldTrigger(int uid)
 	return c;
 }
 
+int Duel::getIsEvolution(int uid)
+{
+	Message oldmsg = currentMessage;
+	currentMessage = Message("get creatureisevolution");
+	currentMessage.addValue("isevolution", 0);
+	currentMessage.addValue("creature", uid);
+
+	vector<Card*>::iterator i;
+	for (i = CardList.begin(); i != CardList.end(); i++)
+	{
+		(*i)->handleMessage(currentMessage);
+	}
+	int c = currentMessage.getInt("isevolution");
+	currentMessage = oldmsg;
+	return c;
+}
+
 int Duel::getCardCivilization(int uid)
 {
 	return CardList.at(uid)->Civilization;
@@ -1073,6 +1136,7 @@ void Duel::resetCasting()
 	castingciv = -1;
 	castingcivtapped = false;
 	castingcost = -1;
+	castingevobait = -1;
 }
 
 void Duel::clearCards()

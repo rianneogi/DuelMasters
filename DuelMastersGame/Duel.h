@@ -27,6 +27,7 @@ public:
 	int castingcard;
 	int castingciv;
 	int castingcost;
+	int castingevobait;
 	bool castingcivtapped;
 
 	Choice choice;
@@ -117,6 +118,7 @@ public:
 	int getCardCost(int uid);
 	int getCardCivilization(int uid);
 	int getIsShieldTrigger(int uid);
+	int getIsEvolution(int uid);
 };
 
 int getOpponent(int turn);

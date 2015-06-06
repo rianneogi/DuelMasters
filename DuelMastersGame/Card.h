@@ -16,7 +16,7 @@ public:
 	int y;
 
 	vector<Modifier*> modifiers;
-	vector<Card*> cardstack;
+	vector<Card*> evostack;
 
 	string Name;
 	string Race;

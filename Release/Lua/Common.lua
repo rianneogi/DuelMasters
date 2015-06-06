@@ -38,6 +38,14 @@ getOpponent = function(p)
 	end
 end
 
+Abils.Evolution = function(id)
+    if(getMessageType()=="get creatureisevolution") then
+        if(getMessageInt("creature")==id) then
+            setMessageInt("isevolution",1)
+        end
+    end
+end
+
 Abils.bonusPower = function(id, power)
     if(getMessageType()=="get creaturepower") then
 		if(getMessageInt("creature")==id) then

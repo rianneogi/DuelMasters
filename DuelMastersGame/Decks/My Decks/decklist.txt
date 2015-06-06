@@ -9,3 +9,10 @@ F Bolshack
 L Blinding Light
 WN Mana Crisis
 DF Bolshack Mana Control
+WN Origins Evo
+WD Muddy Waters Evo
+FD Hellfire Evo
+DW Crushination Evo
+F Humans Evo
+W Liquid People Evo
+N Beast Folk Evo

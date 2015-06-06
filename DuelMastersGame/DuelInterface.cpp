@@ -505,6 +505,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						{
 							selectedcard = (*j)->UniqueId;
 							selectedcardzone = ZONE_HAND;
+							iscardevo = duel.getIsEvolution(selectedcard);
 							arrows.push_back(Arrow());
 							sf::FloatRect bounds = duel.CardList.at(selectedcard)->sprite.getGlobalBounds();
 							float cx = (bounds.left + bounds.left + bounds.width) / 2;
@@ -538,18 +539,48 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				}
 				else if (selectedcardzone == ZONE_HAND) //play a card
 				{
-					if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY) 
-						&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //cast a card
+					if (iscardevo == 1)
 					{
-						Message msg("cardplay");
-						msg.addValue("card", selectedcard);
-						duel.handleInterfaceInput(msg);
-						if (dueltype == DUELTYPE_MULTI)
+						if (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)
 						{
-							Socket.send(createPacketFromMessage(msg));
-						}
+							for (int i = 0; i < duel.battlezones[duel.turn].cards.size(); i++)
+							{
+								if (duel.battlezones[duel.turn].cards.at(i)->Race == duel.CardList.at(selectedcard)->Race)
+								{
+									if (checkCollision((duel.battlezones[duel.turn].cards.at(i))->sprite.getGlobalBounds(), MouseX, MouseY))
+									{
+										Message msg("cardplay");
+										msg.addValue("card", selectedcard);
+										msg.addValue("evobait", duel.battlezones[duel.turn].cards.at(i)->UniqueId);
+										duel.handleInterfaceInput(msg);
+										if (dueltype == DUELTYPE_MULTI)
+										{
+											Socket.send(createPacketFromMessage(msg));
+										}
 
-						undoSelection();
+										undoSelection();
+										break;
+									}
+								}
+							}
+						}
+					}
+					else
+					{
+						if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY)
+							&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //cast a card
+						{
+							Message msg("cardplay");
+							msg.addValue("card", selectedcard);
+							msg.addValue("evobait", -1);
+							duel.handleInterfaceInput(msg);
+							if (dueltype == DUELTYPE_MULTI)
+							{
+								Socket.send(createPacketFromMessage(msg));
+							}
+
+							undoSelection();
+						}
 					}
 					if (checkCollision(duel.manazones[duel.turn].getBounds(), MouseX, MouseY) && duel.manaUsed == 0
 						&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI)) //put mana
@@ -881,6 +912,7 @@ int DuelInterface::receivePacket(sf::Packet& packet, int callback)
 		{
 			arrows.clear();
 			cout << "clear arrows packet received" << endl;
+			mousearrow = -1;
 		}
 	}
 	return RETURN_NOTHING;
@@ -895,7 +927,9 @@ void DuelInterface::undoSelection()
 {
 	selectedcard = -1;
 	selectedcardzone = -1;
+	iscardevo = -1;
 	arrows.clear();
+	mousearrow = -1;
 	if (dueltype == DUELTYPE_MULTI)
 	{
 		sf::Packet p;

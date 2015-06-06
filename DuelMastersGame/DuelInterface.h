@@ -21,6 +21,7 @@ public:
 	int MouseY;
 	int selectedcard;
 	int selectedcardzone;
+	int iscardevo;
 
 	Button endturnbutton;
 

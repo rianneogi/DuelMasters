@@ -78,6 +78,19 @@ Cards["Armored Blaster Valdios"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id)
+        if(getMessageType()=="get creaturepower") then
+            if(getCardZone(id)==ZONE_BATTLE) then   
+                local sid = getMessageInt("creature")
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_BATTLE)
+                for i=0,(size-1) do
+                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Human" and sid~=id) then
+                        setMessageInt("power",getMessageInt("power")+1000)
+                    end
+                end
+            end
+        end
 	end
 }
 
@@ -92,10 +105,25 @@ Cards["Armored Cannon Balbaro"] = {
 	shieldtrigger = 0,
 	blocker = 0,
 
-	power = 5000,
+	power = 3000,
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id)
+        if(getMessageType()=="get creaturepower") then
+            if(id==getMessageInt("creature") and getAttacker()==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_BATTLE)
+                local count = 0
+                for i=0,(size-1) do
+                    local sid = getCardAt(owner,ZONE_BATTLE,i)
+                    if(getCardRace(sid)=="Human" and sid~=id) then
+                        count = count+1
+                    end
+                end
+                setMessageInt("power",getMessageInt("power")+2000*count)
+            end
+        end
 	end
 }
 
@@ -114,6 +142,19 @@ Cards["Barkwhip, the Smasher"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id)
+        if(getMessageType()=="get creaturepower") then
+            if(isCardTapped(id)==1 and getCardZone(id)==ZONE_BATTLE) then
+                local sid = getMessageInt("creature")
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_BATTLE)
+                for i=0,(size-1) do
+                    if(id==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Human" and sid~=id) then
+                        setMessageInt("power",getMessageInt("power")+2000)
+                    end
+                end
+            end
+        end
 	end
 }
 
@@ -225,8 +266,29 @@ Cards["Cavalry General Curatops"] = {
 
 Cards["Chaos Worm"] = {
     name = "Chaos Worm",
-    set = "Evo-Crushinators of Doom"
+    set = "Evo-Crushinators of Doom",
 
+    type = TYPE_CREATURE,
+    civilization = CIV_DARKNESS,
+    race = "Parasite Worm",
+    cost = 5,
+
+    shieldtrigger = 0,
+    blocker = 0,
+
+    power = 5000,
+    breaker = 1,
+
+    HandleMessage = function(id)
+        Abils.Evolution(id)
+        local func = function(id)
+            local ch = createChoice("Choose an untapped creature to destroy",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
+            if(ch>=0) then
+                destroyCreature(ch)
+            end
+        end
+        Abils.onSummon(id,func)
+    end
 }
 
 Cards["Corile"] = {
@@ -287,6 +349,8 @@ Cards["Crystal Lancer"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id)
+        Abils.cantBeBlocked(id)
 	end
 }
 
@@ -305,6 +369,16 @@ Cards["Crystal Paladin"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id)
+        local func = function(id)
+            local func2 = function(cid,sid)
+                if(getCreatureIsBlocker(sid)==1) then
+                    moveCard(sid,ZONE_HAND)
+                end
+            end
+            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id),func2))
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -484,7 +558,16 @@ Cards["Fighter Dual Fang"] = {
 	breaker = 2,
 
     HandleMessage = function(id)
-        --todo
+        Abils.Evolution(id)
+        local func = function(id)
+            local turn = getTurn()
+			local size = getZoneSize(turn,ZONE_BATTLE)
+			local c = getCardAt(turn,ZONE_DECK,size-1)
+			moveCard(c,ZONE_MANA)
+            c = getCardAt(turn,ZONE_DECK,size-2)
+            moveCard(c,ZONE_MANA)
+        end
+        Abils.onSummon(id,func)
     end
 }
 
@@ -719,7 +802,7 @@ Cards["Ladia Bale, the Inspirational"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.Evolution(id)
 	end
 }
 
@@ -767,7 +850,16 @@ Cards["Larba Geer, the Immaculate"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.Evolution(id)
+        local func = function(id)
+            local func2 = function(cid,sid)
+                if(getCreatureIsBlocker(sid)==1) then
+                    tapCard(sid)
+                end
+            end
+            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id),func2))
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -1274,7 +1366,7 @@ Cards["Ultracide Worm"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.Evolution(id)
 	end
 }
 
