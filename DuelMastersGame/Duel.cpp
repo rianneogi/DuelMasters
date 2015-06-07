@@ -269,6 +269,7 @@ int Duel::handleMessage(Message& msg)
 		int eb = msg.getInt("evobait");
 		Card* cid = CardList.at(eb);
 		getZone(cid->Owner, cid->Zone)->removeCard(cid);
+		cid->Zone = ZONE_EVOLVED;
 		CardList.at(msg.getInt("evolution"))->evostack.push_back(cid);
 	}
 	else if (msg.getType() == "cardtap")
@@ -1189,6 +1190,10 @@ Zone* Duel::getZone(int player, int zone)
 	else if (zone == ZONE_GRAVEYARD)
 	{
 		return &graveyards[player];
+	}
+	else if (zone == ZONE_EVOLVED)
+	{
+		return &battlezones[player];
 	}
 	return NULL;
 }

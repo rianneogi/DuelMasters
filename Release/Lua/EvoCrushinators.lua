@@ -149,7 +149,7 @@ Cards["Barkwhip, the Smasher"] = {
                 local owner = getCardOwner(id)
                 local size = getZoneSize(owner,ZONE_BATTLE)
                 for i=0,(size-1) do
-                    if(id==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Human" and sid~=id) then
+                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Beast Folk" and sid~=id) then
                         setMessageInt("power",getMessageInt("power")+2000)
                     end
                 end

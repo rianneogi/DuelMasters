@@ -335,7 +335,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					for (vector<Card*>::iterator i = duel.CardList.begin(); i != duel.CardList.end(); i++)
 					{
-						if ((*i)->Zone != ZONE_DECK && (*i)->Zone != ZONE_GRAVEYARD)
+						if ((*i)->Zone != ZONE_DECK && (*i)->Zone != ZONE_GRAVEYARD && (*i)->Zone != ZONE_EVOLVED)
 						{
 							if (checkCollision((*i)->getBounds(), MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
