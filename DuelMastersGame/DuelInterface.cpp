@@ -684,8 +684,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 
 				for (int i = 0; i < 2; i++) //view graveyard
 				{
-					if (checkCollision(duel.graveyards[i].getBounds(), MouseX, MouseY))
+					if (checkCollision(duel.graveyards[i].getBounds(), MouseX, MouseY)
+						&& cardsearch.zone != &duel.decks[0] && cardsearch.zone != &duel.decks[1])
 					{
+						//if (cardsearch.zone != &duel.graveyards[i]
 						if (cardsearch.zone != &duel.graveyards[i])
 						{
 							cardsearch.setZone(&duel.graveyards[i]);
