@@ -184,7 +184,7 @@
     <None Include="..\Release\Lua\EvoCrushinators.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
-    <None Include="..\Release\Lua\Rampage.lua">
+    <None Include="Lua\Rampage.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
   </ItemGroup>
