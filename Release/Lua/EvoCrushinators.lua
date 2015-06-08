@@ -376,7 +376,7 @@ Cards["Crystal Paladin"] = {
                     moveCard(sid,ZONE_HAND)
                 end
             end
-            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id),func2))
+            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -857,7 +857,7 @@ Cards["Larba Geer, the Immaculate"] = {
                     tapCard(sid)
                 end
             end
-            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id),func2))
+            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
         end
         Abils.onSummon(id,func)
 	end
