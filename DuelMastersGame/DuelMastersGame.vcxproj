@@ -131,7 +131,9 @@
     <None Include="..\Release\Lua\BaseSet.lua" />
     <None Include="..\Release\Lua\Common.lua" />
     <None Include="..\Release\Lua\EvoCrushinators.lua" />
-    <None Include="Lua\Rampage.lua" />
+    <None Include="..\Release\Lua\Rampage.lua" />
+    <None Include="ClassDiagram.cd" />
+    <None Include="Lua\Cards.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
