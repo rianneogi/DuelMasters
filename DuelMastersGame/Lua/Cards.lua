@@ -1,7 +1,7 @@
 Cards = {}
 
 package.path = package.path .. ';./?.lua;'
-require("Rampage")
+require("EvoCrushinators")
 
 loadCards = function()
 	for k,v in pairs(Cards) do loadcard(k,v.set) end

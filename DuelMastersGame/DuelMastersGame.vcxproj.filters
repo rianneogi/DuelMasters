@@ -191,5 +191,8 @@
     <None Include="Lua\Cards.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
+    <None Include="..\Release\Lua\Promo.lua">
+      <Filter>Source Files\Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>

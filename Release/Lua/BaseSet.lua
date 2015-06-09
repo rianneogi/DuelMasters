@@ -361,10 +361,7 @@ Cards["Bronze-Arm Tribe"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            local turn = getTurn()
-			local size = getZoneSize(turn,ZONE_BATTLE)
-			local c = getCardAt(turn,ZONE_DECK,size-1)
-			moveCard(c,ZONE_MANA)
+            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
         end
         Abils.onSummon(id,summon)
 	end

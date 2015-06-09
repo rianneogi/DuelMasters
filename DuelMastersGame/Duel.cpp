@@ -502,6 +502,7 @@ int Duel::handleInterfaceInput(Message& msg)
 					{
 						Message m("cardplay");
 						m.addValue("card", trigger);
+						m.addValue("evobait", -1);
 						MsgMngr.sendMessage(m);
 					}
 				}

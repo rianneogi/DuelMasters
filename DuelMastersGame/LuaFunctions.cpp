@@ -256,8 +256,16 @@ static int getCardAt(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
 	int z = lua_tointeger(L, 2);
+	int id = lua_tointeger(L, 3);
 	
-	lua_pushinteger(L, ActiveDuel->duel.getZone(p, z)->cards.at(lua_tointeger(L, 3))->UniqueId);
+	if (id >= ActiveDuel->duel.getZone(p, z)->cards.size())
+	{
+		lua_pushinteger(L, -1);
+	}
+	else
+	{
+		lua_pushinteger(L, ActiveDuel->duel.getZone(p, z)->cards.at(id)->UniqueId);
+	}
 
 	return 1;
 }

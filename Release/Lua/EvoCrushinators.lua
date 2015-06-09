@@ -1,5 +1,5 @@
 package.path = package.path .. ';./?.lua;'
-require("BaseSet")
+require("Promo")
 
 Cards["Amber Piercer"] = {
 	name = "Amber Piercer",
@@ -193,7 +193,7 @@ Cards["Bombersaur"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post creaturedestroy") then
-            if(getMessageInt("card")==id) then
+            if(getMessageInt("creature")==id) then
                 local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch>=0) then
                     destroyMana(ch)
@@ -481,7 +481,7 @@ Cards["Engineer Kipo"] = {
 
     HandleMessage = function(id)
         if(getMessageType()=="post creaturedestroy") then
-            if(getMessageInt("card")==id) then
+            if(getMessageInt("creature")==id) then
                 local ch = createChoice("Destroy a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
                 if(ch>=0) then
                     destroyMana(ch)
@@ -560,12 +560,7 @@ Cards["Fighter Dual Fang"] = {
     HandleMessage = function(id)
         Abils.Evolution(id)
         local func = function(id)
-            local turn = getTurn()
-			local size = getZoneSize(turn,ZONE_BATTLE)
-			local c = getCardAt(turn,ZONE_DECK,size-1)
-			moveCard(c,ZONE_MANA)
-            c = getCardAt(turn,ZONE_DECK,size-2)
-            moveCard(c,ZONE_MANA)
+            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,2)
         end
         Abils.onSummon(id,func)
     end
@@ -1255,10 +1250,7 @@ Cards["Silver Axe"] = {
 
 	HandleMessage = function(id)
         local func = function(id)
-            local turn = getTurn()
-			local size = getZoneSize(turn,ZONE_BATTLE)
-			local c = getCardAt(turn,ZONE_DECK,size-1)
-			moveCard(c,ZONE_MANA)
+            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
         end
         Abils.onAttack(id,func)
 	end

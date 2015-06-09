@@ -424,7 +424,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						}
 					}
 				}
-				else if (duel.attackphase == PHASE_TARGET && (duel.CardList.at(duel.attacker)->Owner == myPlayer || dueltype == DUELTYPE_SINGLE))
+				else if (duel.attackphase == PHASE_TARGET && (duel.CardList.at(duel.attacker)->Owner == myPlayer || dueltype == DUELTYPE_SINGLE)) //target shields
 				{
 					for (vector<Card*>::iterator i = duel.shields[getOpponent(duel.turn)].cards.begin(); i != duel.shields[getOpponent(duel.turn)].cards.end(); i++)
 					{
@@ -479,7 +479,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						undoSelection();
 					}
 				}
-				else if (duel.castingcard != -1 && (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE))
+				else if (duel.castingcard != -1 && (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //tap mana
 				{
 					for (vector<Card*>::iterator i = duel.manazones[duel.turn].cards.begin(); i != duel.manazones[duel.turn].cards.end(); i++)
 					{
@@ -541,7 +541,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					if (iscardevo == 1)
 					{
-						if (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)
+						if (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE) //cast evolution card
 						{
 							for (int i = 0; i < duel.battlezones[duel.turn].cards.size(); i++)
 							{
@@ -568,7 +568,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					else
 					{
 						if (checkCollision(duel.battlezones[duel.turn].getBounds(), MouseX, MouseY)
-							&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //cast a card
+							&& (duel.turn == myPlayer || dueltype == DUELTYPE_SINGLE)) //cast a non-evo card
 						{
 							Message msg("cardplay");
 							msg.addValue("card", selectedcard);
