@@ -1,3 +1,5 @@
+A computer game implementation of the Duel Masters card game with enforced rules
+
 ##Goals
 -Online PvP
 
