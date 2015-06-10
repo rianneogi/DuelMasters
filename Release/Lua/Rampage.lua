@@ -16,7 +16,19 @@ Cards["Alek, Solidity Enforcer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local valid = function(cid,sid)
+                    if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_LIGHT and cid~=sid) then
+                        return 1
+                    else
+                        return 0
+                    end
+                end
+                local c = Actions.count(id,valid)
+                Abils.bonusPower(id,c*1000)
+            end
+        end
 	end
 }
 
@@ -35,7 +47,11 @@ Cards["Aless, the Oracle"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="mod creaturedestroy") then
+		    if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
+			    setMessageInt("zoneto",ZONE_SHIELD)
+		    end
+	    end
 	end
 }
 
@@ -74,7 +90,21 @@ Cards["Aqua Deformer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            for i=1,2 do
+                local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+                if(ch>=0) then
+                    moveCard(ch,ZONE_HAND)
+                end
+            end
+            for i=1,2 do
+                local ch = createChoice("Choose a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
+                if(ch>=0) then
+                    moveCard(ch,ZONE_HAND)
+                end
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -93,7 +123,31 @@ Cards["Armored Warrior Quelos"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid1 = function(cid,sid)
+                if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardCiv(sid)==CIV_FIRE) then
+		            return 1
+	            else
+		            return 0
+	            end
+            end
+            local ch1 = createChoice("Choose a non-fire card in your mana zone",0,id,getCardOwner(id),valid1)
+            if(ch1>=0) then
+                destroyMana(ch1)
+            end
+
+            local valid2 = function(cid,sid)
+                if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardCiv(sid)==CIV_FIRE) then
+		            return 1
+	            else
+		            return 0
+	            end
+            end
+            local ch2 = createChoice("Choose a non-fire card in your mana zone",0,id,getCardOwner(id),valid2)
+            if(ch2>=0) then
+                destroyMana(ch2)
+            end
+        end
 	end
 }
 
@@ -196,7 +250,14 @@ Cards["Bone Piercer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="post cardmove") then
+            if(getMessageInt("from")==ZONE_BATTLE and getMessageInt("to")==ZONE_GRAVEYARD) then
+                local ch = createChoice("Choose a creature in your mana zone",1,id,getCardOwner(id),Checks.CreatureInYourMana)
+                if(ch>=0) then
+                    moveCard(ch,ZONE_HAND)
+                end
+            end
+        end
 	end
 }
 
@@ -253,7 +314,7 @@ Cards["Dawn Giant"] = {
 }
 
 Cards["Earthstomp Giant"] = {
-	name = "Alek, Solidity Enforcer",
+	name = "Earthstomp Giant",
 	set = "Rampage of the Super Warriors",
 	type = TYPE_CREATURE,
 	civilization = CIV_NATURE,
@@ -267,7 +328,13 @@ Cards["Earthstomp Giant"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local func2 = function(cid,sid)
+                moveCard(sid,ZONE_HAND)
+            end
+            Actions.execute(id,Checks.CreatureInYourMana,func2)
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -281,7 +348,22 @@ Cards["Eldritch Poison"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(Checks.InYourBattle(cid,sid)==1 and getCardCiv(sid)==CIV_DARKNESS) then
+                return 1
+            else
+                return 0
+            end
+        end
+        local ch = createChoice("Destroy one of your darkness creatures",1,id,getCardOwner(id),valid)
+        if(ch>=0) then  
+            destroyCreature(ch)
+            local ch2 = createChoice("Choose a creature in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+            if(ch2>=0) then
+                moveCard(ch2,ZONE_HAND)
+            end
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -337,7 +419,18 @@ Cards["Flametropus"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a card in your mana zone",1,id,getCardOwner(id),Checks.InYourMana)
+            if(ch>=0) then
+                destroyMana(ch)
+                local mod = function(cid,mid)
+                    Abils.PowerAttacker(cid,3000)
+                    Abils.Breaker(cid,2)
+		            Abils.destroyModAtEOT(cid,mid)
+                end
+                createModifier(id,mod)
+            end
+        end
 	end
 }
 
@@ -351,7 +444,11 @@ Cards["Flood Valve"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+        if(ch>=0) then
+            moveCard(ch,ZONE_HAND)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -370,7 +467,22 @@ Cards["Gamil, Knight of Hatred"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --Abils.returnCreatureFromGraveyardOnAttack(id,1)
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.CreatureInYourGraveyard(cid,sid) and getCardCiv(sid)==CIV_DARKNESS) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            for i=1,count do
+                local ch = createChoice("Select a darkness creature in your graveyard",0,id,getCardOwner(id),valid)
+                if(ch>=0) then
+                    moveCard(ch,ZONE_HAND)
+                end
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -424,7 +536,14 @@ Cards["Gigamantis"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        --todo
+        local owner = getCardOwner(id)
+        local s = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(s-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardCiv(cid)==CIV_NATURE and cid~=id) then
+                Abils.manaAfterDestroyed(cid)
+            end
+        end
 	end
 }
 
@@ -480,7 +599,14 @@ Cards["Jack Viper, Shadow of Doom"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        --todo
+        local owner = getCardOwner(id)
+        local s = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(s-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardCiv(cid)==CIV_DARKNESS and cid~=id) then
+                Abils.returnAfterDestroyed(cid)
+            end
+        end
 	end
 }
 
@@ -504,7 +630,7 @@ Cards["King Neptas"] = {
 }
 
 Cards["King Ponitas"] = {
-	name = "Jack Viper, Shadow of Doom",
+	name = "King Ponitas",
 	set = "Rampage of the Super Warriors",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,
@@ -538,7 +664,14 @@ Cards["Legendary Bynor"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        --todo
+        local owner = getCardOwner(id)
+        local s = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(s-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardCiv(cid)==CIV_WATER and cid~=id) then
+                Abils.cantBeBlocked(cid)
+            end
+        end
 	end
 }
 
@@ -557,7 +690,13 @@ Cards["Lena, Vizier of Brilliance"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a spell in your mana zone",1,id,getCardOwner(id),Checks.SpellsInYourMana)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -585,7 +724,11 @@ Cards["Logic Sphere"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local ch = createChoice("Choose a spell in your mana zone",0,id,getCardOwner(id),Checks.SpellsInYourMana)
+        if(ch>=0) then
+            moveCard(ch,ZONE_HAND)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -599,7 +742,11 @@ Cards["Mana Nexus"] = {
     shieldtrigger = 1,  
 
 	OnCast = function(id)
-        --todo
+        local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+        if(ch>=0) then
+            moveCard(ch,ZONE_SHIELD)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -765,7 +912,11 @@ Cards["Raza Vega, Thunder Guardian"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="mod creaturedestroy") then
+		    if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
+			    setMessageInt("zoneto",ZONE_SHIELD)
+		    end
+	    end
 	end
 }
 
@@ -852,7 +1003,14 @@ Cards["Sieg Balicula, the Intense"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        --todo
+        local owner = getCardOwner(id)
+        local s = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(s-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardCiv(cid)==CIV_LIGHT and cid~=id) then
+                Abils.Blocker(cid)
+            end
+        end
 	end
 }
 
@@ -956,7 +1114,11 @@ Cards["Sundrop Armor"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local ch = createChoice("Choose a card in your hand",0,id,getCardOwner(id),Checks.InYourHand)
+        if(ch>=0) then
+            moveCard(ch,ZONE_SHIELD)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -994,7 +1156,15 @@ Cards["Uberdragon Jabaha"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        Abils.Evolution(id)
+        local owner = getCardOwner(id)
+        local s = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(s-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(getCardCiv(cid)==CIV_FIRE and cid~=id) then
+                Abils.PowerAttacker(cid,2000)
+            end
+        end
 	end
 }
 

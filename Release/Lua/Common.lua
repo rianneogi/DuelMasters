@@ -276,8 +276,40 @@ Checks.InYourMana = function(cid,sid)
 	end
 end
 
+Checks.CreatureInYourMana = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_CREATURE) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.SpellInYourMana = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_SPELL) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.InOppMana = function(cid,sid)
 	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.CreatureInOppMana = function(cid,sid)
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_CREATURE) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.SpellInOppMana = function(cid,sid)
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_SPELL) then
 		return 1
 	else
 		return 0
