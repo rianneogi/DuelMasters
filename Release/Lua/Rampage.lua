@@ -874,7 +874,20 @@ Cards["Ra Vu, Seeker of Lightning"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.SpellInYourGraveyard(cid,sid)==1 and getCardCiv(sid)==CIV_LIGHT) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local ch = createChoice("Choose a light spell in your graveyard",1,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                moveCad(ch,ZONE_HAND)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -983,7 +996,17 @@ Cards["Shtra"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+            local ch = createChoice("Choose a card in your mana zone",0,id,getOpponent(getCardOwner(id)),Checks.InOppMana)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -1062,7 +1085,13 @@ Cards["Sniper Mosquito"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
