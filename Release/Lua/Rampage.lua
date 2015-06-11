@@ -71,7 +71,21 @@ Cards["Angler Cluster"] = {
 
 	HandleMessage = function(id)
         Abils.cantAttack(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_WATER) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.bonusPower(id,3000)
+                end
+            end
+        end
 	end
 }
 
@@ -180,7 +194,21 @@ Cards["Baby Zoppe"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_FIRE) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.bonusPower(id,2000)
+                end
+            end
+        end
 	end
 }
 
@@ -291,6 +319,19 @@ Cards["Chaos Fish"] = {
 
 	HandleMessage = function(id)
         --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local valid = function(cid,sid)
+                    if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_WATER and cid~=sid) then
+                        return 1
+                    else
+                        return 0
+                    end
+                end
+                local c = Actions.count(id,valid)
+                Abils.bonusPower(id,c*1000)
+            end
+        end
 	end
 }
 
@@ -469,7 +510,7 @@ Cards["Gamil, Knight of Hatred"] = {
 	HandleMessage = function(id)
         local func = function(id)
             local valid = function(cid,sid)
-                if(Checks.CreatureInYourGraveyard(cid,sid) and getCardCiv(sid)==CIV_DARKNESS) then
+                if(Checks.CreatureInYourGraveyard(cid,sid)==1 and getCardCiv(sid)==CIV_DARKNESS) then
                     return 1
                 else
                     return 0
@@ -502,7 +543,19 @@ Cards["Garkago Dragon"] = {
 
 	HandleMessage = function(id)
         Abils.canAttackUntappedCreatures(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local valid = function(cid,sid)
+                    if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_FIRE and cid~=sid) then
+                        return 1
+                    else
+                        return 0
+                    end
+                end
+                local c = Actions.count(id,valid)
+                Abils.bonusPower(id,c*1000)
+            end
+        end
 	end
 }
 
@@ -625,7 +678,20 @@ Cards["King Neptas"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.InBattle(cid,sid)==1 and getCreaturePower(sid)<=2000) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local ch = createChoice("Choose a creature that has 2000 power or less",1,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -644,7 +710,24 @@ Cards["King Ponitas"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.InYourDeck(cid,sid)==1 and getCardCiv(sid)==CIV_WATER) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local owner = getCardOwner(id)
+            openDeck(owner)
+            local ch = createChoice("Choose a water card in your deck",1,id,owner,valid)
+            closeDeck(owner)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+            shuffleDeck(owner)
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -750,6 +833,38 @@ Cards["Mana Nexus"] = {
 	end
 }
 
+Cards["Masked Pomegranate"] = {
+	name = "Masked Pomegranate",
+	set = "Rampage of the Super Warriors",
+	type = TYPE_CREATURE,
+	civilization = CIV_NATURE,
+	race = "Tree Folk",
+	cost = 5,
+
+	shieldtrigger = 0,
+	blocker = 0,
+
+	power = 1000,
+	breaker = 1,
+
+	HandleMessage = function(id)
+        Abils.cantBeBlockedPower(id,4000)
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local valid = function(cid,sid)
+                    if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_NATURE and cid~=sid) then
+                        return 1
+                    else
+                        return 0
+                    end
+                end
+                local c = Actions.count(id,valid)
+                Abils.bonusPower(id,c*1000)
+            end
+        end
+	end
+}
+
 Cards["Miar, Comet Elemental"] = {
 	name = "Miar, Comet Elemental",
 	set = "Rampage of the Super Warriors",
@@ -783,7 +898,21 @@ Cards["Mudman"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_DARKNESS) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.bonusPower(id,2000)
+                end
+            end
+        end
 	end
 }
 
@@ -855,7 +984,20 @@ Cards["Psyshroom"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.InYourGraveyard(cid,sid)==1 and getCardCiv(sid)==CIV_NATURE) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local ch = createChoice("Choose a card in your graveyard",1,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                moveCard(ch,ZONE_MANA)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -906,7 +1048,22 @@ Cards["Raging Dash-Horn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_LIGHT) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.bonusPower(id,3000)
+                    Abils.Breaker(id,2)
+                end
+            end
+        end
 	end
 }
 
@@ -934,7 +1091,7 @@ Cards["Raza Vega, Thunder Guardian"] = {
 }
 
 Cards["Roar of the Earth"] = {
-	name = "Raza Vega, Thunder Guardian",
+	name = "Roar of the Earth",
 	set = "Rampage of the Super Warriors",
 	type = TYPE_SPELL,
 	civilization = CIV_NATURE,
@@ -943,7 +1100,18 @@ Cards["Roar of the Earth"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(Checks.CreatureInYourMana(cid,sid)==1 and getCardCost(sid)>=6) then
+                return 1
+            else
+                return 0
+            end
+        end
+        local ch = createChoice("Select a creature in your mana zone",0,id,getCardOwner(id),valid)
+        if(ch>=0) then
+            moveCard(ch,ZONE_HAND)
+        end
+        Abils.EndSpell(id)
 	end
 }
 
@@ -963,7 +1131,19 @@ Cards["Scratchclaw"] = {
 
 	HandleMessage = function(id)
         Abils.Slayer(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local valid = function(cid,sid)
+                    if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_DARKNESS and cid~=sid) then
+                        return 1
+                    else
+                        return 0
+                    end
+                end
+                local c = Actions.count(id,valid)
+                Abils.bonusPower(id,c*1000)
+            end
+        end
 	end
 }
 
@@ -1110,7 +1290,21 @@ Cards["Sparkle Flower"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_LIGHT) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.Blocker(id)
+                end
+            end
+        end
 	end
 }
 
@@ -1212,7 +1406,21 @@ Cards["Ur Pale, Seeker of Sunlight"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_LIGHT) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
+                    Abils.bonusPower(id,2000)
+                end
+            end
+        end
 	end
 }
 

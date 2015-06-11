@@ -556,7 +556,7 @@ Cards["Crystal Memory"] = {
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
-            shuffleDeck(getCardOwner(ch))
+            shuffleDeck(owner)
         end
         Actions.EndSpell(id)
 	end
@@ -632,6 +632,7 @@ Cards["Deadly Fighter Braid Claw"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.attacksEachTurn(id)
 	end
 }
 
@@ -723,7 +724,7 @@ Cards["Dimension Gate"] = {
         closeDeck(owner)
 	    if(ch>=0) then
             moveCard(ch,ZONE_HAND)
-            shuffleDeck(getCardOwner(ch))
+            shuffleDeck(owner)
         end
         Actions.EndSpell(id)
 	end
@@ -763,6 +764,7 @@ Cards["Draglide"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.attacksEachTurn(id)
 	end
 }
 
@@ -1717,6 +1719,7 @@ Cards["Rayla, Truth Enforcer"] = {
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
+            shuffleDeck(ch,owner)
         end
         Abils.onSummon(id,summon)
 	end

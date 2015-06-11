@@ -1021,7 +1021,7 @@ Cards["Mini Titan Gett"] = {
 
 	HandleMessage = function(id)
         Abils.PowerAttacker(id,1000)
-        --todo
+        Abils.attacksEachTurn(id)
 	end
 }
 

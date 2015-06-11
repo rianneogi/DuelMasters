@@ -55,6 +55,14 @@ Abils.bonusPower = function(id, power)
 	end
 end
 
+Abils.Blocker = function(id)
+    if(getMessageType()=="get creatureisblocker") then
+        if(getMessageInt("creature")==id) then
+			setMessageInt("isblocker",1)
+		end
+    end
+end
+
 Abils.PowerAttacker = function(id, power)
 	if(getMessageType()=="get creaturepower") then
 		if(getMessageInt("creature")==id and getAttacker()==id) then
@@ -88,6 +96,9 @@ Abils.Slayer = function(id)
 			end
 		end
 	end
+end
+
+Abils.attacksEachTurn = function(id)
 end
 
 Abils.cantAttack = function(id)

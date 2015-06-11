@@ -73,6 +73,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIInterface.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="BattleZone.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="ZoneList.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIInterface.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="BattleZone.h" />
     <ClInclude Include="Button.h" />
