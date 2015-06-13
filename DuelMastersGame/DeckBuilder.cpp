@@ -178,7 +178,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 	}
 	else  if (e.type == sf::Event::MouseWheelMoved)
 	{
-		if (MouseX < 100 * cardcountx + 50)
+		if (MouseX < 125 * cardcountx + 50)
 		{
 			cardlistpos -= e.mouseWheel.delta;
 			if (cardlistpos < 0)

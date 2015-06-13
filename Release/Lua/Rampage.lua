@@ -1290,7 +1290,7 @@ Cards["Sparkle Flower"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        if(getMessageType()=="get creaturepower") then
+        if(getMessageType()=="get creatureisblocker") then
             if(getMessageInt("creature")==id) then
                 local owner = getCardOwner(id)
                 local size = getZoneSize(owner,ZONE_MANA)
@@ -1301,7 +1301,7 @@ Cards["Sparkle Flower"] = {
                     end
                 end
                 if(flag==0) then
-                    Abils.Blocker(id)
+                    setMessageInt("isblocker",1)
                 end
             end
         end

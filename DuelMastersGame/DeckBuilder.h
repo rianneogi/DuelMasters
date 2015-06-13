@@ -1,6 +1,17 @@
 #pragma once
 #include "Card.h"
 
+class CardData
+{
+	int CardId;
+	string Name;
+	string Race;
+	int Civilization;
+	int Type;
+	int ManaCost;
+	int Power;
+};
+
 struct DeckItem
 {
 	int card;
@@ -15,6 +26,7 @@ public:
 	int decklistpos;
 	vector<DeckItem> decklist;
 
+	vector<CardData> cardlist;
 	int cardlistpos;
 	vector<sf::Sprite> cardsprites;
 
