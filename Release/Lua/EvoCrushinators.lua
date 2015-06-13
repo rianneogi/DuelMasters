@@ -409,10 +409,17 @@ Cards["Diamond Cutter"] = {
 	cost = 5,
 
 	shieldtrigger = 0,
-	blocker = 0,
 
     OnCast = function(id)
-        --todo
+        local func = function(cid,sid)
+            local mod = function(cid,mid)
+                Abils.canAttackPlayersAlways(cid)
+                Abils.destroyModAtEOT(cid,mid)
+            end
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
     end
 }
 

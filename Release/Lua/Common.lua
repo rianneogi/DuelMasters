@@ -21,6 +21,7 @@ DEFENDER_PLAYER = 1
 CANATTACK_TAPPED = 0
 CANATTACK_UNTAPPED = 1
 CANATTACK_NO = 2
+CANATTACK_ALWAYS = 3
 
 RETURN_BUTTON1 = -1
 RETURN_BUTTON2 = -2
@@ -109,7 +110,7 @@ Abils.cantAttack = function(id)
 	end
     if(getMessageType()=="get creaturecanattackplayers") then
 		if(getMessageInt("attacker")==id) then
-			setMessageInt("canattack",0)
+			setMessageInt("canattack",CANATTACK_NO)
 		end
 	end
 end
@@ -125,7 +126,15 @@ end
 Abils.cantAttackPlayers = function(id)
 	if(getMessageType()=="get creaturecanattackplayers") then
 		if(getMessageInt("attacker")==id) then
-			setMessageInt("canattack",0)
+			setMessageInt("canattack",CANATTACK_NO)
+		end
+	end
+end
+
+Abils.canAttackPlayersAlways = function(id)
+    if(getMessageType()=="get creaturecanattackplayers") then
+		if(getMessageInt("attacker")==id) then
+			setMessageInt("canattack",CANATTACK_ALWAYS)
 		end
 	end
 end

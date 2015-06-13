@@ -392,7 +392,8 @@ int Duel::handleInterfaceInput(Message& msg)
 		int defen = msg.getInt("defender");
 		if (msg.getInt("defendertype") == DEFENDER_PLAYER)
 		{
-			if (getCreatureCanAttackPlayers(attck) == 1
+			int canattack = getCreatureCanAttackPlayers(attck);
+			if ((canattack == CANATTACK_ALWAYS || (CardList.at(attck)->summoningSickness == 0 && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
 				&& CardList.at(attck)->isTapped == false)
 			{
 				Message msg2("cardtap");
@@ -403,10 +404,11 @@ int Duel::handleInterfaceInput(Message& msg)
 		}
 		else if (msg.getInt("defendertype") == DEFENDER_CREATURE)
 		{
-			if ((CardList.at(defen)->isTapped == true || getCreatureCanAttackCreature(attck, defen) == CANATTACK_UNTAPPED)
-				&& getCreatureCanAttackCreature(attck, defen) <= CANATTACK_UNTAPPED
-				//&& getCreatureCanBeAttacked(attck, defen)
-				&& CardList.at(attck)->isTapped == false)
+			int canattack = getCreatureCanAttackCreature(attck, defen);
+			if ((CardList.at(defen)->isTapped == true || canattack == CANATTACK_UNTAPPED)
+				&& canattack <= CANATTACK_UNTAPPED
+				&& CardList.at(attck)->isTapped == false
+				&& CardList.at(attck)->summoningSickness == 0)
 			{
 				Message msg2("cardtap");
 				msg2.addValue("card", msg.getInt("attacker"));
@@ -840,13 +842,23 @@ int Duel::getCreatureCanAttackPlayers(int uid)
 {
 	Message oldmsg = currentMessage;
 	currentMessage = Message("get creaturecanattackplayers");
-	currentMessage.addValue("canattack", 1);
+	currentMessage.addValue("canattack", CANATTACK_TAPPED);
 	currentMessage.addValue("attacker", uid);
+
+	int big = CANATTACK_TAPPED;
 
 	vector<Card*>::iterator i;
 	for (i = CardList.begin(); i != CardList.end(); i++)
 	{
 		(*i)->handleMessage(currentMessage);
+		if (currentMessage.getInt("canattack") > big)
+		{
+			big = currentMessage.getInt("canattack");
+		}
+		else
+		{
+			currentMessage.addValue("canattack", big);
+		}
 	}
 	int c = currentMessage.getInt("canattack");
 	currentMessage = oldmsg;
