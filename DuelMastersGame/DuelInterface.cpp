@@ -369,7 +369,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						cout << "cs returned " << cs << endl;
 						if (cs != -1)
 						{
-							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1 
+							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1
 								&& (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
 								cout << "true " << endl;
@@ -519,7 +519,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					for (vector<Card*>::iterator j = duel.battlezones[duel.turn].cards.begin(); j != duel.battlezones[duel.turn].cards.end(); j++)
 					{
-						if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->isTapped == false 
+						if (checkCollision((*j)->getBounds(), MouseX, MouseY) && (*j)->isTapped == false
 							&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
 						{
 							selectedcard = (*j)->UniqueId;
@@ -605,7 +605,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					int canattack = duel.getCreatureCanAttackPlayers(selectedcard);
 					if (checkCollision(duel.shields[getOpponent(duel.turn)].getBounds(), MouseX, MouseY) //attack player
-						&& (canattack == CANATTACK_ALWAYS || 
+						&& (canattack == CANATTACK_ALWAYS ||
 						(duel.CardList.at(selectedcard)->summoningSickness == 0 && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
 						&& duel.CardList.at(selectedcard)->isTapped == false
 						&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
@@ -836,7 +836,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			{
 				currentWindow = static_cast<GameWindow*>(mainMenu);
 			}
-			
+
 		}
 		else if (event.mouseButton.button == sf::Mouse::Right)
 		{
@@ -847,6 +847,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	if (cardsearch.zone != NULL)
 	{
 		cardsearch.handleEvent(event);
+	}
+	if (duelstate == DUELSTATE_SINGLE || (duelstate == DUELSTATE_MULTI && dueltype == DUELTYPE_MULTI))
+	{
+		decklist.handleEvent(event);
 	}
 
 	return RETURN_NOTHING;

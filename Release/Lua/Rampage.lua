@@ -818,7 +818,7 @@ Cards["Logic Sphere"] = {
 Cards["Mana Nexus"] = {
 	name = "Mana Nexus",
 	set = "Rampage of the Super Warriors",
-	type = TYPE_CREATURE,
+	type = TYPE_SPELL,
 	civilization = CIV_NATURE,
 	cost = 4,
 
@@ -1054,12 +1054,26 @@ Cards["Raging Dash-Horn"] = {
                 local size = getZoneSize(owner,ZONE_MANA)
                 local flag = 0
                 for i=0,(size-1) do
-                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_LIGHT) then
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_NATURE) then
                         flag = 1
                     end
                 end
                 if(flag==0) then
                     Abils.bonusPower(id,3000)
+                end
+            end
+        end
+        if(getMessageType()=="get creaturebreaker") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_NATURE) then
+                        flag = 1
+                    end
+                end
+                if(flag==0) then
                     Abils.Breaker(id,2)
                 end
             end
