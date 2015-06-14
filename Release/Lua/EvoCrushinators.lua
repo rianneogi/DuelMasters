@@ -1036,7 +1036,7 @@ Cards["Phal Eega, Dawn Guardian"] = {
 	name = "Phal Eega, Dawn Guardian",
 	set = "Evo-Crushinators of Doom",
 	type = TYPE_CREATURE,
-	civilization = CIV_FIRE,
+	civilization = CIV_LIGHT,
 	race = "Guardian",
 	cost = 5,
 

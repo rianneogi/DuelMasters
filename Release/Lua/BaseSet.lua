@@ -609,7 +609,7 @@ Cards["Dark Reversal"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.InYourGraveyard)
+        local ch = createChoice("Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
@@ -1084,7 +1084,7 @@ Cards["Gran Gure, Space Guardian"] = {
 	blocker = 1,
 
 	power = 9000,
-	breaker = 2,
+	breaker = 1,
 
 	HandleMessage = function(id)
 		Abils.cantAttackPlayers(id)
@@ -1863,26 +1863,25 @@ Cards["Saucer-Head Shark"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		if(getMessageType()=="post cardmove") then
-			if(getMessageInt("card")==id) then
-				local owner = getCardOwner(id)
-				local size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreaturePower(cid)<=2000) then
-						moveCard(cid,ZONE_HAND)
-					end
-				end
-				owner = getOpponent(getCardOwner(id))
-				size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreaturePower(cid)<=2000) then
-						moveCard(cid,ZONE_HAND)
-					end
+		local func = function(id)
+			local owner = getCardOwner(id)
+			local size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreaturePower(cid)<=2000) then
+					moveCard(cid,ZONE_HAND)
 				end
 			end
-		end
+			owner = getOpponent(getCardOwner(id))
+			size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreaturePower(cid)<=2000) then
+					moveCard(cid,ZONE_HAND)
+				end
+			end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -1901,27 +1900,26 @@ Cards["Scarlet Skyterror"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		if(getMessageType()=="post cardmove") then
-			if(getMessageInt("card")==id) then
-				local owner = getCardOwner(id)
-				local size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreatureCanBlock(cid)==1) then
-						destroyCreature(cid)
-					end
+		local func = function(id)
+			local owner = getCardOwner(id)
+			local size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreatureIsBlocker(cid)==1) then
+					destroyCreature(cid)
 				end
+			end
 
-				owner = getOpponent(getCardOwner(id))
-				size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreatureCanBlock(cid)==1) then
-						destroyCreature(cid)
-					end
+			owner = getOpponent(getCardOwner(id))
+			size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreatureIsBlocker(cid)==1) then
+					destroyCreature(cid)
 				end
 			end
 		end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -2477,27 +2475,26 @@ Cards["Vampire Silphy"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		if(getMessageType()=="post cardmove") then
-			if(getMessageInt("card")==id) then
-				local owner = getCardOwner(id)
-				local size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreaturePower(cid)<=3000) then
-						destroyCreature(cid)
-					end
+		local func = function(id)
+			local owner = getCardOwner(id)
+			local size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreaturePower(cid)<=3000) then
+					destroyCreature(cid)
 				end
+			end
 
-				owner = getOpponent(getCardOwner(id))
-				size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					local cid = getCardAt(owner,ZONE_BATTLE,i)
-					if(getCreaturePower(cid)<=3000) then
-						destroyCreature(cid)
-					end
+			owner = getOpponent(getCardOwner(id))
+			size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				local cid = getCardAt(owner,ZONE_BATTLE,i)
+				if(getCreaturePower(cid)<=3000) then
+					destroyCreature(cid)
 				end
 			end
 		end
+        Abils.onSummon(id,func)
 	end
 }
 

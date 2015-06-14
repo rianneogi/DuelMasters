@@ -539,7 +539,7 @@ Cards["Garkago Dragon"] = {
 	blocker = 0,
 
 	power = 6000,
-	breaker = 1,
+	breaker = 2,
 
 	HandleMessage = function(id)
         Abils.canAttackUntappedCreatures(id)
