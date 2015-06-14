@@ -69,7 +69,9 @@ int main()
 		cout << "ERROR couldnt init cards" << endl;
 	}
 
-	Window = new sf::RenderWindow(sf::VideoMode(1300,800), "Duel Masters");
+	sf::VideoMode vm = sf::VideoMode::getFullscreenModes().at(0);
+	cout << "Video Mode width: " << vm.width << ", height: " << vm.height << ", bpp: " << vm.bitsPerPixel << endl;
+	Window = new sf::RenderWindow(vm, "Duel Masters", sf::Style::Fullscreen);
 	Window->setPosition(sf::Vector2i(0, 0));
 
 	SoundMngr = new SoundManager();
