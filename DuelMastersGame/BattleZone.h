@@ -11,7 +11,8 @@ public:
 	void renderCards(sf::RenderWindow& window);
 	void handleEvent(sf::Event event);
 	void addCard(Card* c);
-	void addEvoCard(Card* c, int evobait);
+	void evolveCard(Card* c, int evobait); //removes the evobait and adds the evolution at its location
 	void removeCard(Card* c);
+	void removeBait(Card* c);
 };
 

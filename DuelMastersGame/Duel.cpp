@@ -110,7 +110,7 @@ int Duel::handleMessage(Message& msg)
 			}
 			else
 			{
-				battlezones[owner].addEvoCard(c, evobait);
+				battlezones[owner].evolveCard(c, evobait);
 			}
 		}
 		else
@@ -268,7 +268,12 @@ int Duel::handleMessage(Message& msg)
 	{
 		int eb = msg.getInt("evobait");
 		Card* cid = CardList.at(eb);
-		getZone(cid->Owner, cid->Zone)->removeCard(cid);
+		//getZone(cid->Owner, cid->Zone)->removeCard(cid);
+		if (cid->Zone != ZONE_BATTLE)
+		{
+			cout << "WARNING: attempting to evolve on card that is not in battlezone" << endl;
+		}
+		//battlezones[cid->Owner].removeBait(cid);
 		cid->Zone = ZONE_EVOLVED;
 		CardList.at(msg.getInt("evolution"))->evostack.push_back(cid);
 	}

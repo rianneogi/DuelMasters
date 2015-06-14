@@ -33,15 +33,18 @@ void BattleZone::addCard(Card* c)
 	cards.push_back(c);
 }
 
-void BattleZone::addEvoCard(Card* c, int evobait)
+void BattleZone::evolveCard(Card* c, int evobait)
 {
 	Card* eb = NULL;
+	int ebloc = 0;
 	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
 	{
 		if ((*i)->UniqueId == evobait)
 		{
 			eb = *i;
+			break;
 		}
+		ebloc++;
 	}
 	if (eb == NULL)
 	{
@@ -49,11 +52,13 @@ void BattleZone::addEvoCard(Card* c, int evobait)
 		return;
 	}
 	sf::FloatRect r = eb->sprite.getGlobalBounds();
-	c->move(r.left + r.width*2, r.top + r.height/2);
+	c->move(r.left + r.width/2, r.top + r.height/2);
 	c->unflip();
 	c->untap();
 	c->summoningSickness = 0;
-	cards.push_back(c);
+	eb->Zone = ZONE_EVOLVED;
+	c->evostack.push_back(eb);
+	cards.at(ebloc) = c;
 }
 
 void BattleZone::removeCard(Card* c)
@@ -71,6 +76,20 @@ void BattleZone::removeCard(Card* c)
 	for (int i = x; i < cards.size(); i++)
 	{
 		cards.at(i)->setPosition(cards.at(i)->x - CARDSEPERATION, cards.at(i)->y);
+	}
+}
+
+void BattleZone::removeBait(Card* c)
+{
+	int x = 0;
+	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+	{
+		if (*i == c)
+		{
+			cards.erase(i);
+			break;
+		}
+		x++;
 	}
 }
 
