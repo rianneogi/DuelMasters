@@ -127,7 +127,7 @@ Cards["Armored Warrior Quelos"] = {
 	set = "Rampage of the Super Warriors",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Armoloid",
+	race = "Armorloid",
 	cost = 5,
 
 	shieldtrigger = 0,
@@ -481,7 +481,7 @@ Cards["Emeral"] = {
                 moveCard(ch,ZONE_SHIELD)
                 local ch2 = createChoice("Choose a card in your shields",0,id,getCardOwner(id),Checks.InYourShields)
                 if(ch2>=0) then
-                    moveCard(ch,ZONE_HAND)
+                    moveCard(ch2,ZONE_HAND)
                 end
             end
         end

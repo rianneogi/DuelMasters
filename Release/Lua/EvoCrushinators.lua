@@ -888,8 +888,8 @@ Cards["Leaping Tornado Horn"] = {
 Cards["Logic Cube"] = {
 	name = "Logic Cube",
 	set = "Evo-Crushinators of Doom",
-	type = TYPE_LIGHT,
-	civilization = CIV_SPELL,
+	type = TYPE_SPELL,
+	civilization = CIV_LIGHT,
 	cost = 3,
 
 	shieldtrigger = 1,

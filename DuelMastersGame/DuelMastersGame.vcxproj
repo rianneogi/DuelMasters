@@ -135,6 +135,7 @@
     <None Include="..\Release\Lua\EvoCrushinators.lua" />
     <None Include="..\Release\Lua\Promo.lua" />
     <None Include="..\Release\Lua\Rampage.lua" />
+    <None Include="..\Release\Lua\Shadowclash.lua" />
     <None Include="ClassDiagram.cd" />
     <None Include="Lua\Cards.lua" />
   </ItemGroup>

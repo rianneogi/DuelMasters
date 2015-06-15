@@ -110,7 +110,7 @@ Cards["Armored Walker Urherion"] = {
 	set = "Base Set",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Armoloid",
+	race = "Armorloid",
 	cost = 4,
 
 	shieldtrigger = 0,
@@ -1496,7 +1496,7 @@ Cards["Miele, Vizier of Lightning"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
+        local summon = function(id)
             local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
             if(ch>=0) then
                 tapCard(ch)
@@ -1805,7 +1805,7 @@ Cards["Rothus, the Traveler"] = {
 	set = "Base Set",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Armoloid",
+	race = "Armorloid",
 	cost = 4,
 
 	shieldtrigger = 0,

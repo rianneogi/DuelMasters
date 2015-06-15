@@ -200,5 +200,8 @@
     <None Include="..\Release\Lua\Promo.lua">
       <Filter>Source Files\Lua</Filter>
     </None>
+    <None Include="..\Release\Lua\Shadowclash.lua">
+      <Filter>Source Files\Lua</Filter>
+    </None>
   </ItemGroup>
 </Project>
