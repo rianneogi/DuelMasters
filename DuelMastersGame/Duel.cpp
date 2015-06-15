@@ -124,6 +124,7 @@ int Duel::handleMessage(Message& msg)
 			{
 				Message m("cardmove");
 				m.addValue("card", c->evostack.at(i)->UniqueId);
+				m.addValue("from", c->evostack.at(i)->Zone);
 				m.addValue("to", tozone);
 				MsgMngr.sendMessage(m);
 				c->evostack.pop_back();
@@ -134,6 +135,7 @@ int Duel::handleMessage(Message& msg)
 			c->callOnCast(); //cast the spell
 			Message m("cardmove");
 			m.addValue("card", cid);
+			m.addValue("from", CardList.at(cid)->Zone);
 			m.addValue("to", ZONE_GRAVEYARD);
 			MsgMngr.sendMessage(m);
 		}
@@ -146,21 +148,27 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "creaturedestroy")
 	{
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("creature"));
+		int cid = msg.getInt("creature");
+		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", msg.getInt("zoneto"));
 		MsgMngr.sendMessage(m);
 	}
 	else if (msg.getType() == "carddiscard")
 	{
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("card"));
+		int cid = msg.getInt("card");
+		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", msg.getInt("zoneto"));
 		MsgMngr.sendMessage(m);
 	}
 	else if (msg.getType() == "manadestroy")
 	{
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("card"));
+		int cid = msg.getInt("card");
+		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", msg.getInt("zoneto"));
 		MsgMngr.sendMessage(m);
 	}
@@ -185,6 +193,7 @@ int Duel::handleMessage(Message& msg)
 		int eb = msg.getInt("evobait");
 		Message m("cardmove");
 		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", ZONE_BATTLE);
 		m.addValue("evobait", eb);
 		MsgMngr.sendMessage(m);
@@ -201,8 +210,10 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "cardmana")
 	{
 		manaUsed = 1;
+		int cid = msg.getInt("card");
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("card"));
+		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", ZONE_MANA);
 		MsgMngr.sendMessage(m);
 		SoundMngr->playSound(SOUND_PLAY);
@@ -251,7 +262,9 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "breakshield")
 	{
 		Message m("cardmove");
-		m.addValue("card", msg.getInt("shield"));
+		int cid = msg.getInt("shield");
+		m.addValue("card", cid);
+		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", ZONE_HAND);
 		MsgMngr.sendMessage(m);
 		/*if (msg.getInt("cantrigger") == 1)
@@ -1039,6 +1052,7 @@ void Duel::drawCards(int player, int count)
 	{
 		Message msg("cardmove");
 		msg.addValue("card", decks[player].cards.at(decks[player].cards.size() - i - 1)->UniqueId);
+		msg.addValue("from", decks[player].cards.at(decks[player].cards.size() - i - 1)->Zone);
 		msg.addValue("to", ZONE_HAND);
 		MsgMngr.sendMessage(msg);
 	}
@@ -1133,6 +1147,7 @@ void Duel::startDuel()
 			shields[i].addCard(c);*/
 			Message msg("cardmove");
 			msg.addValue("card", decks[i].cards.at(decks[i].cards.size() - 1 - j)->UniqueId);
+			msg.addValue("from", ZONE_DECK);
 			msg.addValue("to", ZONE_SHIELD);
 			MsgMngr.sendMessage(msg);
 		}
@@ -1142,6 +1157,7 @@ void Duel::startDuel()
 			hands[i].addCard(c);*/
 			Message msg("cardmove");
 			msg.addValue("card", decks[i].cards.at(decks[i].cards.size() - 6 - j)->UniqueId);
+			msg.addValue("from", ZONE_DECK);
 			msg.addValue("to", ZONE_HAND);
 			MsgMngr.sendMessage(msg);
 		}

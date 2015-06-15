@@ -99,6 +99,14 @@ Abils.Slayer = function(id)
 	end
 end
 
+Abils.Charger = function(id)
+	if(getMessageType()=="mod cardmove") then
+		if(getMessageInt("card")==id and getMessageInt("to")==ZONE_GRAVEYARD and getMessageInt("from")==ZONE_BATTLE) then
+			setMessageInt("to",ZONE_MANA)
+		end
+	end
+end
+
 Abils.attacksEachTurn = function(id)
 end
 

@@ -331,9 +331,17 @@ Cards["Boomerang Comet"] = {
 
 	shieldtrigger = 1,
 
-	HandleMessage = function(id)
-        --todo
-	end
+	OnCast = function(id)
+        local ch = createChoice("Choose a card in your mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+        if(ch>=0) then
+            moveCard(ch,ZONE_HAND)
+        end
+        Actions.EndSpell(id)
+	end,
+
+    HandleMessage = function(id)
+        Abils.Charger(id)
+    end
 }
 
 Cards["Chaos Fish"] = {
@@ -351,7 +359,6 @@ Cards["Chaos Fish"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
         if(getMessageType()=="get creaturepower") then
             if(getMessageInt("creature")==id) then
                 local valid = function(cid,sid)
@@ -365,6 +372,18 @@ Cards["Chaos Fish"] = {
                 Abils.bonusPower(id,c*1000)
             end
         end
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(getCardOwner(cid)==getCardOwner(sid) and getCardZone(cid)==ZONE_BATTLE and getCardZone(sid)==ZONE_BATTLE and getCardCiv(sid)==CIV_WATER and cid~=sid) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local c = Actions.count(id,valid)
+            drawCards(getCardOwner(id),c)
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -456,7 +475,17 @@ Cards["Emeral"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a card in your hand",1,id,getCardOwner(id),Checks.InYourHand)
+            if(ch>=0) then
+                moveCard(ch,ZONE_SHIELD)
+                local ch2 = createChoice("Choose a card in your shields",0,id,getCardOwner(id),Checks.InYourShields)
+                if(ch2>=0) then
+                    moveCard(ch,ZONE_HAND)
+                end
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -826,7 +855,23 @@ Cards["Liquid Scope"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if((getCardZone(sid)==ZONE_SHIELD or getCardZone(sid)==ZONE_HAND) and getCardOwner(sid)~=getCardOwner(cid)) then
+                return 1
+            else
+                return 0
+            end
+        end
+        local func = function(cid,sid)
+            unflipCard(sid)
+        end
+        local func2 = function(cid,sid)
+            flipCard(sid)
+        end
+        Actions.execute(id,valid,func)
+        local ch = createChoiceNoCheck("Look at cards",1,id,getCardOwner(id),Checks.False)
+        Actions.execute(id,valid,func2)
+        Actions.EndSpell(id)
 	end
 }
 
