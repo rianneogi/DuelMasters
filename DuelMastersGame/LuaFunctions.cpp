@@ -404,8 +404,6 @@ void registerLua(lua_State* L)
 	lua_register(L, "tapCard", tapCard);
 	lua_register(L, "untapCard", untapCard);
 	lua_register(L, "drawCards", drawCards);
-	lua_register(L, "createModifier", createModifier);
-	lua_register(L, "destroyModifier", destroyModifier);
 	lua_register(L, "shuffleDeck", shuffleDeck);
 	lua_register(L, "openDeck", openDeck);
 	lua_register(L, "closeDeck", closeDeck);

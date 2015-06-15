@@ -1139,17 +1139,26 @@ Cards["Recon Operation"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
+        local owner = getCardOwner(id)
+        local cardsflipped = {}
+        local count = 0
         for i=1,3 do
-            local ch = createChoice("Choose an opponent's shield",1,id,getCardOwner(id),Checks.InOppShield)
+            local ch = createChoice("Choose an opponent's shield",1,id,owner,Checks.InOppShields)
             if(ch>=0) then
-                --todo flip card here
+                cardsflipped[i] = ch
+                unflipCard(ch,owner)
+                count = count+1
             end
-            if(ch==-1) then
+            if(ch==RETURN_BUTTON1 or ch==RETURN_NOVALID) then
                 break
             end
         end
-        local ch = createChoiceNoCheck("Ok",1,id,getCardOwner(id),Checks.False)
-        --todo unflip here
+        if(count>0) then
+            local ch = createChoiceNoCheck("Look at cards",1,id,owner,Checks.False)
+            for k,v in pairs(cardsflipped) do 
+                flipCard(v,owner) 
+            end
+        end
 	end
 }
 
@@ -1384,7 +1393,15 @@ Cards["Wyn, the Oracle"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose an opponent's shield",1,id,getCardOwner(id),Checks.InOppShields)
+            if(ch>=0) then
+                unflipCard(ch,owner)
+                createChoiceNoCheck("Look at card",1,id,getCardOwner(id),Checks.False)
+                flipCard(ch)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
