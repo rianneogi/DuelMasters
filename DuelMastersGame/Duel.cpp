@@ -366,7 +366,7 @@ int Duel::handleInterfaceInput(Message& msg)
 	{
 		int whichCard = msg.getInt("card");
 		int manacost = getCardCost(whichCard);
-		if (manazones[turn].getUntappedMana() >= manacost && isThereUntappedManaOfCiv(turn, getCardCivilization(whichCard)))
+		if (manazones[turn].getUntappedMana() >= manacost && isThereUntappedManaOfCiv(turn, getCardCivilization(whichCard)) && getCardCanCast(whichCard)==1)
 		{
 			//manazones[turn].tapMana(manacost);
 			castingcard = whichCard;
@@ -997,6 +997,23 @@ int Duel::getIsEvolution(int uid)
 		(*i)->handleMessage(currentMessage);
 	}
 	int c = currentMessage.getInt("isevolution");
+	currentMessage = oldmsg;
+	return c;
+}
+
+int Duel::getCardCanCast(int uid)
+{
+	Message oldmsg = currentMessage;
+	currentMessage = Message("get cardcancast");
+	currentMessage.addValue("cancast", 1);
+	currentMessage.addValue("card", uid);
+
+	vector<Card*>::iterator i;
+	for (i = CardList.begin(); i != CardList.end(); i++)
+	{
+		(*i)->handleMessage(currentMessage);
+	}
+	int c = currentMessage.getInt("cancast");
 	currentMessage = oldmsg;
 	return c;
 }

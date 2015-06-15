@@ -119,6 +119,7 @@ public:
 	int getCardCivilization(int uid);
 	int getIsShieldTrigger(int uid);
 	int getIsEvolution(int uid);
+	int getCardCanCast(int uid);
 };
 
 int getOpponent(int turn);

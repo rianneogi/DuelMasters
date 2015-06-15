@@ -411,11 +411,11 @@ Cards["Diamond Cutter"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
+        local mod = function(cid,mid)
+            Abils.canAttackPlayersAlways(cid)
+            Abils.destroyModAtEOT(cid,mid)
+        end
         local func = function(cid,sid)
-            local mod = function(cid,mid)
-                Abils.canAttackPlayersAlways(cid)
-                Abils.destroyModAtEOT(cid,mid)
-            end
             createModifier(sid,mod)
         end
         Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)

@@ -216,7 +216,7 @@ Cards["Baraga, Blade of Gloom"] = {
 	name = "Baraga, Blade of Gloom",
 	set = "Rampage of the Super Warriors",
 	type = TYPE_CREATURE,
-	civilization = CIV_LIGHT,
+	civilization = CIV_DARKNESS,
 	race = "Dark Lord",
 	cost = 4,
 
@@ -227,7 +227,13 @@ Cards["Baraga, Blade of Gloom"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose one of your shields",0,id,getCardOwner(id),Checks.InYourShields)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -241,8 +247,35 @@ Cards["Blaze Cannon"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
-	end
+        local mod = function(cid,mid)
+            Abils.PowerAttacker(cid,4000)
+            Abils.Breaker(cid,2)
+		    Abils.destroyModAtEOT(cid,mid)
+        end
+        local func = function(cid,sid)
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
+	end,
+
+    HandleMessage = function(id)
+        if(getMessageType()=="get cardcancast") then
+            if(getMessageInt("card")==id) then
+                local owner = getCardOwner(id)
+                local size = getZoneSize(owner,ZONE_MANA)
+                local flag = 0
+                for i=0,(size-1) do
+                    if(getCardCiv(getCardAt(owner,ZONE_MANA,i))~=CIV_FIRE) then
+                        flag = 1
+                    end
+                end
+                if(flag==1) then
+                    setMessageInt("cancast",0)
+                end
+            end
+        end
+    end
 }
 
 Cards["Boltail Dragon"] = {
@@ -987,7 +1020,7 @@ Cards["Psychic Shaper"] = {
             if(getCardCiv(c)==CIV_WATER) then
 	            moveCard(c,ZONE_HAND)
             else
-                moveCard(c,ZONE_GRAVEYARD
+                moveCard(c,ZONE_GRAVEYARD)
             end
         end
 	end
@@ -1195,7 +1228,17 @@ Cards["Searing Wave"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local func = function(cid,sid)
+            if(getCreaturePower(sid)<=3000) then
+                destroyCreature(sid)
+            end
+        end
+        Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func)
+        local ch2 = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShields)
+        if(ch2>=0) then
+            moveCard(ch2,ZONE_GRAVEYARD)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -1258,14 +1301,26 @@ Cards["Sieg Balicula, the Intense"] = {
 Cards["Snake Attack"] = {
 	name = "Snake Attack",
 	set = "Rampage of the Super Warriors",
-	type = TYPE_CREATURE,
+	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 4,
 
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local mod = function(cid,mid)
+            Abils.Breaker(cid,2)
+            Abils.destroyModAtEOT(cid,mid)
+        end
+        local func = function(cid,sid)
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        local ch2 = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShields)
+        if(ch2>=0) then
+            moveCard(ch2,ZONE_GRAVEYARD)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -1489,7 +1544,22 @@ Cards["Volcanic Arrows"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(Checks.InBattle(cid,sid)==1 and getCreaturePower(sid)<=6000) then
+                return 1
+            else
+                return 0
+            end
+        end
+        local ch = createChoice("Choose a creature",0,id,getCardOwner(id),valid)
+        if(ch>=0) then
+            destroyCreature(ch)
+        end
+        local ch2 = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShields)
+        if(ch2>=0) then
+            moveCard(ch2,ZONE_GRAVEYARD)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
