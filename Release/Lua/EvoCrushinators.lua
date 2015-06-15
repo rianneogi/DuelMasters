@@ -461,7 +461,7 @@ Cards["Elf-X"] = {
         if(getMessageType()=="get cardcost") then
             if(getCardZone(id)==ZONE_BATTLE) then
                 local card = getMessageInt("card")
-                if(getCardType(card==TYPE_CREATURE) and getCardOwner(id)==getCardOwner(card)) then
+                if(getCardType(card)==TYPE_CREATURE and getCardOwner(id)==getCardOwner(card)) then
                     local cost = getMessageInt("cost")
                     if(cost>1) then
                         setMessageInt("cost",cost-1)
@@ -1218,7 +1218,7 @@ Cards["Rumbling Terahorn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        func = function(id)
+        local func = function(id)
             local owner = getCardOwner(id)
             openDeck(owner)
 	        local ch = createChoice("Choose a creature in your deck",0,id,owner,Checks.CreatureInYourDeck)

@@ -534,6 +534,7 @@ Cards["Flametropus"] = {
                 createModifier(id,mod)
             end
         end
+        Abils.onAttack(id,func)
 	end
 }
 
