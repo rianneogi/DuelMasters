@@ -931,7 +931,20 @@ Cards["Muramasa, Duke of Blades"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.InOppBattle(cid,sid)==1 and getCreaturePower(sid)<=2000) then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local ch = createChoice("Destroy one of your opponents creatures",1,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                destroyCreature(ch)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -965,7 +978,18 @@ Cards["Psychic Shaper"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local size = getZoneSize(player,ZONE_DECK)
+        for i=1,4 do
+            if(i>size) then
+                break
+            end
+            local c = getCardAt(player,ZONE_DECK,size-i)
+            if(getCardCiv(c)==CIV_WATER) then
+	            moveCard(c,ZONE_HAND)
+            else
+                moveCard(c,ZONE_GRAVEYARD
+            end
+        end
 	end
 }
 
@@ -1260,7 +1284,16 @@ Cards["Snip Striker Bullraizer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturecanattackcreature" or getMessageType()=="get creaturecanattackplayers") then
+            if(getMessageInt("creature")==id) then
+                local owner = getCardOwner(id)
+                local count = countCreaturesInBattle(owner)
+                local count2 = countCreaturesInBattle(getOpponent(owner))
+                if(count2>count) then
+                    Abils.cantAttack(id)
+                end
+            end
+        end
 	end
 }
 
@@ -1337,7 +1370,15 @@ Cards["Stinger Ball"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose an opponent's shield",1,id,getCardOwner(id),Checks.InOppShields)
+            if(ch>=0) then
+                unflipCard(ch,owner)
+                createChoiceNoCheck("Look at card",1,id,getCardOwner(id),Checks.False)
+                flipCard(ch)
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 

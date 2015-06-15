@@ -547,7 +547,7 @@ Actions.countCreaturesInBattle = function(player)
 end
 
 Actions.moveTopCardsFromDeck = function(player,zone,count)
-	local size = getZoneSize(player,ZONE_BATTLE)
+	local size = getZoneSize(player,ZONE_DECK)
     for i=1,count do
         if(i>size) then
             break
