@@ -1,16 +1,37 @@
 #pragma once
 
-const float CARD_SCALE = 0.20;
+#include "SFML\Graphics.hpp"
+#include "SFML\Audio.hpp"
+#include "SFML\Network.hpp"
+#include "SFML\Window.hpp"
 
-const int CARDSEPERATION = 65;
+const sf::Color ATTACKARROWCOLOR(255, 0, 0, 128);
+const sf::Color SUMMONARROWCOLOR(0, 255, 0, 128);
+
+//const sf::Color DECKBORDERCOLOR(141, 211, 199);
+//const sf::Color GRAVEYARDBORDERCOLOR(190, 186, 218);
+//const sf::Color HANDBORDERCOLOR(128, 177, 211);
+//const sf::Color MANABORDERCOLOR(179, 222, 105);
+//const sf::Color SHIELDBORDERCOLOR(253, 180, 98);
+//const sf::Color BATTLEBORDERCOLOR(251, 128, 114);
+const sf::Color DECKBORDERCOLOR(141, 211, 199);
+const sf::Color GRAVEYARDBORDERCOLOR(190, 186, 218);
+const sf::Color HANDBORDERCOLOR(255, 255, 178);
+const sf::Color MANABORDERCOLOR(254, 204, 92);
+const sf::Color SHIELDBORDERCOLOR(253, 141, 60);
+const sf::Color BATTLEBORDERCOLOR(227, 26, 28);
+
+const float CARD_SCALE = 0.25;
+
+const int CARDSEPERATION = 80;
 const int CARDZONEOFFSET = 5;
 const int CARDORIGINOFFSET = (307/2) * CARD_SCALE;
 
 const int ZONEBORDERSIZE = 3;
 
-const int CENTER = 360;
+const int CENTER = 390;
 const int ZONEYOFFSET = CARDSEPERATION + 3 * CARDZONEOFFSET;
-const int ZONE1X = 100;
+const int ZONE1X = 10;
 const int ZONE2X = 700;
 
 const int INFOBOXX = 800;
@@ -30,7 +51,7 @@ const int ENDTURNY = INFOTEXTY + 90;
 const int ENDTURNLENGTH = 150;
 const int ENDTURNHEIGHT = 40;
 
-const int QUITBUTTONX = ENDTURNX + 200;
+const int QUITBUTTONX = ENDTURNX + 300;
 const int QUITBUTTONY = ENDTURNY + 90;
 const int QUITBUTTONLENGTH = ENDTURNLENGTH;
 const int QUITBUTTONHEIGHT = ENDTURNHEIGHT;

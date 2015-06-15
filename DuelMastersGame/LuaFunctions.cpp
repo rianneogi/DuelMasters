@@ -252,6 +252,18 @@ static int closeDeck(lua_State* L)
 	return 0;
 }
 
+static int flipCard (lua_State* L)
+{
+	ActiveDuel->flipCardForPlayer(lua_tointeger(L, 1), lua_tointeger(L, 2));
+	return 0;
+}
+
+static int unflipCard(lua_State* L)
+{
+	ActiveDuel->unflipCardForPlayer(lua_tointeger(L, 1), lua_tointeger(L, 2));
+	return 0;
+}
+
 static int getCardAt(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
@@ -397,6 +409,8 @@ void registerLua(lua_State* L)
 	lua_register(L, "shuffleDeck", shuffleDeck);
 	lua_register(L, "openDeck", openDeck);
 	lua_register(L, "closeDeck", closeDeck);
+	lua_register(L, "flipCard", flipCard);
+	lua_register(L, "unflipCard", unflipCard);
 
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getTotalCardCount", getTotalCardCount);

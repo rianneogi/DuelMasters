@@ -950,6 +950,18 @@ void DuelInterface::undoSelection()
 	}
 }
 
+void DuelInterface::flipCardForPlayer(int cid, int p)
+{
+	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
+		duel.CardList.at(cid)->flip();
+}
+
+void DuelInterface::unflipCardForPlayer(int cid, int p)
+{
+	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
+		duel.CardList.at(cid)->unflip();
+}
+
 void DuelInterface::setDecklist()
 {
 	decklist.items.clear();

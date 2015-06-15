@@ -52,12 +52,12 @@ Duel::Duel()
 		battlezones[i].rect.setFillColor(sf::Color(255, 255, 255));
 		shields[i].rect.setFillColor(sf::Color(255, 255, 255));
 
-		decks[i].rect.setOutlineColor(sf::Color(255, 50, 255));
-		hands[i].rect.setOutlineColor(sf::Color(50, 50, 255));
-		manazones[i].rect.setOutlineColor(sf::Color(50, 255, 50));
-		graveyards[i].rect.setOutlineColor(sf::Color(100, 100, 120));
-		battlezones[i].rect.setOutlineColor(sf::Color(255, 50, 50));
-		shields[i].rect.setOutlineColor(sf::Color(255, 255, 50));
+		decks[i].rect.setOutlineColor(DECKBORDERCOLOR);
+		hands[i].rect.setOutlineColor(HANDBORDERCOLOR);
+		manazones[i].rect.setOutlineColor(MANABORDERCOLOR);
+		graveyards[i].rect.setOutlineColor(GRAVEYARDBORDERCOLOR);
+		battlezones[i].rect.setOutlineColor(BATTLEBORDERCOLOR);
+		shields[i].rect.setOutlineColor(SHIELDBORDERCOLOR);
 
 		decks[i].rect.setOutlineThickness(ZONEBORDERSIZE);
 		hands[i].rect.setOutlineThickness(ZONEBORDERSIZE);
