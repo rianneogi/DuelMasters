@@ -296,6 +296,12 @@ Abils.destroyModAtEOT = function(cid,mid)
 	end
 end
 
+Abils.destroyModAtSOT = function(cid,mid)
+    if(getMessageType()=="pre startturn") then
+		destroyModifier(cid,mid)
+	end
+end
+
 Checks.InYourMana = function(cid,sid)
 	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA) then
 		return 1
