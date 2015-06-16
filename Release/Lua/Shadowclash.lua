@@ -1386,7 +1386,26 @@ Cards["Sword of Benevolent Life"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(Checks.InYourBattle(cid,sid)==1 and getCardCiv(sid)==CIV_LIGHT)
+                return 1
+            else
+                return 0
+            end
+        end
+        local mod = function(cid,mid)
+            if(getMessageType()=="get creaturepower") then
+		        if(getMessageInt("creature")==cid) then
+                    local count = Actions.count(id,valid)
+			        setMessageInt("power",getMessageInt("power")+1000*count)
+		        end
+	        end
+        end
+        local func = function(cid,sid)
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
 	end
 }
 
@@ -1400,7 +1419,26 @@ Cards["Sword of Malevolent Death"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        local valid = function(cid,sid)
+            if(Checks.InYourMana(cid,sid)==1 and getCardCiv(sid)==CIV_DARKNESS)
+                return 1
+            else
+                return 0
+            end
+        end
+        local mod = function(cid,mid)
+            if(getMessageType()=="get creaturepower") then
+		        if(getMessageInt("creature")==cid and getAttacker()==cid) then
+                    local count = Actions.count(id,valid)
+			        setMessageInt("power",getMessageInt("power")+1000*count)
+		        end
+	        end
+        end
+        local func = function(cid,sid)
+            createModifier(sid,mod)
+        end
+        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
 	end
 }
 
