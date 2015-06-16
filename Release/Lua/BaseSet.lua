@@ -184,13 +184,12 @@ Cards["Aura Blast"] = {
 	OnCast = function(id)
         local mod = function(cid,mid)
             Abils.PowerAttacker(cid,2000)
-		Abils.destroyModAtEOT(cid,mid)
+		    Abils.destroyModAtEOT(cid,mid)
         end
-		local owner = getCardOwner(id)
-		local size = getZoneSize(owner,ZONE_BATTLE)-1
-		for i=0,size,1 do
-			createModifier(getCardAt(owner,ZONE_BATTLE,i),mod)
-		end
+        local func = function(cid,sid)
+            createModifier(sid,mod)
+        end
+		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
         Actions.EndSpell(id)
 	end
 }
@@ -509,11 +508,11 @@ Cards["Creeping Plague"] = {
             end
 		    Abils.destroyModAtEOT(cid,mid)
         end
-		local owner = getCardOwner(id)
-		local size = getZoneSize(owner,ZONE_BATTLE)-1
-		for i=0,size,1 do
-			createModifier(getCardAt(owner,ZONE_BATTLE,i),mod1)
-		end
+        local func = function(cid,sid)
+            createModifier(sid,mod1)
+        end
+		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Actions.EndSpell(id)
 	end
 }
 

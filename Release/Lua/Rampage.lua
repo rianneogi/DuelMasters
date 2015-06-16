@@ -175,7 +175,16 @@ Cards["Aurora of Reversal"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        while(true) do
+            local ch = createChoice("Choose a shield",1,id,getCardOwner(id),Checks.InYourShields)
+            if(ch>=0) then
+                moveCard(ch,ZONE_MANA)
+            end
+            if(ch==RETURN_NOVALID or ch==RETURN_BUTTON1) then
+                break
+            end
+        end
+        Abils.EndSpell(id)
 	end
 }
 
@@ -632,12 +641,21 @@ Cards["Ghastly Drain"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        --todo
+        while(true) do
+            local ch = createChoice("Choose a shield",1,id,getCardOwner(id),Checks.InYourShields)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+            if(ch==RETURN_NOVALID or ch==RETURN_BUTTON1) then
+                break
+            end
+        end
+        Abils.EndSpell(id)
 	end
 }
 
 Cards["Gigamantis"] = {
-	name = "Alek, Solidity Enforcer",
+	name = "Gigamantis",
 	set = "Rampage of the Super Warriors",
 	type = TYPE_CREATURE,
 	civilization = CIV_NATURE,
