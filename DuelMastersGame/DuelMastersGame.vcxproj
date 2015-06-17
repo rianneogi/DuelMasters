@@ -78,6 +78,7 @@
     <ClCompile Include="BattleZone.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardData.cpp" />
     <ClCompile Include="Choice.cpp" />
     <ClCompile Include="Constants.cpp" />
     <ClCompile Include="Deck.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="BattleZone.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CardData.h" />
     <ClInclude Include="Choice.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Deck.h" />

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Modifier.h"
+#include "CardData.h"
 
 enum ZoneType { ZONE_HAND, ZONE_DECK, ZONE_BATTLE, ZONE_MANA, ZONE_SHIELD, ZONE_GRAVEYARD, ZONE_EVOLVED };
 enum Civilization { CIV_LIGHT, CIV_NATURE, CIV_WATER, CIV_FIRE, CIV_DARKNESS };

@@ -197,8 +197,46 @@ static int loadcard(lua_State* L)
 {
 	string name = lua_tostring(L, 1);
 	string set = lua_tostring(L, 2);
-	CardNames.push_back(name);
+
 	std::cout << "Loading Card : " << name << "\n";
+
+	CardNames.push_back(name);
+
+	lua_getglobal(LuaCards, "Cards");
+	lua_getfield(LuaCards, -1, name.c_str());
+
+	lua_getfield(LuaCards, -1, "type");
+	int type = lua_tointeger(LuaCards, -1);
+	lua_pop(LuaCards, 1);
+
+	string race = "";
+	int power = 0;
+
+	if (type == TYPE_CREATURE)
+	{
+		lua_getfield(LuaCards, -1, "race");
+		race = lua_tostring(LuaCards, -1);
+		lua_pop(LuaCards, 1);
+
+		lua_getfield(LuaCards, -1, "power");
+		power = lua_tointeger(LuaCards, -1);
+		lua_pop(LuaCards, 1);
+	}
+
+	lua_getfield(LuaCards, -1, "civilization");
+	int civ = lua_tointeger(LuaCards, -1);
+	lua_pop(LuaCards, 1);
+
+	lua_getfield(LuaCards, -1, "cost");
+	int cost = lua_tointeger(LuaCards, -1);
+	lua_pop(LuaCards, 1);
+
+	lua_pop(LuaCards, 1);
+	lua_pop(LuaCards, 1);
+
+	CardData cd(CardDatabase.size(), name, set, race, civ, type, cost, power);
+	CardDatabase.push_back(cd);
+
 	name = "Graphics\\" + set + "\\" + name + ".png";
 	CardTextures.push_back(sf::Texture());
 	if (!CardTextures.at(CardTextures.size() - 1).loadFromFile(name))

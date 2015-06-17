@@ -1,17 +1,6 @@
 #pragma once
 #include "Card.h"
 
-class CardData
-{
-	int CardId;
-	string Name;
-	string Race;
-	int Civilization;
-	int Type;
-	int ManaCost;
-	int Power;
-};
-
 struct DeckItem
 {
 	int card;

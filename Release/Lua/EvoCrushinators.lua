@@ -910,7 +910,7 @@ Cards["Logic Cube"] = {
 Cards["Lost Soul"] = {
 	name = "Lost Soul",
 	set = "Evo-Crushinators of Doom",
-	type = TYPE_LIGHT,
+	type = TYPE_SPELL,
 	civilization = CIV_DARKNESS,
 	cost = 7,
 
