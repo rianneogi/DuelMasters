@@ -945,7 +945,7 @@ Cards["Mist Rias, Sonic Guardian"] = {
 	set = "Shadowclash of Blinding Night",
 	type = TYPE_CREATURE,
 	civilization = CIV_LIGHT,
-	race = "Angel Command",
+	race = "Guardian",
 	cost = 5,
 
 	shieldtrigger = 0,
@@ -956,7 +956,7 @@ Cards["Mist Rias, Sonic Guardian"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post cardmove") then
-		    if(getCardZone(id)==ZONE_BATTLE and getCardType(getMessageInt("card"))==TYPE_CREATURE and getMessageInt("to")==ZONE_BATTLE) then
+		    if(getCardZone(id)==ZONE_BATTLE and getCardType(getMessageInt("card"))==TYPE_CREATURE and getMessageInt("to")==ZONE_BATTLE and getMessageInt("card")~=id) then
                 local ch = createChoiceNoCheck("Draw a card?",2,id,getCardOwner(id),Checks.False)
                 if(ch==RETURN_BUTTON1) then
                     drawCards(getCardOwner(id),1)
@@ -982,7 +982,7 @@ Cards["Mongrel Man"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post creaturedestroy") then
-		    if(getCardZone(id)==ZONE_BATTLE) then
+		    if(getCardZone(id)==ZONE_BATTLE and getMessageInt("creature")~=id) then
                 local ch = createChoiceNoCheck("Draw a card?",2,id,getCardOwner(id),Checks.False)
                 if(ch==RETURN_BUTTON1) then
                     drawCards(getCardOwner(id),1)
