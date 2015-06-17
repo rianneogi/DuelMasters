@@ -956,7 +956,7 @@ Cards["Mist Rias, Sonic Guardian"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post cardmove") then
-		    if(getMessageZone(id)==ZONE_BATTLE and getCardType(getMessageInt("card"))==TYPE_CREATURE and getMessageInt("to")==ZONE_BATTLE) then
+		    if(getCardZone(id)==ZONE_BATTLE and getCardType(getMessageInt("card"))==TYPE_CREATURE and getMessageInt("to")==ZONE_BATTLE) then
                 local ch = createChoiceNoCheck("Draw a card?",2,id,getCardOwner(id),Checks.False)
                 if(ch==RETURN_BUTTON1) then
                     drawCards(getCardOwner(id),1)
@@ -982,7 +982,7 @@ Cards["Mongrel Man"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post creaturedestroy") then
-		    if(getMessageZone(id)==ZONE_BATTLE) then
+		    if(getCardZone(id)==ZONE_BATTLE) then
                 local ch = createChoiceNoCheck("Draw a card?",2,id,getCardOwner(id),Checks.False)
                 if(ch==RETURN_BUTTON1) then
                     drawCards(getCardOwner(id),1)
@@ -1387,7 +1387,7 @@ Cards["Sword of Benevolent Life"] = {
 
 	OnCast = function(id)
         local valid = function(cid,sid)
-            if(Checks.InYourBattle(cid,sid)==1 and getCardCiv(sid)==CIV_LIGHT)
+            if(Checks.InYourBattle(cid,sid)==1 and getCardCiv(sid)==CIV_LIGHT) then
                 return 1
             else
                 return 0
@@ -1420,7 +1420,7 @@ Cards["Sword of Malevolent Death"] = {
 
 	OnCast = function(id)
         local valid = function(cid,sid)
-            if(Checks.InYourMana(cid,sid)==1 and getCardCiv(sid)==CIV_DARKNESS)
+            if(Checks.InYourMana(cid,sid)==1 and getCardCiv(sid)==CIV_DARKNESS) then
                 return 1
             else
                 return 0

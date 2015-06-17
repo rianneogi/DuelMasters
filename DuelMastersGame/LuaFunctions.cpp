@@ -376,6 +376,18 @@ static int getDefender(lua_State* L)
 	return 1;
 }
 
+static int getEvoStackSize(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->evostack.size());
+	return 1;
+}
+
+static int getEvoStackAt(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->evostack.at(lua_tointeger(L, 2))->UniqueId);
+	return 1;
+}
+
 void registerLua(lua_State* L)
 {
 	lua_register(L, "printstr", printstr);
@@ -426,4 +438,6 @@ void registerLua(lua_State* L)
 	lua_register(L, "isCardTapped", isCardTapped);
 	lua_register(L, "getAttacker", getAttacker);
 	lua_register(L, "getDefender", getDefender);
+	lua_register(L, "getEvoStackSize", getEvoStackSize);
+	lua_register(L, "getEvoStackAt", getEvoStackAt);
 }
