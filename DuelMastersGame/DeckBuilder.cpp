@@ -12,12 +12,30 @@ DeckBuilder::DeckBuilder()
 
 	exitbutton = Button(sf::Vector2f(QUITBUTTONX, QUITBUTTONY), sf::Vector2f(QUITBUTTONLENGTH, QUITBUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Green, sf::Color::Black, "Main Menu", 16);
-	loadbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY - 50), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White,
+	loadbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY - BUTTONSEPERATION), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Blue, sf::Color::Black, "Load Deck", 16);
-	savebutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White,
+	savebutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Blue, sf::Color::Black, "Save Deck", 16);
-	newbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY + 50), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White,
+	newbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY + BUTTONSEPERATION), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Blue, sf::Color::Black, "New Deck", 16);
+
+	civbutton[0] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Yellow, sf::Color::Black, "Light", 16);
+	civbutton[1] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 35), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Green, sf::Color::Black, "Nature", 16);
+	civbutton[2] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 70), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Blue, sf::Color::Black, "Water", 16);
+	civbutton[3] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 105), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Red, sf::Color::Black, "Fire", 16);
+	civbutton[4] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 140), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Magenta, sf::Color::Black, "Darkness", 16);
+
+	sortbutton[0] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Yellow, sf::Color::Black, "Sort: Name", 16);
+	sortbutton[1] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 35), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Green, sf::Color::Black, "Sort: Cost", 16);
+	sortbutton[2] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 70), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Blue, sf::Color::Black, "Sort: Civ", 16);
+	sortbutton[3] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 105), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Red, sf::Color::Black, "Sort: Race", 16);
+	sortbutton[4] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 140), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Magenta, sf::Color::Black, "Sort: Type", 16);
+
+	for (int i = 0; i < 5; i++)
+	{
+		civfilter[i] = 1;
+	}
+	sortby = SORTBY_NAME;
 
 	MouseX = MouseY = 0;
 
@@ -49,6 +67,8 @@ DeckBuilder::DeckBuilder()
 		decks.push_back(s);
 	}
 	deckfile.close();
+
+	generateCardList();
 }
 
 DeckBuilder::~DeckBuilder()
@@ -62,6 +82,12 @@ void DeckBuilder::render(sf::RenderWindow& window)
 	savebutton.render(window);
 	loadbutton.render(window);
 	newbutton.render(window);
+
+	for (int i = 0; i < 5; i++)
+	{
+		civbutton[i].render(window);
+		sortbutton[i].render(window);
+	}
 
 	if (isloadingdeck == 1)
 	{
@@ -94,7 +120,7 @@ void DeckBuilder::render(sf::RenderWindow& window)
 	if (isloadingdeck == 0)
 	{
 		sf::Text t("Deck Name: " + currentdeck, DefaultFont, 16);
-		t.setPosition(HOVERCARDX, HOVERCARDY - 100);
+		t.setPosition(HOVERCARDX, HOVERCARDY - BUTTONSEPERATION);
 		window.draw(t);
 
 		int count = 0;
@@ -133,7 +159,7 @@ void DeckBuilder::render(sf::RenderWindow& window)
 		{
 			if (cardlistpos*cardcountx + count < CardTextures.size())
 			{
-				hovercard.setTexture(CardTextures.at(cardlistpos*cardcountx + count));
+				hovercard.setTexture(CardTextures.at(cardlist.at(cardlistpos*cardcountx + count).CardId));
 				window.draw(hovercard);
 			}
 		}
@@ -197,7 +223,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 				int index = (cardlistpos + vert)*cardcountx + hori;
 				if (index < CardTextures.size())
 				{
-					(*i).setTexture(CardTextures.at(index), true);
+					(*i).setTexture(CardTextures.at(cardlist.at(index).CardId), true);
 					hori++;
 					if (hori >= cardcountx)
 					{
@@ -319,6 +345,32 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 		}
 	}
 	return RETURN_NOTHING;
+}
+
+void DeckBuilder::generateCardList()
+{
+	cardlist.clear();
+	for (vector<CardData>::iterator i = CardDatabase.begin(); i != CardDatabase.end(); i++)
+	{
+		int civ = (*i).Civilization;
+		if (civfilter[civ] == 1)
+		{
+			cardlist.push_back(*i);
+		}
+	}
+	
+	for (int i = 0; i < cardlist.size(); i++)
+	{
+		for (int j = 0; j < cardlist.size() - 1 - i; j++)
+		{
+			if (cardlist.at(j).Name.compare(cardlist.at(j+1).Name) > 0)
+			{
+				CardData d = cardlist.at(j);
+				cardlist.at(j) = cardlist.at(j+1);
+				cardlist.at(j+1) = d;
+			}
+		}
+	}
 }
 
 int DeckBuilder::getCardAtPos(int x, int y)

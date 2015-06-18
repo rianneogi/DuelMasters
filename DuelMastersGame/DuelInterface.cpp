@@ -7,9 +7,9 @@ DuelInterface::DuelInterface()
 
 	setMyPlayer(0);
 
-	endturnbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White, ZONEBORDERSIZE,
+	endturnbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, ZONEBORDERSIZE,
 		sf::Color(127, 127, 127), sf::Color::Black, "Multiplayer", 16);
-	cancelbutton = Button(sf::Vector2f(CANCELBOXX, CANCELBOXY), sf::Vector2f(ENDTURNLENGTH, ENDTURNHEIGHT), sf::Color::White, ZONEBORDERSIZE,
+	cancelbutton = Button(sf::Vector2f(CANCELBOXX, CANCELBOXY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, ZONEBORDERSIZE,
 		sf::Color(127, 127, 127), sf::Color::Black, "Single Player", 16);
 	quitbutton = Button(sf::Vector2f(QUITBUTTONX, QUITBUTTONY), sf::Vector2f(QUITBUTTONLENGTH, QUITBUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Green, sf::Color::Black, "Main Menu", 16);

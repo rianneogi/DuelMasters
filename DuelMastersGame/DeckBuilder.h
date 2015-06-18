@@ -1,6 +1,8 @@
 #pragma once
 #include "Card.h"
 
+enum SortBy { SORTBY_NAME, SORTBY_COST, SORTBY_CIV, SORTBY_RACE, SORTBY_TYPE };
+
 struct DeckItem
 {
 	int card;
@@ -29,6 +31,11 @@ public:
 	Button newbutton;
 	Button exitbutton;
 
+	Button civbutton[5];
+	int civfilter[5];
+	int sortby;
+	Button sortbutton[5];
+
 	string currentdeck;
 	int isloadingdeck;
 
@@ -48,6 +55,8 @@ public:
 	void removeCard(int cid);
 	int getCardCount(int cid);
 	void setCardCount(int cid, int count);
+
+	void generateCardList();
 
 	void loaddeck();
 	void savedeck();
