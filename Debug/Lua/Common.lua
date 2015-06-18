@@ -13,6 +13,7 @@ ZONE_BATTLE = 2
 ZONE_MANA = 3
 ZONE_SHIELD = 4
 ZONE_GRAVEYARD = 5
+ZONE_EVOLVED = 6
 
 DEFENDER_CREATURE = 0
 DEFENDER_PLAYER = 1
@@ -20,6 +21,7 @@ DEFENDER_PLAYER = 1
 CANATTACK_TAPPED = 0
 CANATTACK_UNTAPPED = 1
 CANATTACK_NO = 2
+CANATTACK_ALWAYS = 3
 
 RETURN_BUTTON1 = -1
 RETURN_BUTTON2 = -2
@@ -36,6 +38,30 @@ getOpponent = function(p)
 	else
 		return 1
 	end
+end
+
+Abils.Evolution = function(id)
+    if(getMessageType()=="get creatureisevolution") then
+        if(getMessageInt("creature")==id) then
+            setMessageInt("isevolution",1)
+        end
+    end
+end
+
+Abils.bonusPower = function(id, power)
+    if(getMessageType()=="get creaturepower") then
+		if(getMessageInt("creature")==id) then
+			setMessageInt("power",getMessageInt("power")+power)
+		end
+	end
+end
+
+Abils.Blocker = function(id)
+    if(getMessageType()=="get creatureisblocker") then
+        if(getMessageInt("creature")==id) then
+			setMessageInt("isblocker",1)
+		end
+    end
 end
 
 Abils.PowerAttacker = function(id, power)
@@ -62,15 +88,26 @@ Abils.Slayer = function(id)
 		local def = getMessageInt("defender")
 		if(att==id) then
 			if(getCardZone(def)==ZONE_BATTLE) then
-				destroyCard(def)
+				destroyCreature(def)
 			end
 		end
 		if(def==id) then
 			if(getCardZone(att)==ZONE_BATTLE) then
-				destroyCard(att)
+				destroyCreature(att)
 			end
 		end
 	end
+end
+
+Abils.Charger = function(id)
+	if(getMessageType()=="mod cardmove") then
+		if(getMessageInt("card")==id and getMessageInt("to")==ZONE_GRAVEYARD and getMessageInt("from")==ZONE_BATTLE) then
+			setMessageInt("to",ZONE_MANA)
+		end
+	end
+end
+
+Abils.attacksEachTurn = function(id)
 end
 
 Abils.cantAttack = function(id)
@@ -81,7 +118,7 @@ Abils.cantAttack = function(id)
 	end
     if(getMessageType()=="get creaturecanattackplayers") then
 		if(getMessageInt("attacker")==id) then
-			setMessageInt("canattack",0)
+			setMessageInt("canattack",CANATTACK_NO)
 		end
 	end
 end
@@ -97,7 +134,15 @@ end
 Abils.cantAttackPlayers = function(id)
 	if(getMessageType()=="get creaturecanattackplayers") then
 		if(getMessageInt("attacker")==id) then
-			setMessageInt("canattack",0)
+			setMessageInt("canattack",CANATTACK_NO)
+		end
+	end
+end
+
+Abils.canAttackPlayersAlways = function(id)
+    if(getMessageType()=="get creaturecanattackplayers") then
+		if(getMessageInt("attacker")==id) then
+			setMessageInt("canattack",CANATTACK_ALWAYS)
 		end
 	end
 end
@@ -132,23 +177,23 @@ Abils.destroyAfterBattle = function(id)
 	if(getMessageType()=="post creaturebattle") then
 		if(getMessageInt("attacker")==id or getMessageInt("defender")==id) then
 			if(getCardZone(id)==ZONE_BATTLE) then
-				destroyCard(id)
+				destroyCreature(id)
 			end
 		end
 	end
 end
 
 Abils.returnAfterDestroyed = function(id)
-	if(getMessageType()=="mod carddestroy") then
-		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
+	if(getMessageType()=="mod creaturedestroy") then
+		if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_HAND)
 		end
 	end
 end
 
 Abils.manaAfterDestroyed = function(id)
-	if(getMessageType()=="mod carddestroy") then
-		if(getMessageInt("card")==id and getCardZone(id)==ZONE_BATTLE) then
+	if(getMessageType()=="mod creaturedestroy") then
+		if(getMessageInt("creature")==id and getCardZone(id)==ZONE_BATTLE) then
 			setMessageInt("zoneto",ZONE_MANA)
 		end
 	end
@@ -174,7 +219,7 @@ Abils.destroyYourManaOnSummon = function(id, count)
         for i=1,count do
             local ch = createChoice("Select mana to destroy",0,id,getCardOwner(id),Checks.InYourMana)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyMana(ch)
             end
         end
     end
@@ -186,17 +231,58 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
         for i=1,count do
             local ch = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
             if(ch>=0) then
-                destroyCard(ch)
+                destroyCreature(ch)
             end
         end
     end
     Abils.onSummon(id,summon)
 end
 
+Abils.onAttack = function(id,func)
+    if(getMessageType()=="post creatureattack") then
+        if(getMessageInt("attacker")==id) then
+            func(id)
+        end
+    end
+end
+
+Abils.destroyOppManaOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            local ch = createChoice("Select a card in opponent's mana",0,id,getCardOwner(id),Checks.InOppMana)
+            if(ch>=0) then
+                destroyMana(ch)
+            end
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
+Abils.discardOppCardOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            discardCardAtRandom(getOpponent(getCardOwner(id)))
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
+Abils.returnCreatureFromGraveyardOnAttack = function(id,count)
+    local func = function(id)
+        for i=1,count do
+            local ch = createChoice("Select a creature in your graveyard",0,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+    end
+    Abils.onAttack(id,func)
+end
+
 Abils.untapAtEOT = function(id,name)
     if(getMessageType()=="pre endturn") then
 		if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE and isCardTapped(id)==1) then
-			local ch = createChoiceNoCheck(name..": Untap this creature?",2,id,getCardOwner(id),Checks.False)
+			local ch = createChoiceNoCheck("Untap this creature?",2,id,getCardOwner(id),Checks.False)
 			if(ch==RETURN_BUTTON1) then
                 untapCard(id)
             end
@@ -210,6 +296,12 @@ Abils.destroyModAtEOT = function(cid,mid)
 	end
 end
 
+Abils.destroyModAtSOT = function(cid,mid)
+    if(getMessageType()=="pre startturn") then
+		destroyModifier(cid,mid)
+	end
+end
+
 Checks.InYourMana = function(cid,sid)
 	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA) then
 		return 1
@@ -218,8 +310,40 @@ Checks.InYourMana = function(cid,sid)
 	end
 end
 
+Checks.CreatureInYourMana = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_CREATURE) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.SpellInYourMana = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_SPELL) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.InOppMana = function(cid,sid)
 	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.CreatureInOppMana = function(cid,sid)
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_CREATURE) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.SpellInOppMana = function(cid,sid)
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_MANA and getCardType(sid)==TYPE_SPELL) then
 		return 1
 	else
 		return 0
@@ -298,8 +422,16 @@ Checks.UntappedInOppBattle = function(cid,sid)
 	end
 end
 
-Checks.OppBlocker = function(cid,sid)
-    if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureCanBlock(sid)==1) then
+Checks.BlockerInYourBattle = function(cid,sid)
+    if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureIsBlocker(sid)==1) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.BlockerInOppBattle = function(cid,sid)
+    if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureIsBlocker(sid)==1) then
 		return 1
 	else
 		return 0
@@ -338,6 +470,22 @@ Checks.CreatureInYourDeck = function(cid,sid)
 	end
 end
 
+Checks.InYourShields = function(cid,sid)
+    if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_SHIELD) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.InOppShields = function(cid,sid)
+    if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_SHIELD) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.True = function(cid,sid)
     return 1
 end
@@ -351,10 +499,74 @@ Actions.SkipChoice = function(cid)
 end
 
 Actions.EndChoiceSpell = function(cid)
-    setChoiceActive(0)
-    moveCard(cid,ZONE_GRAVEYARD)
+    --setChoiceActive(0)
+    --moveCard(cid,ZONE_GRAVEYARD)
 end
 
 Actions.EndSpell = function(id)
-    moveCard(id,ZONE_GRAVEYARD)
+    --moveCard(id,ZONE_GRAVEYARD)
+end
+
+Actions.execute = function(id,check,func)
+    local x = getTotalCardCount()
+    for i=0,(x-1) do
+        if(check(id,i)==1) then
+            func(id,i)
+        end
+    end
+end
+
+Actions.executeForCreaturesInBattle = function(id,player,func)
+    local s = getZoneSize(player,ZONE_BATTLE)
+    for i=0,(s-1) do
+        local c = getCardAt(player,ZONE_BATTLE,i)
+        if(getCardType(c)==TYPE_CREATURE) then
+            func(id,c)
+        end
+    end
+end
+
+Actions.count = function(id,check)
+    local x = getTotalCardCount()
+    local count = 0
+    for i=0,(x-1) do
+        if(check(id,i)==1) then
+            count=count+1
+        end
+    end
+    return count
+end
+
+Actions.countTappedCreaturesInBattle = function(player)
+    local size = getZoneSize(player,ZONE_BATTLE)
+    local count = 0
+    for i=0,(size-1) do
+        local sid = getCardAt(player,ZONE_BATTLE,i)
+        if(getCardType(sid)==TYPE_CREATURE and isCardTapped(sid)==1) then
+            count = count+1
+        end
+    end
+    return count
+end
+
+Actions.countCreaturesInBattle = function(player)
+    local size = getZoneSize(player,ZONE_BATTLE)
+    local count = 0
+    for i=0,(size-1) do
+        if(getCardType(getCardAt(player,ZONE_BATTLE,i))==TYPE_CREATURE) then
+            count = count+1
+        end
+    end
+    return count
+end
+
+Actions.moveTopCardsFromDeck = function(player,zone,count)
+	local size = getZoneSize(player,ZONE_DECK)
+    for i=1,count do
+        if(i>size) then
+            break
+        end
+        local c = getCardAt(player,ZONE_DECK,size-i)
+	    moveCard(c,zone)
+    end
 end

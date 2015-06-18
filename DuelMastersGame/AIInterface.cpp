@@ -15,7 +15,7 @@ AIInterface::~AIInterface()
 
 vector<Message> AIInterface::getValidMoves()
 {
-
+	return vector<Message>(0);
 }
 
 int AIInterface::getPlayerToMove()

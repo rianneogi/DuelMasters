@@ -43,6 +43,12 @@ void Button::setPosition(int x,int y)
 	text.setPosition(x + CARDZONEOFFSET, y + CARDZONEOFFSET);
 }
 
+void Button::setBorderColor(const sf::Color& c)
+{
+	rect.setOutlineColor(c);
+}
+
+
 bool checkCollision(sf::FloatRect& b, int x, int y)
 {
 	if (x >= b.left && x <= b.left + b.width && y >= b.top && y <= b.top + b.height)

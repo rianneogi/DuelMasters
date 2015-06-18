@@ -19,17 +19,17 @@ DeckBuilder::DeckBuilder()
 	newbutton = Button(sf::Vector2f(ENDTURNX, ENDTURNY + BUTTONSEPERATION), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White,
 		3, sf::Color::Blue, sf::Color::Black, "New Deck", 16);
 
-	civbutton[0] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Yellow, sf::Color::Black, "Light", 16);
-	civbutton[1] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 35), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Green, sf::Color::Black, "Nature", 16);
-	civbutton[2] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 70), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Blue, sf::Color::Black, "Water", 16);
-	civbutton[3] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 105), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Red, sf::Color::Black, "Fire", 16);
-	civbutton[4] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 140), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Magenta, sf::Color::Black, "Darkness", 16);
+	civbutton[0] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, CivColors[0], sf::Color::Black, "Light", 16);
+	civbutton[1] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 35), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, CivColors[1], sf::Color::Black, "Nature", 16);
+	civbutton[2] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 70), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, CivColors[2], sf::Color::Black, "Water", 16);
+	civbutton[3] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 105), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, CivColors[3], sf::Color::Black, "Fire", 16);
+	civbutton[4] = Button(sf::Vector2f(HOVERCARDX + 250, HOVERCARDY + 140), sf::Vector2f(80, BUTTONHEIGHT), sf::Color::White, 3, CivColors[4], sf::Color::Black, "Darkness", 16);
 
-	sortbutton[0] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Yellow, sf::Color::Black, "Sort: Name", 16);
-	sortbutton[1] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 35), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Green, sf::Color::Black, "Sort: Cost", 16);
-	sortbutton[2] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 70), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Blue, sf::Color::Black, "Sort: Civ", 16);
-	sortbutton[3] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 105), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Red, sf::Color::Black, "Sort: Race", 16);
-	sortbutton[4] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 140), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, sf::Color::Magenta, sf::Color::Black, "Sort: Type", 16);
+	sortbutton[0] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, ActiveButtonColor, sf::Color::Black, "Sort: Name", 16);
+	sortbutton[1] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 35), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, InactiveButtonColor, sf::Color::Black, "Sort: Cost", 16);
+	sortbutton[2] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 70), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, InactiveButtonColor, sf::Color::Black, "Sort: Civ", 16);
+	sortbutton[3] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 105), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, InactiveButtonColor, sf::Color::Black, "Sort: Race", 16);
+	sortbutton[4] = Button(sf::Vector2f(HOVERCARDX + 350, HOVERCARDY + 140), sf::Vector2f(BUTTONLENGTH, BUTTONHEIGHT), sf::Color::White, 3, InactiveButtonColor, sf::Color::Black, "Sort: Type", 16);
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -46,7 +46,7 @@ DeckBuilder::DeckBuilder()
 		{
 			cardsprites.push_back(sf::Sprite());
 			cardsprites[count] = sf::Sprite(CardTextures.at(count));
-			cardsprites[count].setPosition(j * 125, i * 125);
+			cardsprites[count].setPosition(j * 125, i * 155);
 			cardsprites[count].setScale(2*CARD_SCALE, 2*CARD_SCALE);
 			count++;
 		}
@@ -102,16 +102,16 @@ void DeckBuilder::render(sf::RenderWindow& window)
 			{
 				string s = *i;
 				sf::RectangleShape r(sf::Vector2f(150, 20));
-				r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos));
+				r.setPosition(DECKLISTX, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos));
 				r.setFillColor(sf::Color::White);
 				window.draw(r);
 				sf::Text t(s, DefaultFont, 14);
 				t.setColor(sf::Color::Black);
-				t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
+				t.setPosition(DECKLISTX + CARDZONEOFFSET, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
 				window.draw(t);
 			}
 			count++;
-			if (count >= decklistpos + CARDSEARCHITEMCOUNT)
+			if (count >= decklistpos + DECKLISTCOUNT)
 			{
 				break;
 			}
@@ -129,17 +129,17 @@ void DeckBuilder::render(sf::RenderWindow& window)
 			if (count >= decklistpos)
 			{
 				string s = std::to_string((*i).count) + " " + CardNames.at((*i).card);
-				sf::RectangleShape r(sf::Vector2f(CARDSEARCHLENGTH, 20));
-				r.setPosition(CARDSEARCHX, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos));
+				sf::RectangleShape r(sf::Vector2f(DECKLISTLENGTH, 20));
+				r.setPosition(DECKLISTX, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos));
 				r.setFillColor(sf::Color::White);
 				window.draw(r);
 				sf::Text t(s, DefaultFont, 14);
 				t.setColor(sf::Color::Black);
-				t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
+				t.setPosition(DECKLISTX + CARDZONEOFFSET, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
 				window.draw(t);
 			}
 			count++;
-			if (count >= decklistpos + CARDSEARCHITEMCOUNT)
+			if (count >= decklistpos + DECKLISTCOUNT)
 			{
 				break;
 			}
@@ -157,7 +157,7 @@ void DeckBuilder::render(sf::RenderWindow& window)
 	{
 		if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
 		{
-			if (cardlistpos*cardcountx + count < CardTextures.size())
+			if (cardlistpos*cardcountx + count < cardlist.size())
 			{
 				hovercard.setTexture(CardTextures.at(cardlist.at(cardlistpos*cardcountx + count).CardId));
 				window.draw(hovercard);
@@ -211,9 +211,9 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			{
 				cardlistpos = 0;
 			}
-			if (cardlistpos > CardNames.size() / cardcountx)
+			if (cardlistpos > cardlist.size() / cardcountx)
 			{
-				cardlistpos = CardNames.size() / cardcountx;
+				cardlistpos = cardlist.size() / cardcountx;
 			}
 
 			int hori = 0;
@@ -221,19 +221,19 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
 			{
 				int index = (cardlistpos + vert)*cardcountx + hori;
-				if (index < CardTextures.size())
+				if (index < cardlist.size())
 				{
 					(*i).setTexture(CardTextures.at(cardlist.at(index).CardId), true);
-					hori++;
-					if (hori >= cardcountx)
-					{
-						hori = 0;
-						vert++;
-					}
 				}
 				else
 				{
-					break;
+					(*i).setTexture(sf::Texture(), true);
+				}
+				hori++;
+				if (hori >= cardcountx)
+				{
+					hori = 0;
+					vert++;
 				}
 			}
 		}
@@ -261,9 +261,10 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 				{
 					if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
 					{
-						if (getCardCount(cardlistpos*cardcountx + count) < 4)
+						int index = cardlistpos*cardcountx + count;
+						if (getCardCount(cardlist.at(index).CardId) < 4)
 						{
-							addCard(cardlistpos*cardcountx + count);
+							addCard(cardlist.at(index).CardId);
 						}
 					}
 					count++;
@@ -276,6 +277,39 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 					{
 						addCard(decklist.at(card).card);
 					}
+				}
+			}
+
+			for (int i = 0; i < 5; i++)
+			{
+				if (sortbutton[i].collision(MouseX, MouseY))
+				{
+					sortby = i;
+					for (int j = 0; j < 5; j++)
+					{
+						if (i != j)
+						{
+							sortbutton[j].setBorderColor(InactiveButtonColor);
+						}
+						else
+						{
+							sortbutton[j].setBorderColor(ActiveButtonColor);
+						}
+					}
+					generateCardList();
+				}
+				if (civbutton[i].collision(MouseX, MouseY))
+				{
+					civfilter[i] = (civfilter[i] + 1) % 2;
+					if (civfilter[i] == 0)
+					{
+						civbutton[i].setBorderColor(InactiveButtonColor);
+					}
+					else
+					{
+						civbutton[i].setBorderColor(CivColors[i]);
+					}
+					generateCardList();
 				}
 			}
 
@@ -325,9 +359,10 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 				{
 					if (checkCollision((*i).getGlobalBounds(), MouseX, MouseY))
 					{
-						if (getCardCount(cardlistpos*cardcountx + count) > 0)
+						int index = cardlistpos*cardcountx + count;
+						if (getCardCount(cardlist.at(index).CardId) > 0)
 						{
-							removeCard(cardlistpos*cardcountx + count);
+							removeCard(cardlist.at(index).CardId);
 						}
 					}
 					count++;
@@ -350,6 +385,8 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 void DeckBuilder::generateCardList()
 {
 	cardlist.clear();
+	cardlistpos = 0;
+
 	for (vector<CardData>::iterator i = CardDatabase.begin(); i != CardDatabase.end(); i++)
 	{
 		int civ = (*i).Civilization;
@@ -359,16 +396,98 @@ void DeckBuilder::generateCardList()
 		}
 	}
 	
-	for (int i = 0; i < cardlist.size(); i++)
+	if (sortby == SORTBY_NAME)
 	{
-		for (int j = 0; j < cardlist.size() - 1 - i; j++)
+		for (int i = 0; i < cardlist.size(); i++)
 		{
-			if (cardlist.at(j).Name.compare(cardlist.at(j+1).Name) > 0)
+			for (int j = 0; j < cardlist.size() - 1 - i; j++)
 			{
-				CardData d = cardlist.at(j);
-				cardlist.at(j) = cardlist.at(j+1);
-				cardlist.at(j+1) = d;
+				if (cardlist.at(j).Name.compare(cardlist.at(j + 1).Name) > 0)
+				{
+					CardData d = cardlist.at(j);
+					cardlist.at(j) = cardlist.at(j + 1);
+					cardlist.at(j + 1) = d;
+				}
 			}
+		}
+	}
+	else if (sortby == SORTBY_RACE)
+	{
+		for (int i = 0; i < cardlist.size(); i++)
+		{
+			for (int j = 0; j < cardlist.size() - 1 - i; j++)
+			{
+				if (cardlist.at(j).Race.compare(cardlist.at(j + 1).Race) > 0)
+				{
+					CardData d = cardlist.at(j);
+					cardlist.at(j) = cardlist.at(j + 1);
+					cardlist.at(j + 1) = d;
+				}
+			}
+		}
+	}
+	else if (sortby == SORTBY_COST)
+	{
+		for (int i = 0; i < cardlist.size(); i++)
+		{
+			for (int j = 0; j < cardlist.size() - 1 - i; j++)
+			{
+				if (cardlist.at(j).ManaCost > cardlist.at(j + 1).ManaCost)
+				{
+					CardData d = cardlist.at(j);
+					cardlist.at(j) = cardlist.at(j + 1);
+					cardlist.at(j + 1) = d;
+				}
+			}
+		}
+	}
+	else if (sortby == SORTBY_CIV)
+	{
+		for (int i = 0; i < cardlist.size(); i++)
+		{
+			for (int j = 0; j < cardlist.size() - 1 - i; j++)
+			{
+				if (cardlist.at(j).Civilization > cardlist.at(j + 1).Civilization)
+				{
+					CardData d = cardlist.at(j);
+					cardlist.at(j) = cardlist.at(j + 1);
+					cardlist.at(j + 1) = d;
+				}
+			}
+		}
+	}
+	else if (sortby == SORTBY_TYPE)
+	{
+		for (int i = 0; i < cardlist.size(); i++)
+		{
+			for (int j = 0; j < cardlist.size() - 1 - i; j++)
+			{
+				if (cardlist.at(j).Type > cardlist.at(j + 1).Type)
+				{
+					CardData d = cardlist.at(j);
+					cardlist.at(j) = cardlist.at(j + 1);
+					cardlist.at(j + 1) = d;
+				}
+			}
+		}
+	}
+	resetCardSprites();
+}
+
+void DeckBuilder::resetCardSprites()
+{
+	cardlistpos = 0;
+	int count = 0;
+	for (int i = 0; i < cardcounty; i++)
+	{
+		for (int j = 0; j < cardcountx; j++)
+		{
+			if (count >= cardlist.size())
+			{
+				break;
+			}
+			cardsprites[count].setTexture(CardTextures.at(cardlist.at(count).CardId), true);
+			count++;
 		}
 	}
 }
@@ -376,11 +495,11 @@ void DeckBuilder::generateCardList()
 int DeckBuilder::getCardAtPos(int x, int y)
 {
 	int ans = -1;
-	if (x >= CARDSEARCHX && x <= CARDSEARCHX + CARDSEARCHLENGTH)
+	if (x >= DECKLISTX && x <= DECKLISTX + DECKLISTLENGTH)
 	{
-		if (y >= CARDSEARCHY && y <= CARDSEARCHY + CARDSEARCHITEMCOUNT*CARDSEARCHSEPERATION)
+		if (y >= DECKLISTY && y <= DECKLISTY + DECKLISTCOUNT*DECKLISTSEPERATION)
 		{
-			ans = ((y - CARDSEARCHY) / CARDSEARCHSEPERATION) + decklistpos;
+			ans = ((y - DECKLISTY) / DECKLISTSEPERATION) + decklistpos;
 		}
 	}
 	if (ans >= decklist.size() || ans < 0)
@@ -393,11 +512,11 @@ int DeckBuilder::getCardAtPos(int x, int y)
 int DeckBuilder::getDeckAtPos(int x, int y)
 {
 	int ans = -1;
-	if (x >= CARDSEARCHX && x <= CARDSEARCHX + CARDSEARCHLENGTH)
+	if (x >= DECKLISTX && x <= DECKLISTX + DECKLISTLENGTH)
 	{
-		if (y >= CARDSEARCHY && y <= CARDSEARCHY + CARDSEARCHITEMCOUNT*CARDSEARCHSEPERATION)
+		if (y >= DECKLISTY && y <= DECKLISTY + DECKLISTCOUNT*DECKLISTSEPERATION)
 		{
-			ans = ((y - CARDSEARCHY) / CARDSEARCHSEPERATION) + decklistpos;
+			ans = ((y - DECKLISTY) / DECKLISTSEPERATION) + decklistpos;
 		}
 	}
 	if (ans >= decks.size() || ans < 0)

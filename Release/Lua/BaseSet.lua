@@ -159,7 +159,7 @@ Cards["Astrocomet Dragon"] = {
 	set = "Base Set",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Astrocomet Dragon",
+	race = "Armored Dragon",
 	cost = 7,
 
 	shieldtrigger = 0,
@@ -2119,7 +2119,7 @@ Cards["Storm Shell"] = {
 	name = "Storm Shell",
 	set = "Base Set",
 	type = TYPE_CREATURE,
-	civilization = CIV_NAURE,
+	civilization = CIV_NATURE,
 	race = "Colony Beetle",
 	cost = 7,
 

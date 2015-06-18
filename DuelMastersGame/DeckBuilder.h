@@ -3,6 +3,16 @@
 
 enum SortBy { SORTBY_NAME, SORTBY_COST, SORTBY_CIV, SORTBY_RACE, SORTBY_TYPE };
 
+const sf::Color CivColors[5] = { sf::Color::Yellow, sf::Color::Green, sf::Color::Blue, sf::Color::Red, sf::Color::Magenta };
+const sf::Color InactiveButtonColor = sf::Color(170, 170, 170);
+const sf::Color ActiveButtonColor = sf::Color(255, 255, 70);
+
+const int DECKLISTX = CARDSEARCHX;
+const int DECKLISTY = CARDSEARCHY + 200;
+const int DECKLISTLENGTH = CARDSEARCHLENGTH;
+const int DECKLISTSEPERATION = CARDSEARCHSEPERATION;
+const int DECKLISTCOUNT = 18;
+
 struct DeckItem
 {
 	int card;
@@ -57,6 +67,7 @@ public:
 	void setCardCount(int cid, int count);
 
 	void generateCardList();
+	void resetCardSprites();
 
 	void loaddeck();
 	void savedeck();

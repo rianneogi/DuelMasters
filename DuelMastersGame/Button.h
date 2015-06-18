@@ -18,6 +18,7 @@ public:
 	
 	void setString(string s);
 	void setPosition(int x, int y);
+	void setBorderColor(const sf::Color& c);
 };
 
 bool checkCollision(sf::FloatRect& b, int x, int y);
