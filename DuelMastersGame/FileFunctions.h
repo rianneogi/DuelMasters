@@ -5,6 +5,7 @@
 #include <iostream>
 #include "conio.h"
 #include <fstream>
+#include <deque>
 
 extern "C"
 {
@@ -24,13 +25,13 @@ const string SoundPaths[] = { "Graphics\\Sounds\\endturn.wav", "Graphics\\Sounds
 "Graphics\\Sounds\\untap.wav", "Graphics\\Sounds\\playcard.wav", "Graphics\\Sounds\\shuffle.wav", "Graphics\\Sounds\\Button1.wav", "Graphics\\Sounds\\Button2.wav" };
 const int SoundCount = 8;
 
-extern vector<sf::Texture> Textures;
-extern vector<sf::SoundBuffer> SoundBuffers;
-extern vector<sf::Sprite> Sprites;
+extern deque<sf::Texture> Textures;
+extern deque<sf::SoundBuffer> SoundBuffers;
+extern deque<sf::Sprite> Sprites;
 
-extern vector<sf::Texture> CardTextures;
-extern vector<sf::Sprite> CardSprites;
-extern vector<string> CardNames;
+extern deque<sf::Texture> CardTextures;
+extern deque<sf::Sprite> CardSprites;
+extern deque<string> CardNames;
 
 extern sf::Font DefaultFont;
 

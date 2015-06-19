@@ -1,11 +1,11 @@
 #include "FileFunctions.h"
 
-vector<sf::Texture> Textures;
-vector<sf::SoundBuffer> SoundBuffers;
-vector<sf::Sprite> Sprites;
-vector<sf::Texture> CardTextures;
-vector<sf::Sprite> CardSprites;
-vector<string> CardNames;
+deque<sf::Texture> Textures;
+deque<sf::SoundBuffer> SoundBuffers;
+deque<sf::Sprite> Sprites;
+deque<sf::Texture> CardTextures;
+deque<sf::Sprite> CardSprites;
+deque<string> CardNames;
 
 sf::Font DefaultFont;
 
