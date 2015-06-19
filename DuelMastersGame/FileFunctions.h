@@ -18,11 +18,11 @@ using namespace std;
 const string DECKEXTENSION = ".txt";
 
 enum SpriteId { TEXTURE_CARDBACK };
-enum SoundId { SOUND_ENDTURN, SOUND_DRAW, SOUND_TAP, SOUND_UNTAP, SOUND_PLAY, SOUND_SHUFFLE };
 
+enum SoundId { SOUND_ENDTURN, SOUND_DRAW, SOUND_TAP, SOUND_UNTAP, SOUND_PLAY, SOUND_SHUFFLE, SOUND_BUTTONPRESS, SOUND_BUTTONUNPRESS };
 const string SoundPaths[] = { "Graphics\\Sounds\\endturn.wav", "Graphics\\Sounds\\draw.wav", "Graphics\\Sounds\\tap.wav",
-"Graphics\\Sounds\\untap.wav", "Graphics\\Sounds\\playcard.wav", "Graphics\\Sounds\\shuffle.wav" };
-const int SoundCount = 6;
+"Graphics\\Sounds\\untap.wav", "Graphics\\Sounds\\playcard.wav", "Graphics\\Sounds\\shuffle.wav", "Graphics\\Sounds\\Button1.wav", "Graphics\\Sounds\\Button2.wav" };
+const int SoundCount = 8;
 
 extern vector<sf::Texture> Textures;
 extern vector<sf::SoundBuffer> SoundBuffers;

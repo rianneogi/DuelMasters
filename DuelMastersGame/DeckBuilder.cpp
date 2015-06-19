@@ -64,6 +64,8 @@ DeckBuilder::DeckBuilder()
 	{
 		string s;
 		getline(deckfile, s);
+		if (s == "")
+			break;
 		decks.push_back(s);
 	}
 	deckfile.close();
@@ -285,6 +287,8 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 				if (sortbutton[i].collision(MouseX, MouseY))
 				{
 					sortby = i;
+					SoundMngr->playSound(SOUND_BUTTONUNPRESS);
+					SoundMngr->playSound(SOUND_BUTTONPRESS);
 					for (int j = 0; j < 5; j++)
 					{
 						if (i != j)
@@ -303,10 +307,12 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 					civfilter[i] = (civfilter[i] + 1) % 2;
 					if (civfilter[i] == 0)
 					{
+						SoundMngr->playSound(SOUND_BUTTONUNPRESS);
 						civbutton[i].setBorderColor(InactiveButtonColor);
 					}
 					else
 					{
+						SoundMngr->playSound(SOUND_BUTTONPRESS);
 						civbutton[i].setBorderColor(CivColors[i]);
 					}
 					generateCardList();
@@ -315,10 +321,12 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 
 			if (exitbutton.collision(MouseX, MouseY)) //go to main menu
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				currentWindow = static_cast<GameWindow*>(mainMenu);
 			}
 			if (loadbutton.collision(MouseX, MouseY))
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				isloadingdeck = 1;
 				decklistpos = 0;
 				currentdeck = "";
@@ -332,6 +340,7 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 			}
 			if (newbutton.collision(MouseX, MouseY))
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				decklist.clear();
 				currentdeck = "New Deck";
 				isloadingdeck = 0;
@@ -580,8 +589,24 @@ void DeckBuilder::savedeck()
 		string s = std::to_string((*i).count) + " " + CardNames.at((*i).card);
 		file << s << endl;
 	}
-
 	file.close();
+
+	fstream file2;
+	file2.open("Decks\\My Decks\\decklist.txt", ios::out | ios::end);
+	int flag = 0;
+	for (vector<string>::iterator i = decks.begin(); i != decks.end(); i++)
+	{
+		file2 << *i << endl;
+		if (*i == currentdeck)
+			flag = 1;
+	}
+	if (flag == 0)
+	{
+		file2 << currentdeck << endl;
+		decks.push_back(currentdeck);
+	}
+	file2.close();
+	SoundMngr->playSound(SOUND_ENDTURN);
 }
 
 void DeckBuilder::addCard(int cid)

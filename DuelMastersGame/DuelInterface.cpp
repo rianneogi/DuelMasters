@@ -416,6 +416,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					if (cancelbutton.collision(MouseX, MouseY)) //skip shield triggers
 					{
+						SoundMngr->playSound(SOUND_BUTTONPRESS);
 						Message m("triggerskip");
 						duel.handleInterfaceInput(m);
 						if (dueltype == DUELTYPE_MULTI)
@@ -469,6 +470,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					if (cancelbutton.collision(MouseX, MouseY)) //skip block
 					{
+						SoundMngr->playSound(SOUND_BUTTONPRESS);
 						Message m("blockskip");
 						duel.handleInterfaceInput(m);
 						if (dueltype == DUELTYPE_MULTI)
@@ -768,6 +770,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					if (cancelbutton.collision(MouseX, MouseY)) //join game
 					{
+						SoundMngr->playSound(SOUND_BUTTONPRESS);
+
 						fstream ipfile;
 						ipfile.open("ip.txt", ios::in | ios::out);
 						string ipadd;
@@ -787,6 +791,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					}
 					if (endturnbutton.collision(MouseX, MouseY))  //host game
 					{
+						SoundMngr->playSound(SOUND_BUTTONPRESS);
+
 						fstream ipfile;
 						ipfile.open("ip.txt", ios::in | ios::out);
 						string ipadd;
@@ -819,6 +825,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			{
 				if (cancelbutton.collision(MouseX, MouseY)) //singleplayer
 				{
+					SoundMngr->playSound(SOUND_BUTTONPRESS);
+
 					duelstate = DUELSTATE_SINGLE;
 					deckschosen = 0;
 					setDecklist();
@@ -826,6 +834,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				}
 				if (endturnbutton.collision(MouseX, MouseY))  //multiplayer
 				{
+					SoundMngr->playSound(SOUND_BUTTONPRESS);
+
 					duelstate = DUELSTATE_MULTI;
 					deckschosen = 0;
 					setDecklist();
@@ -834,6 +844,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			}
 			if (quitbutton.collision(MouseX, MouseY)) //go back to main menu
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				currentWindow = static_cast<GameWindow*>(mainMenu);
 			}
 

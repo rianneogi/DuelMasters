@@ -36,10 +36,12 @@ int MainMenu::handleEvent(sf::Event event, int callback)
 		{
 			if (play.collision(MouseX, MouseY))
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				currentWindow = (GameWindow*)(ActiveDuel);
 			}
 			else if (deckbuilder.collision(MouseX, MouseY))
 			{
+				SoundMngr->playSound(SOUND_BUTTONPRESS);
 				currentWindow = (GameWindow*)(deckBuilder);
 			}
 			else if (exit.collision(MouseX, MouseY))
