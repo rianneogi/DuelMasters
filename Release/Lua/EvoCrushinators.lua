@@ -1385,7 +1385,7 @@ Cards["Wyn, the Oracle"] = {
 	name = "Wyn, the Oracle",
 	set = "Evo-Crushinators of Doom",
 	type = TYPE_CREATURE,
-	civilization = CIV_WATER,
+	civilization = CIV_LIGHT,
     race = "Light Bringer",
 	cost = 2,
 

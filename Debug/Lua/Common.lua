@@ -406,8 +406,16 @@ Checks.InOppBattle = function(cid,sid)
 	end
 end
 
+Checks.UntappedInBattle = function(cid,sid)
+	if(getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and isCardTapped(sid)==0) then
+		return 1
+	else
+		return 0
+	end
+end
+
 Checks.UntappedInYourBattle = function(cid,sid)
-	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and isCardTapped(sid)==0) then
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and isCardTapped(sid)==0) then
 		return 1
 	else
 		return 0
@@ -415,7 +423,31 @@ Checks.UntappedInYourBattle = function(cid,sid)
 end
 
 Checks.UntappedInOppBattle = function(cid,sid)
-	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and isCardTapped(sid)==0) then
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and isCardTapped(sid)==0) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.EvolutionInBattle = function(cid,sid)
+	if(getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureIsEvolution(sid)==1) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.EvolutionInYourBattle = function(cid,sid)
+	if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureIsEvolution(sid)==1) then
+		return 1
+	else
+		return 0
+	end
+end
+
+Checks.EvolutionInOppBattle = function(cid,sid)
+	if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCardType(sid)==TYPE_CREATURE and getCreatureIsEvolution(sid)==1) then
 		return 1
 	else
 		return 0

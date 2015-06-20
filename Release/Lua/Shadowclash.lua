@@ -41,8 +41,9 @@ Cards["Alcadeias, Lord of Spirits"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        if(getMessageType()=="get cardcancast") then
-            if(getCardCiv(getMessageInt("card"))~=CIV_LIGHT) then
+        if(getMessageType()=="get cardcancast" and getCardZone(id)==ZONE_BATTLE) then
+            local cid = getMessageInt("card")
+            if(getCardType(cid)==TYPE_SPELL and getCardCiv(cid)~=CIV_LIGHT) then
                 setMessageInt("cancast",0)
             end
         end

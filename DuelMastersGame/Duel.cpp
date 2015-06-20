@@ -523,7 +523,7 @@ int Duel::handleInterfaceInput(Message& msg)
 				int trigger = msg.getInt("trigger");
 				if (*j == trigger)
 				{
-					if (getIsShieldTrigger(trigger) && canUseShieldTrigger(trigger))
+					if (getIsShieldTrigger(trigger) && canUseShieldTrigger(trigger) && getCardCanCast(trigger))
 					{
 						Message m("cardplay");
 						m.addValue("card", trigger);

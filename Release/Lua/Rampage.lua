@@ -670,12 +670,14 @@ Cards["Gigamantis"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        local owner = getCardOwner(id)
-        local s = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(s-1) do
-            local cid = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardCiv(cid)==CIV_NATURE and cid~=id) then
-                Abils.manaAfterDestroyed(cid)
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local s = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(s-1) do
+                local cid = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardCiv(cid)==CIV_NATURE and cid~=id) then
+                    Abils.manaAfterDestroyed(cid)
+                end
             end
         end
 	end
@@ -733,12 +735,14 @@ Cards["Jack Viper, Shadow of Doom"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        local owner = getCardOwner(id)
-        local s = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(s-1) do
-            local cid = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardCiv(cid)==CIV_DARKNESS and cid~=id) then
-                Abils.returnAfterDestroyed(cid)
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local s = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(s-1) do
+                local cid = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardCiv(cid)==CIV_DARKNESS and cid~=id) then
+                    Abils.returnAfterDestroyed(cid)
+                end
             end
         end
 	end
@@ -828,13 +832,15 @@ Cards["Legendary Bynor"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        local owner = getCardOwner(id)
-        local s = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(s-1) do
-            local cid = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardCiv(cid)==CIV_WATER and cid~=id) then
-                Abils.cantBeBlocked(cid)
-            end
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local s = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(s-1) do
+                local cid = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardCiv(cid)==CIV_WATER and cid~=id) then
+                    Abils.cantBeBlocked(cid)
+                end
+        end
         end
 	end
 }
@@ -1358,12 +1364,14 @@ Cards["Sieg Balicula, the Intense"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        local owner = getCardOwner(id)
-        local s = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(s-1) do
-            local cid = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardCiv(cid)==CIV_LIGHT and cid~=id) then
-                Abils.Blocker(cid)
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local s = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(s-1) do
+                local cid = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardCiv(cid)==CIV_LIGHT and cid~=id) then
+                    Abils.Blocker(cid)
+                end
             end
         end
 	end
@@ -1561,12 +1569,14 @@ Cards["Uberdragon Jabaha"] = {
 
 	HandleMessage = function(id)
         Abils.Evolution(id)
-        local owner = getCardOwner(id)
-        local s = getZoneSize(owner,ZONE_BATTLE)
-        for i=0,(s-1) do
-            local cid = getCardAt(owner,ZONE_BATTLE,i)
-            if(getCardCiv(cid)==CIV_FIRE and cid~=id) then
-                Abils.PowerAttacker(cid,2000)
+        if(getCardZone(id)==ZONE_BATTLE) then
+            local owner = getCardOwner(id)
+            local s = getZoneSize(owner,ZONE_BATTLE)
+            for i=0,(s-1) do
+                local cid = getCardAt(owner,ZONE_BATTLE,i)
+                if(getCardCiv(cid)==CIV_FIRE and cid~=id) then
+                    Abils.PowerAttacker(cid,2000)
+                end
             end
         end
 	end
