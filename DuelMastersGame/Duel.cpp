@@ -688,7 +688,7 @@ void Duel::addChoice(string info, int skip, int card, int player, int validref)
 	choiceCard = card;
 	choicePlayer = player;
 	isChoiceActive = true;
-	cout << "choice set: " << info << endl;
+	cout << "choice set: " << CardList.at(choiceCard)->Name << ": " << info << endl;
 }
 
 int Duel::choiceCanBeSelected(int sid)

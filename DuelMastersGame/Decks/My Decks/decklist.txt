@@ -28,3 +28,5 @@ FL Light Humans
 F Valdios Army
 DWL Dark Tide
 FD Dark Beanie Weenies
+F Shobu Fire
+D Kokujo Darkness

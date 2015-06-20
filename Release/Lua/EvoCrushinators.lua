@@ -282,7 +282,7 @@ Cards["Chaos Worm"] = {
     HandleMessage = function(id)
         Abils.Evolution(id)
         local func = function(id)
-            local ch = createChoice("Choose an untapped creature to destroy",1,id,getCardOwner(id),Checks.UntappedInOppBattle)
+            local ch = createChoice("Choose an opponent's creature to destroy",1,id,getCardOwner(id),Checks.InOppBattle)
             if(ch>=0) then
                 destroyCreature(ch)
             end
@@ -1095,16 +1095,19 @@ Cards["Poison Worm"] = {
 
 	HandleMessage = function(id)
         local valid = function(cid,sid)
-            if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=2000) then
+            if(getCardOwner(sid)==getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=3000) then
 		        return 1
 	        else
 		        return 0
 	        end
         end
-        local ch = createChoice("Destroy a creature in your battlezone",0,id,getCardOwner(id),valid)
-        if(ch>=0) then
-            destroyCreature(ch)
+        local func = function(id)
+            local ch = createChoice("Destroy a creature in your battlezone",0,id,getCardOwner(id),valid)
+            if(ch>=0) then
+                destroyCreature(ch)
+            end
         end
+        Abils.onSummon(id,func)
 	end
 }
 

@@ -6,7 +6,6 @@ Choice::Choice() : infotext(""), buttoncount(0)
 
 Choice::Choice(string info, int bcount, int vr) : infotext(info), buttoncount(bcount), validref(vr)
 {
-	cout << "ref choice: " << vr << endl;
 }
 
 Choice::~Choice()

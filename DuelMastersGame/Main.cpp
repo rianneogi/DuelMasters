@@ -36,7 +36,7 @@ int mainLoop(sf::RenderWindow& window, int callback)
 				window.close();
 			}
 		}
-
+		
 		if (Socket.receive(packet) != sf::Socket::Status::NotReady)
 		{
 			int r = ActiveDuel->receivePacket(packet, callback);
