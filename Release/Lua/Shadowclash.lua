@@ -441,7 +441,11 @@ Cards["Fu Reil, Seeker of Storms"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get canuseshieldtrigger") then
+            if(getCardCiv(getMessageInt("card"))==CIV_DARKNESS and getCardZone(id)==ZONE_BATTLE) then
+                setMessageInt("canuse",0)
+            end
+        end
 	end
 }
 
@@ -514,7 +518,11 @@ Cards["Gigabolver"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get canuseshieldtrigger") then
+            if(getCardCiv(getMessageInt("card"))==CIV_LIGHT and getCardZone(id)==ZONE_BATTLE) then
+                setMessageInt("canuse",0)
+            end
+        end
 	end
 }
 

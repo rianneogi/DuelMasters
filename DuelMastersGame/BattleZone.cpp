@@ -79,17 +79,47 @@ void BattleZone::removeCard(Card* c)
 	}
 }
 
-void BattleZone::removeBait(Card* c)
+void BattleZone::seperateEvolution(Card* c)
 {
-	int x = 0;
-	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+	//vector<Card*>::iterator eb = cards.begin();
+	int flag = 0;
+	int eb = -1;
+
+	for (eb = 0; eb < cards.size(); eb++)
 	{
-		if (*i == c)
+		if (cards.at(eb) == c)
 		{
-			cards.erase(i);
+			flag = 1;
+			eb;
 			break;
 		}
-		x++;
 	}
+
+	if (flag==0)
+	{
+		cout << "ERROR: attempting to seperate evolution stack not in battlezone, evo name: " << c->Name << endl;
+		return;
+	}
+
+	for (vector<Card*>::iterator i = c->evostack.begin(); i != c->evostack.end(); i++)
+	{
+		(*i)->Zone = ZONE_BATTLE;
+		cards.insert(cards.begin()+eb, *i);
+	}
+	c->evostack.clear();
 }
+
+//void BattleZone::removeBait(Card* c)
+//{
+//	int x = 0;
+//	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+//	{
+//		if (*i == c)
+//		{
+//			cards.erase(i);
+//			break;
+//		}
+//		x++;
+//	}
+//}
 

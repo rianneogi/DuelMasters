@@ -264,6 +264,14 @@ static int unflipCard(lua_State* L)
 	return 0;
 }
 
+static int seperateEvolution(lua_State* L)
+{
+	Message msg("evolutionseperate");
+	msg.addValue("evolution", lua_tointeger(L, 1));
+	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	return 0;
+}
+
 static int getCardAt(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
@@ -358,6 +366,12 @@ static int getCreatureIsBlocker(lua_State* L)
 	return 1;
 }
 
+static int getCreatureIsEvolution(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.getIsEvolution(lua_tointeger(L, 1)));
+	return 1;
+}
+
 static int isCardTapped(lua_State* L)
 {
 	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->isTapped);
@@ -421,6 +435,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "closeDeck", closeDeck);
 	lua_register(L, "flipCard", flipCard);
 	lua_register(L, "unflipCard", unflipCard);
+	lua_register(L, "seperateEvolution", seperateEvolution);
 
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getTotalCardCount", getTotalCardCount);
@@ -435,6 +450,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "getCreaturePower", getCreaturePower);
 	lua_register(L, "getCreatureCanBlock", getCreatureCanBlock);
 	lua_register(L, "getCreatureIsBlocker", getCreatureIsBlocker);
+	lua_register(L, "getCreatureIsEvolution", getCreatureIsEvolution);
 	lua_register(L, "isCardTapped", isCardTapped);
 	lua_register(L, "getAttacker", getAttacker);
 	lua_register(L, "getDefender", getDefender);

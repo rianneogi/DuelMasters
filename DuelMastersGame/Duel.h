@@ -118,6 +118,7 @@ public:
 	int getCardCost(int uid);
 	int getCardCivilization(int uid);
 	int getIsShieldTrigger(int uid);
+	int canUseShieldTrigger(int uid);
 	int getIsEvolution(int uid);
 	int getCardCanCast(int uid);
 };

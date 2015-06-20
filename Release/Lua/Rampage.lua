@@ -1060,7 +1060,14 @@ Cards["Pouch Shell"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose an opponent's evolution creature",1,id,getCardOwner(id),Checks.EvolutionInOppBattle)
+            if(ch>=0) then
+                seperateEvolution(ch)
+                moveCard(ch,ZONE_GRAVEYARD)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 

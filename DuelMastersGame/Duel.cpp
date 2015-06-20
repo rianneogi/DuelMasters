@@ -199,13 +199,13 @@ int Duel::handleMessage(Message& msg)
 		MsgMngr.sendMessage(m);
 		SoundMngr->playSound(SOUND_PLAY);
 
-		if (eb != -1)
+		/*if (eb != -1)
 		{
 			Message msg4("creatureevolve");
 			msg4.addValue("evolution", cid);
 			msg4.addValue("evobait", eb);
 			MsgMngr.sendMessage(msg4);
-		}
+		}*/
 	}
 	else if (msg.getType() == "cardmana")
 	{
@@ -277,19 +277,19 @@ int Duel::handleMessage(Message& msg)
 	{
 		battle(msg.getInt("attacker"), msg.getInt("defender"));
 	}
-	else if (msg.getType() == "creatureevolve")
-	{
-		int eb = msg.getInt("evobait");
-		Card* cid = CardList.at(eb);
-		//getZone(cid->Owner, cid->Zone)->removeCard(cid);
-		if (cid->Zone != ZONE_BATTLE)
-		{
-			cout << "WARNING: attempting to evolve on card that is not in battlezone" << endl;
-		}
-		//battlezones[cid->Owner].removeBait(cid);
-		cid->Zone = ZONE_EVOLVED;
-		CardList.at(msg.getInt("evolution"))->evostack.push_back(cid);
-	}
+	//else if (msg.getType() == "creatureevolve")
+	//{
+	//	int eb = msg.getInt("evobait");
+	//	Card* cid = CardList.at(eb);
+	//	//getZone(cid->Owner, cid->Zone)->removeCard(cid);
+	//	if (cid->Zone != ZONE_BATTLE)
+	//	{
+	//		cout << "WARNING: attempting to evolve on card that is not in battlezone" << endl;
+	//	}
+	//	//battlezones[cid->Owner].removeBait(cid);
+	//	cid->Zone = ZONE_EVOLVED;
+	//	CardList.at(msg.getInt("evolution"))->evostack.push_back(cid);
+	//}
 	else if (msg.getType() == "cardtap")
 	{
 		CardList.at(msg.getInt("card"))->tap();
@@ -368,6 +368,11 @@ int Duel::handleMessage(Message& msg)
 			m.addValue("zoneto", ZONE_GRAVEYARD);
 			MsgMngr.sendMessage(m);
 		}
+	}
+	else if (msg.getType() == "evolutionseperate")
+	{
+		int cid = msg.getInt("evolution");
+		battlezones[CardList.at(cid)->Owner].seperateEvolution(CardList.at(cid));
 	}
 	return 0;
 }
@@ -518,7 +523,7 @@ int Duel::handleInterfaceInput(Message& msg)
 				int trigger = msg.getInt("trigger");
 				if (*j == trigger)
 				{
-					if (getIsShieldTrigger(trigger))
+					if (getIsShieldTrigger(trigger) && canUseShieldTrigger(trigger))
 					{
 						Message m("cardplay");
 						m.addValue("card", trigger);
@@ -993,6 +998,23 @@ int Duel::getIsShieldTrigger(int uid)
 		(*i)->handleMessage(currentMessage);
 	}
 	int c = currentMessage.getInt("shieldtrigger");
+	currentMessage = oldmsg;
+	return c;
+}
+
+int Duel::canUseShieldTrigger(int uid)
+{
+	Message oldmsg = currentMessage;
+	currentMessage = Message("get canuseshieldtrigger");
+	currentMessage.addValue("canuse", 1);
+	currentMessage.addValue("card", uid);
+
+	vector<Card*>::iterator i;
+	for (i = CardList.begin(); i != CardList.end(); i++)
+	{
+		(*i)->handleMessage(currentMessage);
+	}
+	int c = currentMessage.getInt("canuse");
 	currentMessage = oldmsg;
 	return c;
 }
