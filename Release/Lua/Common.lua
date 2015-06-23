@@ -155,6 +155,14 @@ Abils.canAttackUntappedCreatures = function(id)
 	end
 end
 
+Abils.cantBeAttacked = function(id)
+	if(getMessageType()=="get creaturecanattackcreature") then
+		if(getMessageInt("defender")==id) then
+			setMessageInt("canattack",CANATTACK_NO)
+		end
+	end
+end
+
 Abils.cantBeBlocked = function(id)
 	if(getMessageType()=="get creaturecanblock") then
 		if(getMessageInt("attacker")==id) then
@@ -236,6 +244,14 @@ Abils.destroyYourCreatureOnSummon = function(id, count)
         end
     end
     Abils.onSummon(id,summon)
+end
+
+Abils.onDestroy = function(id,func)
+    if(getMessageType()=="post creaturedestroy") then
+        if(getMessageInt("creature")==id) then
+            func(id)
+        end
+    end
 end
 
 Abils.onAttack = function(id,func)
