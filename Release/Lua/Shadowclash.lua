@@ -665,6 +665,7 @@ Cards["Hydro Hurricane"] = {
                 break
             end
         end
+        Actions.EndSpell(id)
 	end
 }
 
