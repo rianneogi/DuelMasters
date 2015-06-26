@@ -19,7 +19,7 @@ Cards["Ambush Scorpion"] = {
         Abils.PowerAttacker(id,3000)
         local func = function(id)
             local valid = function(cid,sid)
-                if(Checks.InYourMana(cid,sid)==1 and getCardName(sid)=="Ambush Scorpion")
+                if(Checks.InYourMana(cid,sid)==1 and getCardName(sid)=="Ambush Scorpion") then
                     return 1
                 else
                     return 0
@@ -841,7 +841,7 @@ Cards["Obsidian Scarab"] = {
         Abils.PowerAttacker(id,3000)
         local func = function(id)
             local valid = function(cid,sid)
-                if(Checks.InYourMana(cid,sid)==1 and getCardName(sid)=="Obsidian Scarab")
+                if(Checks.InYourMana(cid,sid)==1 and getCardName(sid)=="Obsidian Scarab") then
                     return 1
                 else
                     return 0
@@ -856,8 +856,8 @@ Cards["Obsidian Scarab"] = {
 	end
 }
 
-Cards["Pokokul"] = {
-	name = "Pokokul",
+Cards["Pokolul"] = {
+	name = "Pokolul",
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,
@@ -947,7 +947,24 @@ Cards["Scissor Scarab"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local valid = function(cid,sid)
+                if(Checks.CreatureInYourDeck(cid,sid)==1 and getCreatureRace(sid)=="Giant Insect") then
+                    return 1
+                else
+                    return 0
+                end
+            end
+            local owner = getCardOwner(id)
+            openDeck(owner)
+            local ch = createChoice("Choose a Giant Insect in your deck",1,id,owner,valid)
+            closeDeck(owner)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+                shuffleDeck(owner)
+            end
+        end
+        Abils.onSummon(id,func)
 	end
 }
 
@@ -1135,8 +1152,8 @@ Cards["Split-Head Hydroturtle Q"] = {
 	end
 }
 
-Cards["Steel-Turrent Cluster"] = {
-	name = "Steel-Turrent Cluster",
+Cards["Steel-Turret Cluster"] = {
+	name = "Steel-Turret Cluster",
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,

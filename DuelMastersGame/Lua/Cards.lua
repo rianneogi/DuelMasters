@@ -1,7 +1,7 @@
 Cards = {}
 
 package.path = package.path .. ';./?.lua;'
-require("Shadowclash")
+require("Survivors")
 
 loadCards = function()
 	for k,v in pairs(Cards) do loadcard(k,v.set) end
