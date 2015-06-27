@@ -115,7 +115,7 @@ Cards["Aqua Jolter"] = {
 	set = "Shadowclash of Blinding Night",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,
-	race = "Liquid Poeple",
+	race = "Liquid People",
 	cost = 3,
 
 	shieldtrigger = 1,

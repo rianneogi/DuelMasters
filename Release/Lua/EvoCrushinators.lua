@@ -1351,7 +1351,7 @@ Cards["Thought Probe"] = {
 	civilization = CIV_WATER,
 	cost = 4,
 
-	shieldtrigger = 0,
+	shieldtrigger = 1,
 
 	OnCast = function(id)
         local count = Actions.countCreaturesInBattle(getOpponent(getCardOwner(id)))
