@@ -1357,7 +1357,10 @@ Cards["Soul Gulp"] = {
         local c = Actions.count(id,valid)
         local opp = getOpponent(getCardOwner(id))
         for i=1,c do
-            discardCardAtRandom(opp)
+            local ch = createChoice("Choose a card to discard",1,id,opp,Checks.InOppHand)
+            if(ch>=0) then
+                discardCard(ch)
+            end
         end
 	end
 }

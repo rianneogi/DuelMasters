@@ -321,7 +321,7 @@ Cards["Bone Piercer"] = {
 
 	HandleMessage = function(id)
         if(getMessageType()=="post cardmove") then
-            if(getMessageInt("from")==ZONE_BATTLE and getMessageInt("to")==ZONE_GRAVEYARD) then
+            if(getMessageInt("card")==id and getMessageInt("from")==ZONE_BATTLE and getMessageInt("to")==ZONE_GRAVEYARD) then
                 local ch = createChoice("Choose a creature in your mana zone",1,id,getCardOwner(id),Checks.CreatureInYourMana)
                 if(ch>=0) then
                     moveCard(ch,ZONE_HAND)
