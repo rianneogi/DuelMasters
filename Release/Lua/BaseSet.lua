@@ -1179,18 +1179,17 @@ Cards["Illusionary Merfolk"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		if(getMessageType()=="post cardmove") then
-			if(getMessageInt("card")==id) then
-				local owner = getCardOwner(id)
-				local size = getZoneSize(owner,ZONE_BATTLE)-1
-				for i=0,size,1 do
-					if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Cyber Lord") then
-						drawCards(owner,3)
-						break
-					end
+		local func = function(id)
+			local owner = getCardOwner(id)
+			local size = getZoneSize(owner,ZONE_BATTLE)-1
+			for i=0,size,1 do
+				if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Cyber Lord") then
+					drawCards(owner,3)
+					break
 				end
 			end
 		end
+		Abils.onSummon(id,func)
 	end
 }
 

@@ -844,6 +844,7 @@ Cards["Marinomancer"] = {
 
 	HandleMessage = function(id)
         local func = function(id)
+            local player = getCardOwner(id)
             local size = getZoneSize(player,ZONE_DECK)
             for i=1,3 do
                 if(i>size) then
