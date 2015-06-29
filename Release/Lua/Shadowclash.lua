@@ -203,6 +203,7 @@ Cards["Blasto, Explosive Soldier"] = {
                     local cid = getCardAt(owner,ZONE_BATTLE,i)
                     if(getCardCiv(cid)==CIV_DARKNESS and getCardType(cid)==TYPE_CREATURE) then
                         setMessageInt("power",getMessageInt("power")+2000)
+                        break
                     end
                 end
             end
@@ -420,6 +421,7 @@ Cards["Exploding Cactus"] = {
                     local cid = getCardAt(owner,ZONE_BATTLE,i)
                     if(getCardCiv(cid)==CIV_LIGHT and getCardType(cid)==TYPE_CREATURE) then
                         setMessageInt("power",getMessageInt("power")+2000)
+                        break
                     end
                 end
             end
