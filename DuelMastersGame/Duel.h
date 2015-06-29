@@ -121,6 +121,8 @@ public:
 	int canUseShieldTrigger(int uid);
 	int getIsEvolution(int uid);
 	int getCardCanCast(int uid);
+	int isCreatureOfRace(int uid, string race); //finds if the word race exists in the creature's race
+	string getCreatureRace(int uid); //returns the full race string of the creature
 };
 
 int getOpponent(int turn);

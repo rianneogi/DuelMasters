@@ -85,7 +85,7 @@ Cards["Armored Blaster Valdios"] = {
                 local owner = getCardOwner(id)
                 local size = getZoneSize(owner,ZONE_BATTLE)
                 for i=0,(size-1) do
-                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Human" and sid~=id) then
+                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and isCreatureOfRace(sid,"Human")==1 and sid~=id) then
                         setMessageInt("power",getMessageInt("power")+1000)
                     end
                 end
@@ -117,7 +117,7 @@ Cards["Armored Cannon Balbaro"] = {
                 local count = 0
                 for i=0,(size-1) do
                     local sid = getCardAt(owner,ZONE_BATTLE,i)
-                    if(getCardRace(sid)=="Human" and sid~=id) then
+                    if(isCreatureOfRace(sid,"Human")==1 and sid~=id) then
                         count = count+1
                     end
                 end
@@ -149,7 +149,7 @@ Cards["Barkwhip, the Smasher"] = {
                 local owner = getCardOwner(id)
                 local size = getZoneSize(owner,ZONE_BATTLE)
                 for i=0,(size-1) do
-                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and getCardRace(sid)=="Beast Folk" and sid~=id) then
+                    if(sid==getCardAt(owner,ZONE_BATTLE,i) and isCreatureOfRace(sid,"Beast Folk")==1 and sid~=id) then
                         setMessageInt("power",getMessageInt("power")+2000)
                     end
                 end
@@ -781,7 +781,7 @@ Cards["King Nautilus"] = {
             local size = getZoneSize(owner,ZONE_BATTLE)
             for i=0,(size-1) do
                 local c = getCardAt(owner,ZONE_BATTLE,i)
-                if(getCardRace(c)=="Liquid People") then
+                if(isCreatureOfRace(c,"Liquid People")==1) then
                     Abils.cantBeBlocked(c)
                 end
             end

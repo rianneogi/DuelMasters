@@ -125,7 +125,7 @@ Cards["Armored Walker Urherion"] = {
 				local owner = getCardOwner(id)
 				local size = getZoneSize(owner,ZONE_BATTLE)-1
 				for i=0,size,1 do
-					if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Human") then
+					if(isCreatureOfRace(getCardAt(owner,ZONE_BATTLE,i),"Human")==1) then
 						setMessageInt("power",getMessageInt("power")+2000)
 						break
 					end
@@ -854,7 +854,7 @@ Cards["Fatal Attacker Horvath"] = {
 				local owner = getCardOwner(id)
 				local size = getZoneSize(owner,ZONE_BATTLE)-1
 				for i=0,size,1 do
-					if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Armorloid") then
+					if(isCreatureOfRace(getCardAt(owner,ZONE_BATTLE,i),"Armorloid")==1) then
 						setMessageInt("power",getMessageInt("power")+2000)
 						break
 					end
@@ -1183,7 +1183,7 @@ Cards["Illusionary Merfolk"] = {
 			local owner = getCardOwner(id)
 			local size = getZoneSize(owner,ZONE_BATTLE)-1
 			for i=0,size,1 do
-				if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Cyber Lord") then
+				if(isCreatureOfRace(getCardAt(owner,ZONE_BATTLE,i),"Cyber Lord")==1) then
 					drawCards(owner,3)
 					break
 				end
@@ -1231,7 +1231,7 @@ Cards["Iocant, the Oracle"] = {
 				local owner = getCardOwner(id)
 				local size = getZoneSize(owner,ZONE_BATTLE)-1
 				for i=0,size,1 do
-					if(getCardRace(getCardAt(owner,ZONE_BATTLE,i))=="Angel Command") then
+					if(isCreatureOfRace(getCardAt(owner,ZONE_BATTLE,i),"Angel Command")==1) then
 						setMessageInt("power",getMessageInt("power")+2000)
 						break
 					end

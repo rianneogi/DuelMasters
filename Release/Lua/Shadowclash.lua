@@ -278,13 +278,13 @@ Cards["Chaotic Skyterror"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="get creaturepower" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Demon Command" and getAttacker()==cid) then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Demon Command")==1 and getAttacker()==cid) then
                 setMessageInt("power",getMessageInt("power")+4000)
             end
         end
         if(getMessageType()=="get creaturebreaker" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Demon Command" and getAttacker()==cid) then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Demon Command")==1 and getAttacker()==cid) then
                 Abils.Breaker(cid,2)
             end
         end
@@ -546,13 +546,13 @@ Cards["Gregoria, Princess of War"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="get creaturepower" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Demon Command") then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Demon Command")==1) then
                 setMessageInt("power",getMessageInt("power")+2000)
             end
         end
         if(getMessageType()=="get creatureisblocker" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Demon Command") then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Demon Command")==1) then
                 setMessageInt("isblocker",1)
             end
         end
@@ -730,22 +730,25 @@ Cards["King Aquakamui"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="get creaturepower" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and (getCardRace(cid)=="Angel Command" or getCardRace(cid)=="Demon Command")) then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and (isCreatureOfRace(cid,"Angel Command")==1 or isCreatureOfRace(cid,"Demon Command")==1)) then
                 setMessageInt("power",getMessageInt("power")+2000)
             end
         end
         local func = function(id)
-            local valid = function(cid,sid)
-                if(Checks.CreatureInYourGraveyard(cid,sid)==1 and (getCardRace(sid)=="Angel Command" or getCardRace(cid)=="Demon Command")) then
-                    return 1
-                else
-                    return 0
+            local ch = createChoiceNoCheck("Return all Angel and Demon Commands to hand?",2,id,getCardOwner(id),Checks.False)
+            if(ch==RETURN_BUTTON1) then
+                local valid = function(cid,sid)
+                    if(Checks.CreatureInYourGraveyard(cid,sid)==1 and (isCreatureOfRace(sid,"Angel Command")==1 or isCreatureOfRace(sid,"Demon Command")==1)) then
+                        return 1
+                    else
+                        return 0
+                    end
                 end
+                local func2 = function(cid,sid)
+                    moveCard(sid,ZONE_HAND)
+                end
+                Actions.execute(id,valid,func2)
             end
-            local func2 = function(cid,sid)
-                destroyCreature(sid)
-            end
-            Actions.execute(id,valid,func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -1121,7 +1124,7 @@ Cards["Pippie Kuppie"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="get creaturepower" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Armored Dragon") then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Armored Dragon")==1) then
                 setMessageInt("power",getMessageInt("power")+1000)
             end
         end
@@ -1298,7 +1301,7 @@ Cards["Skeleton Thief, the Revealer"] = {
 	HandleMessage = function(id)
         local func = function(id)
             local valid = function(cid,sid)
-                if(Checks.CreatureInYourGraveyard(cid,sid)==1 and getCardRace(sid)=="Living Dead") then
+                if(Checks.CreatureInYourGraveyard(cid,sid)==1 and isCreatureOfRace(sid,"Living Dead")==1) then
                     return 1
                 else
                     return 0
@@ -1385,7 +1388,7 @@ Cards["Supporting Tulip"] = {
 	HandleMessage = function(id)
         if(getMessageType()=="get creaturepower" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("creature")
-            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and getCardRace(cid)=="Angel Command" and getAttacker()==cid) then
+            if(getCardType(cid)==TYPE_CREATURE and getCardZone(cid)==ZONE_BATTLE and isCreatureOfRace(cid,"Angel Command")==1 and getAttacker()==cid) then
                 setMessageInt("power",getMessageInt("power")+4000)
             end
         end

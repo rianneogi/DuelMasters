@@ -336,9 +336,15 @@ static int getCardType(lua_State* L)
 	return 1;
 }
 
-static int getCardRace(lua_State* L)
+static int getCreatureRace(lua_State* L)
 {
-	lua_pushstring(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Race.c_str());
+	lua_pushstring(L, ActiveDuel->duel.getCreatureRace(lua_tointeger(L, 1)).c_str());
+	return 1;
+}
+
+static int isCreatureOfRace(lua_State* L)
+{
+	lua_pushinteger(L, ActiveDuel->duel.isCreatureOfRace(lua_tointeger(L, 1), lua_tostring(L, 2)));
 	return 1;
 }
 
@@ -445,7 +451,8 @@ void registerLua(lua_State* L)
 	lua_register(L, "getCardZone", getCardZone);
 	lua_register(L, "getCardCiv", getCardCiv);
 	lua_register(L, "getCardType", getCardType);
-	lua_register(L, "getCardRace", getCardRace);
+	lua_register(L, "getCreatureRace", getCreatureRace); //returns the full race string of the creature
+	lua_register(L, "isCreatureOfRace", isCreatureOfRace);
 	lua_register(L, "getCardOwner", getCardOwner);
 	lua_register(L, "getCreaturePower", getCreaturePower);
 	lua_register(L, "getCreatureCanBlock", getCreatureCanBlock);

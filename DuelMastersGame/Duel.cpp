@@ -1058,6 +1058,35 @@ int Duel::getCardCivilization(int uid)
 	return CardList.at(uid)->Civilization;
 }
 
+int Duel::isCreatureOfRace(int uid, string race)
+{
+	string r = getCreatureRace(uid);
+	int f = r.find(" "+race+" ");
+	if (f != string::npos)
+	{
+		return 1;
+	}
+	f = r.find(race);
+	if (f != string::npos)
+	{
+		if (f == 0 || r.at(f) == ' ' || r.at(f) == '/')
+		{
+			int s1 = race.size();
+			int s2 = r.size();
+			if (f == s2-s1 || r.at(f+s1) == ' ' || r.at(f+s1) == '/')
+			{
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+string Duel::getCreatureRace(int uid)
+{
+	return CardList.at(uid)->Race;
+}
+
 bool Duel::isThereUntappedManaOfCiv(int player,int civ)
 {
 	for (vector<Card*>::iterator i = manazones[player].cards.begin(); i != manazones[player].cards.end(); i++)
