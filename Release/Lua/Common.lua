@@ -108,12 +108,14 @@ Abils.Charger = function(id)
 end
 
 Abils.Survivor = function(id,func)
-    local owner = getCardOwner(id)
-    local size = getZoneSize(owner,ZONE_BATTLE)
-    for i=0,(size-1) do
-        local cid = getCardAt(owner,ZONE_BATTLE,i)
-        if(isCreatureOfRace(cid,"Survivor")==1) then
-            func(cid)
+    if(getCardZone(id)==ZONE_BATTLE) then
+        local owner = getCardOwner(id)
+        local size = getZoneSize(owner,ZONE_BATTLE)
+        for i=0,(size-1) do
+            local cid = getCardAt(owner,ZONE_BATTLE,i)
+            if(isCreatureOfRace(cid,"Survivor")==1) then
+                func(cid)
+            end
         end
     end
 end

@@ -830,7 +830,7 @@ int Duel::getCreatureCanBlock(int attckr,int blckr)
 {
 	Message oldmsg = currentMessage;
 	currentMessage = Message("get creaturecanblock");
-	currentMessage.addValue("canblock", CardList.at(blckr)->isBlocker);
+	currentMessage.addValue("canblock", getCreatureIsBlocker(blckr));
 	currentMessage.addValue("blocker", blckr);
 	currentMessage.addValue("attacker", attckr);
 
@@ -1061,24 +1061,22 @@ int Duel::getCardCivilization(int uid)
 int Duel::isCreatureOfRace(int uid, string race)
 {
 	string r = getCreatureRace(uid);
-	int f = r.find(" "+race+" ");
+	int f = r.find(race);
 	if (f != string::npos)
 	{
-		return 1;
-	}
-	f = r.find(race);
-	if (f != string::npos)
-	{
-		if (f == 0 || r.at(f) == ' ' || r.at(f) == '/')
+		cout << "found at: " << f << endl;
+		if (f == 0 || r.at(f-1) == ' ' || r.at(f-1) == '/')
 		{
 			int s1 = race.size();
 			int s2 = r.size();
-			if (f == s2-s1 || r.at(f+s1) == ' ' || r.at(f+s1) == '/')
+			if (s1+f == s2 || r.at(f+s1) == ' ' || r.at(f+s1) == '/')
 			{
+				cout << "race true" << endl;
 				return 1;
 			}
 		}
 	}
+	cout << "race false" << endl;
 	return 0;
 }
 

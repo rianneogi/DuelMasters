@@ -84,7 +84,7 @@ Cards["Balloonshroom Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_NATURE,
-	race = "Balloon Mushroom",
+	race = "Balloon Mushroom/Survivor",
 	cost = 4,
 
 	shieldtrigger = 0,
@@ -106,7 +106,7 @@ Cards["Ballus, Dogfight Enforcer Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_LIGHT,
-	race = "Berserker",
+	race = "Berserker/Survivor",
 	cost = 5,
 
 	shieldtrigger = 0,
@@ -150,7 +150,7 @@ Cards["Bladerush Skyterror Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Armored Wyvern",
+	race = "Armored Wyvern/Survivor",
 	cost = 7,
 
 	shieldtrigger = 0,
@@ -172,7 +172,7 @@ Cards["Blazosaur Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
-	race = "Rock Beast",
+	race = "Rock Beast/Survivor",
 	cost = 2,
 
 	shieldtrigger = 0,
@@ -228,7 +228,7 @@ Cards["Bolgash Dragon"] = {
 }
 
 Cards["Bombat, General of Speed"] = {
-	name = "Chains of Sacrifice",
+	name = "Bombat, General of Speed",
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_FIRE,
@@ -443,7 +443,7 @@ Cards["Gallia Zohl, Iron Guardian Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_LIGHT,
-	race = "Guardian",
+	race = "Guardian/Survivor",
 	cost = 5,
 
 	shieldtrigger = 0,
@@ -497,7 +497,7 @@ Cards["Gigaling Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_DARKNESS,
-	race = "Chimera",
+	race = "Chimera/Survivor",
 	cost = 5,
 
 	shieldtrigger = 0,
@@ -739,7 +739,7 @@ Cards["La Guile, Seeker of Skyfire"] = {
 Cards["Le Quist, the Oracle"] = {
 	name = "Le Quist, the Oracle",
 	set = "Survivors of the Megapocalypse",
-	type = TYPE_SPELL,
+	type = TYPE_CREATURE,
 	civilization = CIV_LIGHT,
     race = "Light Bringer",
 	cost = 2,
@@ -1047,7 +1047,7 @@ Cards["Skullsweeper Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_DARKNESS,
-	race = "Brain Jacker",
+	race = "Brain Jacker/Survivor",
 	cost = 4,
 
 	shieldtrigger = 0,
@@ -1083,7 +1083,7 @@ Cards["Smash Horn Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_NATURE,
-	race = "Horned Beast",
+	race = "Horned Beast/Survivor",
 	cost = 3,
 
 	shieldtrigger = 0,
@@ -1148,7 +1148,7 @@ Cards["Spikestrike Ichthys Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,
-    race = "Fish",
+    race = "Fish/Survivor",
 	cost = 6,
 
 	shieldtrigger = 0,
@@ -1170,7 +1170,7 @@ Cards["Split-Head Hydroturtle Q"] = {
 	set = "Survivors of the Megapocalypse",
 	type = TYPE_CREATURE,
 	civilization = CIV_WATER,
-	race = "Gel Fish",
+	race = "Gel Fish/Survivor",
 	cost = 5,
 
 	shieldtrigger = 0,
