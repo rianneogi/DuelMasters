@@ -150,7 +150,10 @@ void DeckBuilder::render(sf::RenderWindow& window)
 
 	for (vector<sf::Sprite>::iterator i = cardsprites.begin(); i != cardsprites.end(); i++)
 	{
-		window.draw(*i);
+		if (i->getLocalBounds().height != 0)
+		{
+			window.draw(*i);
+		}
 	}
 
 	//draw hovercard
@@ -241,14 +244,29 @@ int DeckBuilder::handleEvent(sf::Event e, int callback)
 		}
 		else
 		{
-			decklistpos -= e.mouseWheel.delta;
-			if (decklistpos < 0)
+			if (isloadingdeck == 0)
 			{
-				decklistpos = 0;
+				decklistpos -= e.mouseWheel.delta;
+				if (decklistpos < 0)
+				{
+					decklistpos = 0;
+				}
+				if (decklistpos >= decklist.size())
+				{
+					decklistpos = decklist.size() - 1;
+				}
 			}
-			if (decklistpos >= decklist.size())
+			else
 			{
-				decklistpos = decklist.size() - 1;
+				decklistpos -= e.mouseWheel.delta;
+				if (decklistpos < 0)
+				{
+					decklistpos = 0;
+				}
+				if (decklistpos >= decks.size())
+				{
+					decklistpos = decks.size() - 1;
+				}
 			}
 		}
 	}
