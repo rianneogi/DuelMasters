@@ -754,10 +754,7 @@ Cards["Hypersquid Walter"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local func = function(id)
-            drawCards(getCardOwner(id),1)
-        end
-        Abils.onAttack(id,func)
+        Abils.drawCardsOnAttack(id,1)
 	end
 }
 

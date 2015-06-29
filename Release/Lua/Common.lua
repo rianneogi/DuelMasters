@@ -107,6 +107,17 @@ Abils.Charger = function(id)
 	end
 end
 
+Abils.Survivor = function(id,func)
+    local owner = getCardOwner(id)
+    local size = getZoneSize(owner,ZONE_BATTLE)
+    for i=0,(size-1) do
+        local cid = getCardAt(owner,ZONE_BATTLE,i)
+        if(isCreatureOfRace(cid,"Survivor")==1) then
+            func(cid)
+        end
+    end
+end
+
 Abils.attacksEachTurn = function(id)
 end
 
@@ -260,6 +271,13 @@ Abils.onAttack = function(id,func)
             func(id)
         end
     end
+end
+
+Abils.drawCardsOnAttack = function(id,count)
+    local func = function(id)
+        drawCards(getCardOwner(id),count)
+    end
+    Abils.onAttack(id,func)
 end
 
 Abils.destroyOppManaOnAttack = function(id,count)
