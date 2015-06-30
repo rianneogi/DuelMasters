@@ -78,7 +78,7 @@ Cards["Armored Blaster Valdios"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Human")
         if(getMessageType()=="get creaturepower") then
             if(getCardZone(id)==ZONE_BATTLE) then   
                 local sid = getMessageInt("creature")
@@ -109,7 +109,7 @@ Cards["Armored Cannon Balbaro"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Human")
         if(getMessageType()=="get creaturepower") then
             if(id==getMessageInt("creature") and getAttacker()==id) then
                 local owner = getCardOwner(id)
@@ -142,7 +142,7 @@ Cards["Barkwhip, the Smasher"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Beast Folk")
         if(getMessageType()=="get creaturepower") then
             if(isCardTapped(id)==1 and getCardZone(id)==ZONE_BATTLE) then
                 local sid = getMessageInt("creature")
@@ -280,7 +280,7 @@ Cards["Chaos Worm"] = {
     breaker = 1,
 
     HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Parasite Worm")
         local func = function(id)
             local ch = createChoice("Choose an opponent's creature to destroy",1,id,getCardOwner(id),Checks.InOppBattle)
             if(ch>=0) then
@@ -349,7 +349,7 @@ Cards["Crystal Lancer"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Liquid People")
         Abils.cantBeBlocked(id)
 	end
 }
@@ -369,7 +369,7 @@ Cards["Crystal Paladin"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Liquid People")
         local func = function(id)
             local func2 = function(cid,sid)
                 if(getCreatureIsBlocker(sid)==1) then
@@ -565,7 +565,7 @@ Cards["Fighter Dual Fang"] = {
 	breaker = 2,
 
     HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Beast Folk")
         local func = function(id)
             Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,2)
         end
@@ -801,7 +801,7 @@ Cards["Ladia Bale, the Inspirational"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Guardian")
 	end
 }
 
@@ -849,7 +849,7 @@ Cards["Larba Geer, the Immaculate"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Guardian")
         local func = function(id)
             local func2 = function(cid,sid)
                 if(getCreatureIsBlocker(sid)==1) then
@@ -1374,7 +1374,7 @@ Cards["Ultracide Worm"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Parasite Worm")
 	end
 }
 

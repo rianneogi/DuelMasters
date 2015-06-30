@@ -40,7 +40,7 @@ Cards["Alcadeias, Lord of Spirits"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Angel Command")
         if(getMessageType()=="get cardcancast" and getCardZone(id)==ZONE_BATTLE) then
             local cid = getMessageInt("card")
             if(getCardType(cid)==TYPE_SPELL and getCardCiv(cid)~=CIV_LIGHT) then
@@ -143,6 +143,7 @@ Cards["Astral Warper"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        Abils.Evolution(id,"Cyber Virus")
         Abils.drawOnSummon(id,3)
 	end
 }
@@ -162,7 +163,7 @@ Cards["Ballom, Master of Death"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Demon Command")
         local func = function(id)
             local valid = function(cid,sid)
                 if(Checks.InBattle(cid,sid)==1 and getCardCiv(sid)~=CIV_DARKNESS) then
@@ -380,7 +381,7 @@ Cards["Doboulgyser, Giant Rock Beast"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Rock Beast")
         local valid = function(cid,sid)
             if(Checks.InOppBattle(cid,sid)==1 and getCreaturePower(sid)<=3000) then
                 return 1
@@ -1038,7 +1039,7 @@ Cards["Niofa, Horned Protector"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Horned Beast")
         local valid = function(cid,sid)
             if(Checks.CreatureInYourDeck(cid,sid)==1 and getCardCiv(sid)==CIV_NATURE) then
                 return 1

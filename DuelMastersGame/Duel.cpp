@@ -191,6 +191,7 @@ int Duel::handleMessage(Message& msg)
 	{
 		int cid = msg.getInt("card");
 		int eb = msg.getInt("evobait");
+		
 		Message m("cardmove");
 		m.addValue("card", cid);
 		m.addValue("from", CardList.at(cid)->Zone);
@@ -198,7 +199,6 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("evobait", eb);
 		MsgMngr.sendMessage(m);
 		SoundMngr->playSound(SOUND_PLAY);
-
 		/*if (eb != -1)
 		{
 			Message msg4("creatureevolve");
@@ -384,14 +384,18 @@ int Duel::handleInterfaceInput(Message& msg)
 	{
 		int whichCard = msg.getInt("card");
 		int manacost = getCardCost(whichCard);
-		if (manazones[turn].getUntappedMana() >= manacost && isThereUntappedManaOfCiv(turn, getCardCivilization(whichCard)) && getCardCanCast(whichCard)==1)
+		if (manazones[turn].getUntappedMana() >= manacost && isThereUntappedManaOfCiv(turn, getCardCivilization(whichCard)) && getCardCanCast(whichCard)==1) //has appropriate mana
 		{
-			//manazones[turn].tapMana(manacost);
-			castingcard = whichCard;
-			castingciv = getCardCivilization(castingcard);
-			castingcost = getCardCost(castingcard);
-			castingcivtapped = false;
-			castingevobait = msg.getInt("evobait");
+			int eb = msg.getInt("evobait");
+			int e = getIsEvolution(whichCard);
+			if ((getCreatureCanEvolve(whichCard, eb) == 1 && e == 1) || e == 0) //can evolve if its an evolution
+			{
+				castingcard = whichCard;
+				castingciv = getCardCivilization(castingcard);
+				castingcost = getCardCost(castingcard);
+				castingcivtapped = false;
+				castingevobait = msg.getInt("evobait");
+			}
 			//MsgMngr.sendMessage(msg);
 		}
 	}
@@ -1083,6 +1087,24 @@ int Duel::isCreatureOfRace(int uid, string race)
 string Duel::getCreatureRace(int uid)
 {
 	return CardList.at(uid)->Race;
+}
+
+int Duel::getCreatureCanEvolve(int evo, int bait)
+{
+	Message oldmsg = currentMessage;
+	currentMessage = Message("get creaturecanevolve");
+	currentMessage.addValue("canevolve", 0);
+	currentMessage.addValue("evolution", evo);
+	currentMessage.addValue("evobait", bait);
+
+	vector<Card*>::iterator i;
+	for (i = CardList.begin(); i != CardList.end(); i++)
+	{
+		(*i)->handleMessage(currentMessage);
+	}
+	int c = currentMessage.getInt("canevolve");
+	currentMessage = oldmsg;
+	return c;
 }
 
 bool Duel::isThereUntappedManaOfCiv(int player,int civ)

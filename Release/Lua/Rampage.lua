@@ -669,7 +669,7 @@ Cards["Gigamantis"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Giant Insect")
         if(getCardZone(id)==ZONE_BATTLE) then
             local owner = getCardOwner(id)
             local s = getZoneSize(owner,ZONE_BATTLE)
@@ -734,7 +734,7 @@ Cards["Jack Viper, Shadow of Doom"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Ghost")
         if(getCardZone(id)==ZONE_BATTLE) then
             local owner = getCardOwner(id)
             local s = getZoneSize(owner,ZONE_BATTLE)
@@ -831,7 +831,7 @@ Cards["Legendary Bynor"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Leviathan")
         if(getCardZone(id)==ZONE_BATTLE) then
             local owner = getCardOwner(id)
             local s = getZoneSize(owner,ZONE_BATTLE)
@@ -1363,7 +1363,7 @@ Cards["Sieg Balicula, the Intense"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Initiate")
         if(getCardZone(id)==ZONE_BATTLE) then
             local owner = getCardOwner(id)
             local s = getZoneSize(owner,ZONE_BATTLE)
@@ -1568,7 +1568,7 @@ Cards["Uberdragon Jabaha"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        Abils.Evolution(id)
+        Abils.Evolution(id,"Armored Dragon")
         if(getCardZone(id)==ZONE_BATTLE) then
             local owner = getCardOwner(id)
             local s = getZoneSize(owner,ZONE_BATTLE)

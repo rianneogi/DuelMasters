@@ -123,6 +123,7 @@ public:
 	int getCardCanCast(int uid);
 	int isCreatureOfRace(int uid, string race); //finds if the word race exists in the creature's race
 	string getCreatureRace(int uid); //returns the full race string of the creature
+	int getCreatureCanEvolve(int evo, int bait);
 };
 
 int getOpponent(int turn);

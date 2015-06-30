@@ -40,10 +40,17 @@ getOpponent = function(p)
 	end
 end
 
-Abils.Evolution = function(id)
+Abils.Evolution = function(id,race)
     if(getMessageType()=="get creatureisevolution") then
         if(getMessageInt("creature")==id) then
             setMessageInt("isevolution",1)
+        end
+    end
+    if(getMessageType()=="get creaturecanevolve") then
+        if(getMessageInt("evolution")==id) then
+            if(isCreatureOfRace(getMessageInt("evobait"),race)==1) then
+                setMessageInt("canevolve",1)
+            end
         end
     end
 end

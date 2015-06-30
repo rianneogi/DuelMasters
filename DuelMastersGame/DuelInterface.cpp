@@ -547,9 +547,10 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						{
 							for (int i = 0; i < duel.battlezones[duel.turn].cards.size(); i++)
 							{
-								if (duel.battlezones[duel.turn].cards.at(i)->Race == duel.CardList.at(selectedcard)->Race)
+								//if (duel.battlezones[duel.turn].cards.at(i)->Race == duel.CardList.at(selectedcard)->Race)
+								if (checkCollision((duel.battlezones[duel.turn].cards.at(i))->sprite.getGlobalBounds(), MouseX, MouseY))
 								{
-									if (checkCollision((duel.battlezones[duel.turn].cards.at(i))->sprite.getGlobalBounds(), MouseX, MouseY))
+									//if (duel.getCreatureCanEvolve(selectedcard, duel.battlezones[duel.turn].cards.at(i)->UniqueId) == 1)
 									{
 										Message msg("cardplay");
 										msg.addValue("card", selectedcard);
