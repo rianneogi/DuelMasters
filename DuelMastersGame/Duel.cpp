@@ -107,6 +107,7 @@ int Duel::handleMessage(Message& msg)
 			if (evobait == -1)
 			{
 				getZone(owner, tozone)->addCard(c);
+				battlezones[owner].addCard(c);
 			}
 			else
 			{
@@ -420,7 +421,8 @@ int Duel::handleInterfaceInput(Message& msg)
 		if (msg.getInt("defendertype") == DEFENDER_PLAYER)
 		{
 			int canattack = getCreatureCanAttackPlayers(attck);
-			if ((canattack == CANATTACK_ALWAYS || (CardList.at(attck)->summoningSickness == 0 && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
+			if ((canattack == CANATTACK_ALWAYS || 
+				((CardList.at(attck)->summoningSickness == 0 || getIsSpeedAttacker(attck) == 1) && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
 				&& CardList.at(attck)->isTapped == false)
 			{
 				Message msg2("cardtap");
@@ -1036,6 +1038,23 @@ int Duel::getIsEvolution(int uid)
 		(*i)->handleMessage(currentMessage);
 	}
 	int c = currentMessage.getInt("isevolution");
+	currentMessage = oldmsg;
+	return c;
+}
+
+int Duel::getIsSpeedAttacker(int uid)
+{
+	Message oldmsg = currentMessage;
+	currentMessage = Message("get creatureisspeedattacker");
+	currentMessage.addValue("isspeedattacker", 0);
+	currentMessage.addValue("creature", uid);
+
+	vector<Card*>::iterator i;
+	for (i = CardList.begin(); i != CardList.end(); i++)
+	{
+		(*i)->handleMessage(currentMessage);
+	}
+	int c = currentMessage.getInt("isspeedattacker");
 	currentMessage = oldmsg;
 	return c;
 }

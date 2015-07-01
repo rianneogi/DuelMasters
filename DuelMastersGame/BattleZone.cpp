@@ -33,6 +33,15 @@ void BattleZone::addCard(Card* c)
 	cards.push_back(c);
 }
 
+//void BattleZone::addCard(Card* c, int speedattacker)
+//{
+//	c->move(x + CARDZONEOFFSET + CARDORIGINOFFSET + cards.size() * CARDSEPERATION, y + CARDZONEOFFSET + CARDORIGINOFFSET);
+//	c->unflip();
+//	c->untap();
+//	c->summoningSickness = (speedattacker+1)%2;
+//	cards.push_back(c);
+//}
+
 void BattleZone::evolveCard(Card* c, int evobait)
 {
 	Card* eb = NULL;

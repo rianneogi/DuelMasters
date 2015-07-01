@@ -556,6 +556,13 @@ Cards["Glory Snow"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
+        local owner = getCardOwner(id)
+        local c1 = getZoneSize(owner)
+        local c2 = getZoneSize(getOpponent(owner))
+        if(c2>c1) then
+            Actions.moveTopCardsFromDeck(owner,ZONE_MANA,2)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
@@ -600,7 +607,13 @@ Cards["Jewel Spider"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose one of your shields",0,id,getCardOwner(id),Checks.InYourShields)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+        end
+        Abils.onDestroy(id,func)
 	end
 }
 
@@ -759,7 +772,7 @@ Cards["Le Quist, the Oracle"] = {
                     return 0
                 end
             end
-            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),valid)
+            local ch = createChoice("Choose a creature",1,id,getCardOwner(id),valid)
             if(ch>=0) then
                 tapCard(ch)
             end
@@ -1316,7 +1329,7 @@ Cards["Vashuna, Sword Dancer"] = {
 	type = TYPE_CREATURE,
 	civilization = CIV_DARKNESS,
 	race = "Demon Command",
-	cost = 6,
+	cost = 5,
 
 	shieldtrigger = 0,
 	blocker = 0,

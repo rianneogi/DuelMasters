@@ -608,9 +608,9 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 				{
 					int canattack = duel.getCreatureCanAttackPlayers(selectedcard);
 					if (checkCollision(duel.shields[getOpponent(duel.turn)].getBounds(), MouseX, MouseY) //attack player
-						&& (canattack == CANATTACK_ALWAYS ||
-						(duel.CardList.at(selectedcard)->summoningSickness == 0 && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
-						&& duel.CardList.at(selectedcard)->isTapped == false
+						&& ((canattack == CANATTACK_ALWAYS ||
+						((duel.CardList.at(selectedcard)->summoningSickness == 0 || duel.getIsSpeedAttacker(selectedcard) == 1) && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
+						&& duel.CardList.at(selectedcard)->isTapped == false)
 						&& (duel.turn == myPlayer || dueltype != DUELTYPE_MULTI))
 					{
 						/*Message msg2("cardtap");

@@ -79,6 +79,14 @@ Abils.PowerAttacker = function(id, power)
 	end
 end
 
+Abils.SpeedAttacker = function(id)
+    if(getMessageType()=="get creatureisspeedattacker") then
+        if(getMessageInt("creature")==id) then
+			setMessageInt("isspeedattacker",1)
+		end
+    end
+end
+
 Abils.Breaker = function(id,breakercount)
     if(getMessageType()=="get creaturebreaker") then
 		if(getMessageInt("creature")==id) then
@@ -128,6 +136,7 @@ Abils.Survivor = function(id,func)
 end
 
 Abils.attacksEachTurn = function(id)
+    --todo
 end
 
 Abils.cantAttack = function(id)
