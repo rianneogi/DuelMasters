@@ -204,7 +204,17 @@ Cards["Bloodwing Mantis"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local ch = createChoice("Choose a creature in your mana zone",0,id,getCardOwner(id),Checks.CreatureInYourMana)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+                local ch2 = createChoice("Choose a creature in your mana zone",0,id,getCardOwner(id),Checks.CreatureInYourMana)
+                if(ch2>=0) then
+                    moveCard(ch2,ZONE_HAND)
+                end
+            end
+        end
+        Abils.onAttack(id,func)
 	end
 }
 
@@ -354,7 +364,23 @@ Cards["Crow Winger"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getOpponent(getCardOwner(id))
+                local size = getZoneSize(owner,ZONE_BATTLE)
+                local count = 0
+                local cid
+                local civ
+                for i=0,(size-1) do
+                    cid = getCardAt(owner,ZONE_BATTLE,i)
+                    civ = getCardCiv(cid)
+                    if(civ==CIV_WATER or civ==CIV_DARKNESS) then
+                        count = count+1
+                    end
+                end
+                Abils.bonusPower(id,count*1000)
+            end
+        end
 	end
 }
 
@@ -387,7 +413,15 @@ Cards["Death Cruzer, the Annihilator"] = {
 	breaker = 3,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local func = function(cid,sid)
+                if(sid~=cid) then
+                    destroyCreature(sid)
+                end
+            end
+            Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        end
+        Abils.onSummon(id)
 	end
 }
 
@@ -708,7 +742,15 @@ Cards["Kulus, Soulshine Enforcer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        --todo
+        local func = function(id)
+            local owner = getCardOwner(id)
+            local c1 = getZoneSize(owner)
+            local c2 = getZoneSize(getOpponent(owner))
+            if(c2>c1) then
+                Actions.moveTopCardsFromDeck(owner,ZONE_MANA,1)
+            end
+        end
+        Abils.onSummon(func,id)
 	end
 }
 
@@ -835,7 +877,23 @@ Cards["Moon Horn"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        --todo
+        if(getMessageType()=="get creaturepower") then
+            if(getMessageInt("creature")==id) then
+                local owner = getOpponent(getCardOwner(id))
+                local size = getZoneSize(owner,ZONE_BATTLE)
+                local count = 0
+                local cid
+                local civ
+                for i=0,(size-1) do
+                    cid = getCardAt(owner,ZONE_BATTLE,i)
+                    civ = getCardCiv(cid)
+                    if(civ==CIV_WATER or civ==CIV_DARKNESS) then
+                        count = count+1
+                    end
+                end
+                Abils.bonusPower(id,count*1000)
+            end
+        end
 	end
 }
 
