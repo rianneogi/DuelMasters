@@ -378,6 +378,49 @@ int Duel::handleMessage(Message& msg)
 	return 0;
 }
 
+void Duel::undoMessage(Message& msg)
+{
+	string type = msg.getType();
+	if (type == "cardmove")
+	{
+		int cid = msg.getInt("card");
+		int fromzone = msg.getInt("from");
+		int tozone = msg.getInt("to");
+		Card* c = CardList.at(cid);
+		int owner = c->Owner;
+		getZone(owner, fromzone)->addCard(c);
+		if (tozone == ZONE_BATTLE && getIsEvolution(cid) == 1) //evolution creatures
+		{
+			int evobait = msg.getInt("evobait");
+			if (evobait == -1)
+			{
+				getZone(owner, tozone)->removeCard(c);
+				battlezones[owner].removeCard(c);
+			}
+			else
+			{
+				battlezones[owner].evolveCard(c, evobait);
+			}
+		}
+		else
+		{
+			getZone(owner, tozone)->removeCard(c);
+		}
+		c->Zone = tozone;
+		winner = -1;
+	}
+	else if (msg.getType() == "cardtap")
+	{
+		CardList.at(msg.getInt("card"))->untap();
+		//SoundMngr->playSound(SOUND_TAP);
+	}
+	else if (msg.getType() == "carduntap")
+	{
+		CardList.at(msg.getInt("card"))->tap();
+		//SoundMngr->playSound(SOUND_UNTAP);
+	}
+}
+
 int Duel::handleInterfaceInput(Message& msg)
 {
 	string type = msg.getType();

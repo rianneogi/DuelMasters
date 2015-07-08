@@ -75,6 +75,7 @@ public:
 	void nextTurn();
 
 	int handleMessage(Message& msg);
+	void undoMessage(Message& msg);
 	int handleInterfaceInput(Message& msg);
 	bool dispatchAllMessages();
 	void dispatchMessage(Message& msg);

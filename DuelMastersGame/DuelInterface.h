@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Duel.h"
+#include "AIInterface.h"
 
 enum DuelState { DUELSTATE_DUEL, DUELSTATE_MENU, DUELSTATE_SINGLE, DUELSTATE_MULTI };
 enum DuelType { DUELTYPE_SINGLE, DUELTYPE_MULTI, DUELTYPE_AI };
@@ -11,6 +11,8 @@ class DuelInterface : public GameWindow
 {
 public:
 	Duel duel;
+
+	AIInterface ai;
 
 	int dueltype;
 	int duelstate;

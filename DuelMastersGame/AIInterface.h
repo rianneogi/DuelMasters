@@ -12,6 +12,7 @@ public:
 	~AIInterface();
 
 	vector<Message> getValidMoves();
+	Message makeMove();
 	int getPlayerToMove();
 };
 

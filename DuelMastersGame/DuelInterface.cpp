@@ -30,6 +30,8 @@ DuelInterface::DuelInterface()
 	deckschosen = 0;
 
 	cardCountBox = Button(sf::Vector2f(0, 0), sf::Vector2f(25, 25), sf::Color::Black, 0, sf::Color::Black, sf::Color::White, "0", 16);
+
+	ai.duel = &duel;
 }
 
 DuelInterface::~DuelInterface()
@@ -265,6 +267,12 @@ void DuelInterface::render(sf::RenderWindow& window)
 int DuelInterface::handleEvent(sf::Event event, int callback)
 {
 	if (duel.winner != -1) return RETURN_NOTHING;
+	if (ai.getPlayerToMove() == 1)
+	{
+		Message m = ai.makeMove();
+		duel.handleInterfaceInput(m);
+		return RETURN_NOTHING;
+	}
 	if (event.type == sf::Event::MouseMoved)
 	{
 		MouseX = event.mouseMove.x;
