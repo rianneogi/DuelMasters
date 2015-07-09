@@ -1130,14 +1130,12 @@ int Duel::isCreatureOfRace(int uid, string race)
 	int f = r.find(race);
 	if (f != string::npos)
 	{
-		cout << "found at: " << f << endl;
 		if (f == 0 || r.at(f-1) == ' ' || r.at(f-1) == '/')
 		{
 			int s1 = race.size();
 			int s2 = r.size();
 			if (s1+f == s2 || r.at(f+s1) == ' ' || r.at(f+s1) == '/')
 			{
-				cout << "race true" << endl;
 				return 1;
 			}
 		}

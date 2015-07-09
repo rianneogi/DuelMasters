@@ -27,13 +27,14 @@ Message AIInterface::makeMove()
 vector<Message> AIInterface::getValidMoves()
 {
 	vector<Message> moves(0);
-	if (duel->attackphase == PHASE_NONE && !(duel->isChoiceActive) && duel->castingcard == -1)
+	int player = getPlayerToMove();
+	if (duel->turn == player && duel->attackphase == PHASE_NONE && !(duel->isChoiceActive) && duel->castingcard == -1)
 	{
 		Message m("endturn");
 		m.addValue("player", duel->turn);
 		moves.push_back(m);
 	}
-	else if (duel->isChoiceActive)
+	else if (duel->isChoiceActive && player == duel->choicePlayer)
 	{
 		if (duel->choice.buttoncount > 0)
 		{
@@ -60,7 +61,7 @@ vector<Message> AIInterface::getValidMoves()
 			}
 		}
 	}
-	else if (duel->attackphase == PHASE_TRIGGER) //use shield triggers
+	else if (duel->attackphase == PHASE_TRIGGER && player == getOpponent(duel->turn)) //use shield triggers
 	{
 		for (vector<Card*>::iterator i = duel->hands[getOpponent(duel->turn)].cards.begin(); i != duel->hands[getOpponent(duel->turn)].cards.end(); i++)
 		{
@@ -77,7 +78,7 @@ vector<Message> AIInterface::getValidMoves()
 		Message m("triggerskip");
 		moves.push_back(m);
 	}
-	else if (duel->attackphase == PHASE_TARGET) //target shields
+	else if (duel->attackphase == PHASE_TARGET && player == duel->turn) //target shields
 	{
 		for (vector<Card*>::iterator i = duel->shields[getOpponent(duel->turn)].cards.begin(); i != duel->shields[getOpponent(duel->turn)].cards.end(); i++)
 		{
@@ -87,7 +88,7 @@ vector<Message> AIInterface::getValidMoves()
 			moves.push_back(m);
 		}
 	}
-	else if (duel->attackphase == PHASE_BLOCK) //block
+	else if (duel->attackphase == PHASE_BLOCK && player == getOpponent(duel->turn)) //block
 	{
 		for (vector<Card*>::iterator i = duel->battlezones[getOpponent(duel->turn)].cards.begin(); i != duel->battlezones[getOpponent(duel->turn)].cards.end(); i++)
 		{
@@ -107,7 +108,7 @@ vector<Message> AIInterface::getValidMoves()
 		Message m("blockskip");
 		moves.push_back(m);
 	}
-	else if (duel->castingcard != -1) //tap mana
+	else if (duel->castingcard != -1 && player == duel->turn) //tap mana
 	{
 		for (vector<Card*>::iterator i = duel->manazones[duel->turn].cards.begin(); i != duel->manazones[duel->turn].cards.end(); i++)
 		{
@@ -116,32 +117,35 @@ vector<Message> AIInterface::getValidMoves()
 			moves.push_back(m);
 		}
 	}
-	for (vector<Card*>::iterator i = duel->hands[duel->turn].cards.begin(); i != duel->hands[duel->turn].cards.end(); i++)
+
+	if (player == duel->turn && !duel->isChoiceActive)
 	{
-		if (duel->getCardCost((*i)->UniqueId) <= duel->manazones[duel->turn].getUntappedMana() || duel->manaUsed == 0)
+		for (vector<Card*>::iterator i = duel->hands[duel->turn].cards.begin(); i != duel->hands[duel->turn].cards.end(); i++)
 		{
-			if (duel->getIsEvolution((*i)->UniqueId) == 1)
+			if (duel->getCardCost((*i)->UniqueId) <= duel->manazones[duel->turn].getUntappedMana())
 			{
-				for (vector<Card*>::iterator j = duel->battlezones[duel->turn].cards.begin(); j != duel->battlezones[duel->turn].cards.end(); j++)
+				if (duel->getIsEvolution((*i)->UniqueId) == 1)
 				{
-					if (duel->getCreatureCanEvolve((*i)->UniqueId, (*j)->UniqueId) == 1)
+					for (vector<Card*>::iterator j = duel->battlezones[duel->turn].cards.begin(); j != duel->battlezones[duel->turn].cards.end(); j++)
 					{
-						Message msg("cardplay");
-						msg.addValue("card", (*i)->UniqueId);
-						msg.addValue("evobait", (*j)->UniqueId);
-						moves.push_back(msg);
+						if (duel->getCreatureCanEvolve((*i)->UniqueId, (*j)->UniqueId) == 1)
+						{
+							Message msg("cardplay");
+							msg.addValue("card", (*i)->UniqueId);
+							msg.addValue("evobait", (*j)->UniqueId);
+							moves.push_back(msg);
+						}
 					}
 				}
+				else
+				{
+					Message msg("cardplay");
+					msg.addValue("card", (*i)->UniqueId);
+					msg.addValue("evobait", -1);
+					moves.push_back(msg);
+				}
 			}
-			else
-			{
-				Message msg("cardplay");
-				msg.addValue("card", (*i)->UniqueId);
-				msg.addValue("evobait", -1);
-				moves.push_back(msg);
-			}
-
-			if (duel->manaUsed == 0);
+			if (duel->manaUsed == 0)
 			{
 				Message msg("cardmana");
 				msg.addValue("card", (*i)->UniqueId);
@@ -149,34 +153,38 @@ vector<Message> AIInterface::getValidMoves()
 			}
 		}
 	}
-	for (vector<Card*>::iterator i = duel->battlezones[duel->turn].cards.begin(); i != duel->battlezones[duel->turn].cards.end(); i++)
+	
+	if (player == duel->turn && !duel->isChoiceActive)
 	{
-		int canattack = duel->getCreatureCanAttackPlayers((*i)->UniqueId);
-		if ((canattack == CANATTACK_ALWAYS ||
-			((duel->CardList.at((*i)->UniqueId)->summoningSickness == 0 || duel->getIsSpeedAttacker((*i)->UniqueId) == 1) && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
-			&& duel->CardList.at((*i)->UniqueId)->isTapped == false)
+		for (vector<Card*>::iterator i = duel->battlezones[duel->turn].cards.begin(); i != duel->battlezones[duel->turn].cards.end(); i++)
 		{
-
-			Message msg("creatureattack");
-			msg.addValue("attacker", (*i)->UniqueId);
-			msg.addValue("defender", getOpponent(duel->turn));
-			msg.addValue("defendertype", DEFENDER_PLAYER);
-			moves.push_back(msg);
-		}
-		for (vector<Card*>::iterator j = duel->battlezones[getOpponent(duel->turn)].cards.begin(); j != duel->battlezones[getOpponent(duel->turn)].cards.end(); j++)
-		{
-			int canattack = duel->getCreatureCanAttackCreature((*i)->UniqueId, (*j)->UniqueId);
-			if (((*j)->isTapped == true || canattack == CANATTACK_UNTAPPED)
-				&& canattack <= CANATTACK_UNTAPPED
-				&& duel->CardList.at((*i)->UniqueId)->summoningSickness == 0
+			int canattack = duel->getCreatureCanAttackPlayers((*i)->UniqueId);
+			if ((canattack == CANATTACK_ALWAYS ||
+				((duel->CardList.at((*i)->UniqueId)->summoningSickness == 0 || duel->getIsSpeedAttacker((*i)->UniqueId) == 1) && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
 				&& duel->CardList.at((*i)->UniqueId)->isTapped == false)
 			{
 
 				Message msg("creatureattack");
 				msg.addValue("attacker", (*i)->UniqueId);
-				msg.addValue("defender", (*j)->UniqueId);
-				msg.addValue("defendertype", DEFENDER_CREATURE);
+				msg.addValue("defender", getOpponent(duel->turn));
+				msg.addValue("defendertype", DEFENDER_PLAYER);
 				moves.push_back(msg);
+			}
+			for (vector<Card*>::iterator j = duel->battlezones[getOpponent(duel->turn)].cards.begin(); j != duel->battlezones[getOpponent(duel->turn)].cards.end(); j++)
+			{
+				int canattack = duel->getCreatureCanAttackCreature((*i)->UniqueId, (*j)->UniqueId);
+				if (((*j)->isTapped == true || canattack == CANATTACK_UNTAPPED)
+					&& canattack <= CANATTACK_UNTAPPED
+					&& duel->CardList.at((*i)->UniqueId)->summoningSickness == 0
+					&& duel->CardList.at((*i)->UniqueId)->isTapped == false)
+				{
+
+					Message msg("creatureattack");
+					msg.addValue("attacker", (*i)->UniqueId);
+					msg.addValue("defender", (*j)->UniqueId);
+					msg.addValue("defendertype", DEFENDER_CREATURE);
+					moves.push_back(msg);
+				}
 			}
 		}
 	}
