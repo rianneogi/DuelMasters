@@ -57,7 +57,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 		duel.shields[i].renderCards(window);
 		duel.battlezones[i].renderCards(window);
 	}
-
+	
 	if (duelstate == DUELSTATE_DUEL)
 	{
 		//draw endturn
@@ -269,8 +269,21 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 	if (duel.winner != -1) return RETURN_NOTHING;
 	if (ai.getPlayerToMove() == 1)
 	{
+		duel.dispatchAllMessages(); //AI shouldnt make moves when there are pending messages
 		Message m = ai.makeMove();
-		duel.handleInterfaceInput(m);
+		cout << "AI make move " << m.getType() << endl;
+		if (m.getType() == "choiceselect")
+		{
+			duel.resetChoice();
+			if (callback != 0)
+			{
+				return m.getInt("selection");
+			}
+		}
+		else
+		{
+			duel.handleInterfaceInput(m);
+		}
 		return RETURN_NOTHING;
 	}
 	if (event.type == sf::Event::MouseMoved)

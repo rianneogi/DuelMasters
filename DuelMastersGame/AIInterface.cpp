@@ -27,13 +27,38 @@ Message AIInterface::makeMove()
 vector<Message> AIInterface::getValidMoves()
 {
 	vector<Message> moves(0);
-	if (duel->attackphase == PHASE_NONE
-		&& !(duel->isChoiceActive)
-		&& duel->castingcard == -1)
+	if (duel->attackphase == PHASE_NONE && !(duel->isChoiceActive) && duel->castingcard == -1)
 	{
 		Message m("endturn");
 		m.addValue("player", duel->turn);
 		moves.push_back(m);
+	}
+	else if (duel->isChoiceActive)
+	{
+		if (duel->choice.buttoncount > 0)
+		{
+			Message msg("choiceselect");
+			msg.addValue("selection", RETURN_BUTTON1);
+			moves.push_back(msg);
+		}
+		if (duel->choice.buttoncount > 1)
+		{
+			Message msg("choiceselect");
+			msg.addValue("selection", RETURN_BUTTON2);
+			moves.push_back(msg);
+		}
+		for (vector<Card*>::iterator i = duel->CardList.begin(); i != duel->CardList.end(); i++)
+		{
+			if ((*i)->Zone != ZONE_EVOLVED)
+			{
+				if (duel->choice.callvalid(duel->choiceCard, (*i)->UniqueId) == 1)
+				{
+					Message msg("choiceselect");
+					msg.addValue("selection", (*i)->UniqueId);
+					moves.push_back(msg);
+				}
+			}
+		}
 	}
 	else if (duel->attackphase == PHASE_TRIGGER) //use shield triggers
 	{
