@@ -5,6 +5,12 @@
 enum AttackPhase { PHASE_NONE, PHASE_BLOCK, PHASE_TARGET, PHASE_TRIGGER };
 enum CanAttack { CANATTACK_TAPPED, CANATTACK_UNTAPPED, CANATTACK_NO, CANATTACK_ALWAYS };
 
+struct MsgHistoryItem
+{
+	Message msg;
+	int move;
+};
+
 class Duel
 {
 public:
@@ -16,6 +22,11 @@ public:
 	BattleZone battlezones[2];
 
 	vector<Card*> CardList;
+
+	string decknames[2];
+
+	vector<MsgHistoryItem> MessageHistory;
+	int currentMoveCount;
 
 	int attacker;
 	int defender;
@@ -69,12 +80,15 @@ public:
 	Duel();
 	~Duel();
 
+	void copyFrom(Duel* duel);
+
 	void setDecks(string p1, string p2);
 	void loadDeck(string s, int p);
 	void startDuel();
 	void nextTurn();
 
 	int handleMessage(Message& msg);
+	void undoLastMove();
 	void undoMessage(Message& msg);
 	int handleInterfaceInput(Message& msg);
 	bool dispatchAllMessages();

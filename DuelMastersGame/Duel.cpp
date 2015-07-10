@@ -82,6 +82,8 @@ Duel::Duel()
 	choicePlayer = -1;
 
 	winner = -1;
+
+	currentMoveCount = 0;
 }
 
 Duel::~Duel()
@@ -92,8 +94,45 @@ Duel::~Duel()
 	}
 }
 
+void Duel::copyFrom(Duel* duel)
+{
+	turn = duel->turn;
+	manaUsed = duel->manaUsed;
+	nextUniqueId = duel->nextUniqueId;
+
+	attackphase = duel->attackphase;
+	attacker = duel->attacker;
+	defender = duel->defender;
+	breakcount = duel->breakcount;
+
+	castingcard = duel->castingcard;
+	castingciv = duel->castingciv;
+	castingcost = duel->castingcost;
+	castingcivtapped = duel->castingcivtapped;
+
+	isChoiceActive = duel->isChoiceActive;
+	choiceCard = duel->choiceCard;
+	choicePlayer = duel->choicePlayer;
+
+	winner = duel->winner;
+
+	for (vector<Card*>::iterator i = duel->CardList.begin(); i != duel->CardList.end(); i++)
+	{
+		Card* c = new Card(**i);
+		CardList.push_back(c);
+	}
+	for (int i = 0; i < 2; i++)
+	{
+
+	}
+}
+
 int Duel::handleMessage(Message& msg)
 {
+	MsgHistoryItem k;
+	k.msg = msg;
+	k.move = currentMoveCount;
+	MessageHistory.push_back(k);
 	if (msg.getType() == "cardmove")
 	{
 		int cid = msg.getInt("card");
@@ -378,6 +417,19 @@ int Duel::handleMessage(Message& msg)
 	return 0;
 }
 
+void Duel::undoLastMove()
+{
+	if (MessageHistory.size() == 0)
+		return;
+	for (int i = MessageHistory.size() - 1; i >= 0; i--)
+	{
+		MsgHistoryItem m = MessageHistory.at(i);
+		MessageHistory.pop_back();
+		undoMessage(m.msg);
+	}
+	currentMoveCount--;
+}
+
 void Duel::undoMessage(Message& msg)
 {
 	string type = msg.getType();
@@ -423,6 +475,7 @@ void Duel::undoMessage(Message& msg)
 
 int Duel::handleInterfaceInput(Message& msg)
 {
+	currentMoveCount++;
 	string type = msg.getType();
 	if (type == "cardplay")
 	{
@@ -1237,6 +1290,8 @@ void Duel::loadDeck(string s, int p)
 	}
 
 	file.close();
+
+	decknames[p] = s;
 }
 
 //void Duel::loadDeck(string s, int p)

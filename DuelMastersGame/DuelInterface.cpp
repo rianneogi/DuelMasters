@@ -267,7 +267,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 int DuelInterface::handleEvent(sf::Event event, int callback)
 {
 	if (duel.winner != -1) return RETURN_NOTHING;
-	if (ai.getPlayerToMove() == 1)
+	if (ai.getPlayerToMove(ai.duel) == 1)
 	{
 		duel.dispatchAllMessages(); //AI shouldnt make moves when there are pending messages
 		Message m = ai.makeMove();
