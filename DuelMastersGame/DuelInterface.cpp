@@ -283,6 +283,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 		else
 		{
 			duel.handleInterfaceInput(m);
+			duel.dispatchAllMessages();
 		}
 		return RETURN_NOTHING;
 	}

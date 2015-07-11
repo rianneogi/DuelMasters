@@ -27,14 +27,15 @@ int AIInterface::Search(Duel* pos, int depth)
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
 		d->setDecks(pos->decknames[0], pos->decknames[1]);
-		for (vector<MsgHistoryItem>::iterator i = pos->MessageHistory.begin(); i != pos->MessageHistory.end(); i++)
+		cout << "move size: " << pos->MoveHistory.size() << endl;
+		for (vector<Message>::iterator i = pos->MoveHistory.begin(); i != pos->MoveHistory.end(); i++)
 		{
-			d->MsgMngr.sendMessage((*i).msg);
+			d->handleInterfaceInput(*i);
+			d->dispatchAllMessages();
 		}
-		d->dispatchAllMessages();
 		if (d->hands[0].cards.size() != pos->hands[0].cards.size())
 		{
-			cout << "ERROR check not valid _______________" << endl;
+			cout << "ERROR check not valid _______________" << d->hands[0].cards.size() << " " << pos->hands[0].cards.size() << endl;
 		}
 	
 		for (int i = 0; i < depth; i++)
@@ -49,8 +50,8 @@ int AIInterface::Search(Duel* pos, int depth)
 			d->dispatchAllMessages();
 			cout << "move made: " << mov.getType() << endl;
 		}
-		value += (2 * d->battlezones[d->turn].cards.size() + d->hands[d->turn].cards.size()
-			- 2 * d->battlezones[getOpponent(d->turn)].cards.size() - d->hands[getOpponent(d->turn)].cards.size());
+		value += (4 * d->battlezones[d->turn].cards.size() + 2 * d->manazones[d->turn].cards.size() + d->hands[d->turn].cards.size()
+			- 4 * d->battlezones[getOpponent(d->turn)].cards.size() - 2 * d->manazones[getOpponent(d->turn)].cards.size() - d->hands[getOpponent(d->turn)].cards.size());
 		
 		if (d!=NULL)
 			delete d;
@@ -64,10 +65,10 @@ Message AIInterface::makeMove()
 	vector<Message> m = getValidMoves(duel);
 	if (m.size() == 0)
 	{
-		return Message("ERROR");
+		return Message("AI NO VALID MOVES ERROR");
 	}
-	int max = 0;
-	Message maxmove;
+	int max = -10000;
+	Message maxmove("AI DEFAULT MOVE ERROR");
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
 		Duel* d = new Duel(*duel);

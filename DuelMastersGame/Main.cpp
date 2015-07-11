@@ -54,6 +54,7 @@ int mainLoop(sf::RenderWindow& window, int callback)
 
 		window.display();
 	}
+	return RETURN_NOTHING;
 }
 
 int main()

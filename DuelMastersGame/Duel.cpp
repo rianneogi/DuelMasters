@@ -427,6 +427,7 @@ void Duel::undoLastMove()
 		MessageHistory.pop_back();
 		undoMessage(m.msg);
 	}
+	MoveHistory.pop_back();
 	currentMoveCount--;
 }
 
@@ -476,6 +477,7 @@ void Duel::undoMessage(Message& msg)
 int Duel::handleInterfaceInput(Message& msg)
 {
 	currentMoveCount++;
+	MoveHistory.push_back(msg);
 	string type = msg.getType();
 	if (type == "cardplay")
 	{

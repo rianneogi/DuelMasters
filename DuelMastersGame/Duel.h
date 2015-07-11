@@ -26,6 +26,7 @@ public:
 	string decknames[2];
 
 	vector<MsgHistoryItem> MessageHistory;
+	vector<Message> MoveHistory;
 	int currentMoveCount;
 
 	int attacker;
