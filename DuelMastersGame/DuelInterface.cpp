@@ -830,10 +830,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						dueltype = DUELTYPE_MULTI;
 						cout << "game connected" << endl;
 
-						int seed = time(0);
-						std::srand(seed);
+						//int seed = time(0);
+						//std::srand(seed);
+						duel.RandomGen.Randomize();
 						sf::Packet packet;
-						packet << PACKET_SETSEED << seed;
+						packet << PACKET_SETSEED << duel.RandomGen.GetRandomSeed();
 						Socket.send(packet);
 
 						if (deckschosen >= 2)
@@ -931,7 +932,8 @@ int DuelInterface::receivePacket(sf::Packet& packet, int callback)
 		{
 			sf::Uint32 x;
 			packet >> x;
-			std::srand(x);
+			//std::srand(x);
+			duel.RandomGen.SetRandomSeed(x);
 			cout << "set seed packet received : " << x << endl;
 		}
 		else if (ptype == PACKET_CHOICESELECT)

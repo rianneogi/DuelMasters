@@ -81,6 +81,7 @@
     <ClCompile Include="CardData.cpp" />
     <ClCompile Include="Choice.cpp" />
     <ClCompile Include="Constants.cpp" />
+    <ClCompile Include="CRandom.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="DeckBuilder.cpp" />
     <ClCompile Include="Duel.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="CardData.h" />
     <ClInclude Include="Choice.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="CRandom.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="DeckBuilder.h" />
     <ClInclude Include="Duel.h" />

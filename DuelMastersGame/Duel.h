@@ -29,6 +29,8 @@ public:
 	vector<Message> MoveHistory;
 	int currentMoveCount;
 
+	CRandom RandomGen;
+
 	int attacker;
 	int defender;
 	int defendertype;

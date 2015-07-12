@@ -49,7 +49,7 @@ void Deck::shuffle()
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
-		int x = rand() % cards.size();
+		int x = RandomGen->Random(cards.size());
 		Card* tmp = cards.at(x);
 		cards.at(x) = cards.at(i);
 		cards.at(i) = tmp;

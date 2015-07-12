@@ -4,6 +4,7 @@
 #include "SFML\Audio.hpp"
 #include "SFML\Network.hpp"
 #include "SFML\Window.hpp"
+#include "CRandom.h"
 
 const sf::Color ATTACKARROWCOLOR(255, 0, 0, 128);
 const sf::Color SUMMONARROWCOLOR(0, 255, 0, 128);

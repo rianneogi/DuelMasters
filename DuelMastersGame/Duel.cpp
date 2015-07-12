@@ -10,6 +10,8 @@ Duel::Duel()
 	int Factor2[2] = { 1, 0 };
 	for (int i = 0; i < 2; i++)
 	{
+		decks[i].RandomGen = &RandomGen; //set random function for deck shuffling
+
 		decks[i].owner = i;
 		battlezones[i].owner = i;
 		graveyards[i].owner = i;
@@ -84,6 +86,8 @@ Duel::Duel()
 	winner = -1;
 
 	currentMoveCount = 0;
+
+	RandomGen.Randomize();
 }
 
 Duel::~Duel()
@@ -404,7 +408,7 @@ int Duel::handleMessage(Message& msg)
 		if (hands[plyr].cards.size() > 0)
 		{
 			Message m("carddiscard");
-			m.addValue("card", hands[plyr].cards.at(rand() % hands[plyr].cards.size())->UniqueId);
+			m.addValue("card", hands[plyr].cards.at(RandomGen.Random(hands[plyr].cards.size()))->UniqueId);
 			m.addValue("zoneto", ZONE_GRAVEYARD);
 			MsgMngr.sendMessage(m);
 		}

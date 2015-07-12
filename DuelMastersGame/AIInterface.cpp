@@ -26,7 +26,9 @@ int AIInterface::Search(Duel* pos, int depth)
 	{
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
+		d->RandomGen.SetRandomSeed(pos->RandomGen.GetRandomSeed());
 		d->setDecks(pos->decknames[0], pos->decknames[1]);
+		d->startDuel();
 		cout << "move size: " << pos->MoveHistory.size() << endl;
 		for (vector<Message>::iterator i = pos->MoveHistory.begin(); i != pos->MoveHistory.end(); i++)
 		{
