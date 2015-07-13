@@ -13,13 +13,13 @@ AIInterface::~AIInterface()
 {
 }
 
-int AIInterface::Search(Duel* pos, int depth)
+int AIInterface::Search(Duel* pos, int depth, int player)
 {
 	//Duel* lastpos
 	if (depth == 0)
 	{
-		return (2 * pos->battlezones[pos->turn].cards.size() + pos->hands[pos->turn].cards.size()
-			- 2 * pos->battlezones[getOpponent(pos->turn)].cards.size() - pos->hands[getOpponent(pos->turn)].cards.size());
+		return (4 * pos->battlezones[player].cards.size() + 2 * pos->manazones[player].cards.size() + pos->hands[player].cards.size()
+			- 4 * pos->battlezones[getOpponent(player)].cards.size() - 2 * pos->manazones[getOpponent(player)].cards.size() - pos->hands[getOpponent(player)].cards.size());
 	}
 	int value = 0;
 	for (int i = 0; i < 2; i++)
@@ -29,6 +29,7 @@ int AIInterface::Search(Duel* pos, int depth)
 		d->RandomGen.SetRandomSeed(pos->RandomGen.GetRandomSeed());
 		d->setDecks(pos->decknames[0], pos->decknames[1]);
 		d->startDuel();
+		d->dispatchAllMessages();
 		cout << "move size: " << pos->MoveHistory.size() << endl;
 		for (vector<Message>::iterator i = pos->MoveHistory.begin(); i != pos->MoveHistory.end(); i++)
 		{
@@ -52,8 +53,8 @@ int AIInterface::Search(Duel* pos, int depth)
 			d->dispatchAllMessages();
 			cout << "move made: " << mov.getType() << endl;
 		}
-		value += (4 * d->battlezones[d->turn].cards.size() + 2 * d->manazones[d->turn].cards.size() + d->hands[d->turn].cards.size()
-			- 4 * d->battlezones[getOpponent(d->turn)].cards.size() - 2 * d->manazones[getOpponent(d->turn)].cards.size() - d->hands[getOpponent(d->turn)].cards.size());
+		value += (4 * d->battlezones[player].cards.size() + 2 * d->manazones[player].cards.size() + d->hands[player].cards.size()
+			- 4 * d->battlezones[getOpponent(player)].cards.size() - 2 * d->manazones[getOpponent(player)].cards.size() - d->hands[getOpponent(player)].cards.size());
 		
 		if (d!=NULL)
 			delete d;
@@ -69,20 +70,42 @@ Message AIInterface::makeMove()
 	{
 		return Message("AI NO VALID MOVES ERROR");
 	}
+	if (m.size() == 1) //only 1 valid move
+	{
+		return m.at(0);
+	}
 	int max = -10000;
 	Message maxmove("AI DEFAULT MOVE ERROR");
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
-		Duel* d = new Duel(*duel);
+		Duel* d = new Duel;
+		d->RandomGen.SetRandomSeed(duel->RandomGen.GetRandomSeed());
+		d->setDecks(duel->decknames[0], duel->decknames[1]);
+		d->startDuel();
+		d->dispatchAllMessages();
+		cout << "move size: " << duel->MoveHistory.size() << endl;
+		for (vector<Message>::iterator j = duel->MoveHistory.begin(); j != duel->MoveHistory.end(); j++)
+		{
+			d->handleInterfaceInput(*j);
+			d->dispatchAllMessages();
+		}
+		if (d->hands[0].cards.size() != duel->hands[0].cards.size())
+		{
+			cout << "ERROR check not valid ROOT" << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+		}
 		d->handleInterfaceInput(*i);
+		d->dispatchAllMessages();
 		//positions.push_back(d);
-		int x = Search(d, 2);
+		int x = Search(d, 0, duel->turn);
+		cout << "value " << x << " for move: " << (*i).getType() << endl;
 		//positions.pop_back();
 		if (x > max)
 		{
 			maxmove = *i;
 			max = x;
 		}
+		if (d!=NULL)
+			delete d;
 	}
 	cout << "AI maxmove value: " << max << endl;
 	return maxmove;
@@ -187,9 +210,24 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 	{
 		for (vector<Card*>::iterator i = d->manazones[d->turn].cards.begin(); i != d->manazones[d->turn].cards.end(); i++)
 		{
-			Message m("manatap");
-			m.addValue("card", (*i)->UniqueId);
-			moves.push_back(m);
+			if ((*i)->isTapped == false)
+			{
+				if (d->castingcost == 1) //last card to be tapped
+				{
+					if (d->getCardCivilization((*i)->UniqueId) == d->castingciv || d->castingcivtapped)
+					{
+						Message m("manatap");
+						m.addValue("card", (*i)->UniqueId);
+						moves.push_back(m);
+					}
+				}
+				else
+				{
+					Message m("manatap");
+					m.addValue("card", (*i)->UniqueId);
+					moves.push_back(m);
+				}
+			}
 		}
 	}
 
@@ -197,7 +235,8 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 	{
 		for (vector<Card*>::iterator i = d->hands[d->turn].cards.begin(); i != d->hands[d->turn].cards.end(); i++)
 		{
-			if (d->getCardCost((*i)->UniqueId) <= d->manazones[d->turn].getUntappedMana())
+			if (d->getCardCost((*i)->UniqueId) <= d->manazones[d->turn].getUntappedMana()
+				&& d->isThereUntappedManaOfCiv(d->turn, d->getCardCivilization((*i)->UniqueId) && d->getCardCanCast((*i)->UniqueId) == 1))
 			{
 				if (d->getIsEvolution((*i)->UniqueId) == 1)
 				{
@@ -263,6 +302,7 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 			}
 		}
 	}
+
 	return moves;
 }
 
