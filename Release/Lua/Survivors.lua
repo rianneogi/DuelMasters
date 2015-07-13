@@ -394,7 +394,15 @@ Cards["Cyclone Panic"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        --todo
+        for i=0,1 do
+            local size = getZoneSize(i,ZONE_HAND)
+            for j=0,(size-1) do
+                moveCard(getCardAt(i,ZONE_HAND,j),ZONE_DECK)
+            end
+            shuffleDeck(i)
+            drawCards(i,size)
+        end
+        Actions.EndSpell(id)
 	end
 }
 
