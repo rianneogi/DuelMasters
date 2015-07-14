@@ -51,7 +51,7 @@ static int createChoice(lua_State* L)
 	cout << "ref: " << ref << endl;
 	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
 	ActiveDuel->duel.checkChoiceValid();
-	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
+	if (ActiveDuel->duel.isChoiceActive && !ActiveDuel->duel.isSimulation) //if choice is still active
 	{
 		int r = mainLoop(*Window, 1); //wait for selection made by user
 		lua_pushinteger(L, r);

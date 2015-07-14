@@ -88,6 +88,8 @@ Duel::Duel()
 	currentMoveCount = 0;
 
 	RandomGen.Randomize();
+
+	isSimulation = false;
 }
 
 Duel::~Duel()
@@ -98,7 +100,7 @@ Duel::~Duel()
 	}
 }
 
-void Duel::copyFrom(Duel* duel)
+void Duel::copyFrom(Duel* duel) //incomplete, not used
 {
 	turn = duel->turn;
 	manaUsed = duel->manaUsed;
@@ -242,7 +244,8 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("to", ZONE_BATTLE);
 		m.addValue("evobait", eb);
 		MsgMngr.sendMessage(m);
-		SoundMngr->playSound(SOUND_PLAY);
+		if (!isSimulation)
+			SoundMngr->playSound(SOUND_PLAY);
 		/*if (eb != -1)
 		{
 			Message msg4("creatureevolve");
@@ -260,7 +263,8 @@ int Duel::handleMessage(Message& msg)
 		m.addValue("from", CardList.at(cid)->Zone);
 		m.addValue("to", ZONE_MANA);
 		MsgMngr.sendMessage(m);
-		SoundMngr->playSound(SOUND_PLAY);
+		if (!isSimulation)
+			SoundMngr->playSound(SOUND_PLAY);
 	}
 	else if (msg.getType() == "creatureattack")
 	{
@@ -337,12 +341,14 @@ int Duel::handleMessage(Message& msg)
 	else if (msg.getType() == "cardtap")
 	{
 		CardList.at(msg.getInt("card"))->tap();
-		SoundMngr->playSound(SOUND_TAP);
+		if (!isSimulation)
+			SoundMngr->playSound(SOUND_TAP);
 	}
 	else if (msg.getType() == "carduntap")
 	{
 		CardList.at(msg.getInt("card"))->untap();
-		SoundMngr->playSound(SOUND_UNTAP);
+		if (!isSimulation)
+			SoundMngr->playSound(SOUND_UNTAP);
 	}
 	else if (msg.getType() == "endturn")
 	{
@@ -351,7 +357,8 @@ int Duel::handleMessage(Message& msg)
 		Message m("startturn");
 		m.addValue("player", turn);
 		MsgMngr.sendMessage(m);
-		SoundMngr->playSound(SOUND_ENDTURN);
+		if (!isSimulation)
+			SoundMngr->playSound(SOUND_ENDTURN);
 	}
 	else if (msg.getType() == "startturn")
 	{
@@ -1199,7 +1206,6 @@ int Duel::isCreatureOfRace(int uid, string race)
 			}
 		}
 	}
-	cout << "race false" << endl;
 	return 0;
 }
 

@@ -27,11 +27,12 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 	{
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
+		d->isSimulation = true;
 		d->RandomGen.SetRandomSeed(pos->RandomGen.GetRandomSeed());
 		d->setDecks(pos->decknames[0], pos->decknames[1]);
 		d->startDuel();
 		d->dispatchAllMessages();
-		cout << "move size: " << pos->MoveHistory.size() << endl;
+		cout << "AI: move size: " << pos->MoveHistory.size() << endl;
 		for (vector<Message>::iterator i = pos->MoveHistory.begin(); i != pos->MoveHistory.end(); i++)
 		{
 			d->handleInterfaceInput(*i);
@@ -39,7 +40,7 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 		}
 		if (d->hands[0].cards.size() != pos->hands[0].cards.size())
 		{
-			cout << "ERROR check not valid _______________" << d->hands[0].cards.size() << " " << pos->hands[0].cards.size() << endl;
+			cout << "AI: ERROR check not valid NON-ROOT " << d->hands[0].cards.size() << " " << pos->hands[0].cards.size() << endl;
 		}
 	
 		for (int i = 0; i < depth; i++)
@@ -52,7 +53,7 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 			Message mov = m.at(rand() % m.size());
 			d->handleInterfaceInput(mov);
 			d->dispatchAllMessages();
-			cout << "move made: " << mov.getType() << endl;
+			cout << "AI: move made: " << mov.getType() << endl;
 		}
 		value += (5 * pos->shields[player].cards.size() + 4 * pos->battlezones[player].cards.size() + 2 * pos->manazones[player].cards.size() + pos->hands[player].cards.size()
 			- 5 * pos->shields[getOpponent(player)].cards.size() - 4 * pos->battlezones[getOpponent(player)].cards.size() - 2 * pos->manazones[getOpponent(player)].cards.size()
@@ -70,22 +71,25 @@ Message AIInterface::makeMove()
 	vector<Message> m = getValidMoves(duel);
 	if (m.size() == 0)
 	{
-		return Message("AI NO VALID MOVES ERROR");
+		return Message("AI: NO VALID MOVES ERROR");
 	}
 	if (m.size() == 1) //only 1 valid move
 	{
+		cout << "AI: only 1 legal move" << endl;
 		return m.at(0);
 	}
+	//Duel* oldDuel = ActiveDuel;
 	int max = -10000;
-	Message maxmove("AI DEFAULT MOVE ERROR");
+	Message maxmove("AI: DEFAULT MOVE ERROR");
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
 		Duel* d = new Duel;
+		d->isSimulation = true;
 		d->RandomGen.SetRandomSeed(duel->RandomGen.GetRandomSeed());
 		d->setDecks(duel->decknames[0], duel->decknames[1]);
 		d->startDuel();
 		d->dispatchAllMessages();
-		cout << "move size: " << duel->MoveHistory.size() << endl;
+		cout << "AI: move size: " << duel->MoveHistory.size() << endl;
 		for (vector<Message>::iterator j = duel->MoveHistory.begin(); j != duel->MoveHistory.end(); j++)
 		{
 			d->handleInterfaceInput(*j);
@@ -93,13 +97,13 @@ Message AIInterface::makeMove()
 		}
 		if (d->hands[0].cards.size() != duel->hands[0].cards.size())
 		{
-			cout << "ERROR check not valid ROOT" << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+			cout << "AI: ERROR check not valid ROOT " << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
 		}
 		d->handleInterfaceInput(*i);
 		d->dispatchAllMessages();
 		//positions.push_back(d);
-		int x = Search(d, 0, duel->turn);
-		cout << "value " << x << " for move: " << (*i).getType() << endl;
+		int x = Search(d, 2, duel->turn);
+		cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
 		//positions.pop_back();
 		if (x > max)
 		{
@@ -109,7 +113,7 @@ Message AIInterface::makeMove()
 		if (d!=NULL)
 			delete d;
 	}
-	cout << "AI maxmove value: " << max << endl;
+	cout << "AI: maxmove value: " << max << endl;
 	return maxmove;
 }
 
@@ -241,7 +245,7 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 		for (vector<Card*>::iterator i = d->hands[d->turn].cards.begin(); i != d->hands[d->turn].cards.end(); i++)
 		{
 			if (d->getCardCost((*i)->UniqueId) <= d->manazones[d->turn].getUntappedMana()
-				&& d->isThereUntappedManaOfCiv(d->turn, d->getCardCivilization((*i)->UniqueId) && d->getCardCanCast((*i)->UniqueId) == 1))
+				&& d->isThereUntappedManaOfCiv(d->turn, d->getCardCivilization((*i)->UniqueId)) && d->getCardCanCast((*i)->UniqueId) == 1)
 			{
 				if (d->getIsEvolution((*i)->UniqueId) == 1)
 				{

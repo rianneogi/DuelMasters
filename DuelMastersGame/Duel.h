@@ -25,6 +25,7 @@ public:
 
 	string decknames[2];
 
+	bool isSimulation;
 	vector<MsgHistoryItem> MessageHistory;
 	vector<Message> MoveHistory;
 	int currentMoveCount;

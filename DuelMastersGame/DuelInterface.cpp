@@ -272,6 +272,8 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 		duel.dispatchAllMessages(); //AI shouldnt make moves when there are pending messages
 		Message m = ai.makeMove();
 		cout << "AI make move " << m.getType() << endl;
+		duel.handleInterfaceInput(m);
+		duel.dispatchAllMessages();
 		if (m.getType() == "choiceselect")
 		{
 			duel.resetChoice();
@@ -279,11 +281,6 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 			{
 				return m.getInt("selection");
 			}
-		}
-		else
-		{
-			duel.handleInterfaceInput(m);
-			duel.dispatchAllMessages();
 		}
 		return RETURN_NOTHING;
 	}
