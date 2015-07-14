@@ -8,11 +8,11 @@ ManaZone::~ManaZone()
 {
 }
 
-void ManaZone::renderCards(sf::RenderWindow& window)
+void ManaZone::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
-		cards.at(i)->render(window);
+		cards.at(i)->render(window, myPlayer);
 	}
 }
 

@@ -1,6 +1,7 @@
 #include "LuaFunctions.h"
 
-DuelInterface* ActiveDuel;
+Duel* ActiveDuel;
+DuelInterface* duelInterface;
 MainMenu* mainMenu;
 DeckBuilder* deckBuilder;
 
@@ -39,7 +40,7 @@ int mainLoop(sf::RenderWindow& window, int callback)
 		
 		if (Socket.receive(packet) != sf::Socket::Status::NotReady)
 		{
-			int r = ActiveDuel->receivePacket(packet, callback);
+			int r = duelInterface->receivePacket(packet, callback);
 			if (callback != 0 && r != RETURN_NOTHING)
 			{
 				return r;
@@ -76,15 +77,17 @@ int main()
 	Window->setPosition(sf::Vector2i(0, 0));
 
 	SoundMngr = new SoundManager();
-	ActiveDuel = new DuelInterface();
+	duelInterface = new DuelInterface();
 	mainMenu = new MainMenu();
 	deckBuilder = new DeckBuilder();
+
+	ActiveDuel = &(duelInterface->duel);
 
 	currentWindow = static_cast<GameWindow*>(mainMenu);
 
 	mainLoop(*Window, 0);
 
-	delete ActiveDuel;
+	delete duelInterface;
 	delete deckBuilder;
 	delete mainMenu;
 	delete SoundMngr;

@@ -14,44 +14,44 @@ static int printint(lua_State* L)
 
 static int setMessageString(lua_State* L)
 {
-	ActiveDuel->duel.currentMessage.addValue(lua_tostring(L, 1), lua_tostring(L, 2));
+	ActiveDuel->currentMessage.addValue(lua_tostring(L, 1), lua_tostring(L, 2));
 	return 0;
 }
 
 static int setMessageInt(lua_State* L)
 {
-	ActiveDuel->duel.currentMessage.addValue(lua_tostring(L, 1), std::to_string(lua_tointeger(L, 2)));
+	ActiveDuel->currentMessage.addValue(lua_tostring(L, 1), std::to_string(lua_tointeger(L, 2)));
 	return 0;
 }
 
 static int getMessageString(lua_State* L)
 {
-	lua_pushstring(L, ActiveDuel->duel.currentMessage.getString(lua_tostring(L, 1)).c_str());
+	lua_pushstring(L, ActiveDuel->currentMessage.getString(lua_tostring(L, 1)).c_str());
 	return 1;
 }
 
 static int getMessageInt(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.currentMessage.getInt(lua_tostring(L, 1)));
+	lua_pushinteger(L, ActiveDuel->currentMessage.getInt(lua_tostring(L, 1)));
 	return 1;
 }
 
 static int getMessageType(lua_State* L)
 {
-	lua_pushstring(L, ActiveDuel->duel.currentMessage.getType().c_str());
+	lua_pushstring(L, ActiveDuel->currentMessage.getType().c_str());
 	return 1;
 }
 
 static int createChoice(lua_State* L)
 {
-	ActiveDuel->duel.dispatchAllMessages(); //first resolve all pending messages
+	ActiveDuel->dispatchAllMessages(); //first resolve all pending messages
 	//lua_pushvalue(L, -1);
 	lua_pushvalue(L, 5);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	cout << "ref: " << ref << endl;
-	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
-	ActiveDuel->duel.checkChoiceValid();
-	if (ActiveDuel->duel.isChoiceActive && !ActiveDuel->duel.isSimulation) //if choice is still active
+	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
+	ActiveDuel->checkChoiceValid();
+	if (ActiveDuel->isChoiceActive && !ActiveDuel->isSimulation) //if choice is still active
 	{
 		int r = mainLoop(*Window, 1); //wait for selection made by user
 		lua_pushinteger(L, r);
@@ -67,14 +67,14 @@ static int createChoice(lua_State* L)
 
 static int createChoiceNoCheck(lua_State* L)
 {
-	ActiveDuel->duel.dispatchAllMessages(); //first resolve all pending messages
+	ActiveDuel->dispatchAllMessages(); //first resolve all pending messages
 	//lua_pushvalue(L, -1);
 	lua_pushvalue(L, 4);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	cout << "ref: " << ref << endl;
-	ActiveDuel->duel.addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
-	//ActiveDuel->duel.checkChoiceValid();
-	if (ActiveDuel->duel.isChoiceActive) //if choice is still active
+	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
+	//ActiveDuel->checkChoiceValid();
+	if (ActiveDuel->isChoiceActive) //if choice is still active
 	{
 		int r = mainLoop(*Window, 1); //wait for selection made by user
 		lua_pushinteger(L, r);
@@ -90,17 +90,17 @@ static int createChoiceNoCheck(lua_State* L)
 
 static int setChoiceActive(lua_State* L)
 {
-	ActiveDuel->duel.isChoiceActive = lua_tointeger(L, 1);
-	if (ActiveDuel->duel.isChoiceActive == false)
+	ActiveDuel->isChoiceActive = lua_tointeger(L, 1);
+	if (ActiveDuel->isChoiceActive == false)
 	{
-		ActiveDuel->duel.choiceCard = -1;
+		ActiveDuel->choiceCard = -1;
 	}
 	return 0;
 }
 
 static int isChoiceActive(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.isChoiceActive);
+	lua_pushinteger(L, ActiveDuel->isChoiceActive);
 	return 1;
 }
 
@@ -116,7 +116,7 @@ static int getChoice(lua_State* L)
 //	Message msg("carddestroy");
 //	msg.addValue("card", lua_tointeger(L, 1));
 //	msg.addValue("zoneto", ZONE_GRAVEYARD);
-//	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+//	ActiveDuel->MsgMngr.sendMessage(msg);
 //	return 0;
 //}
 
@@ -126,12 +126,12 @@ static int destroyCreature(lua_State* L)
 	Message msg("creaturedestroy");
 	msg.addValue("creature", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
-	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_BATTLE)
+	ActiveDuel->MsgMngr.sendMessage(msg);
+	if (ActiveDuel->CardList.at(cid)->Zone != ZONE_BATTLE)
 	{
 		cout << "WARNING: destroyCreature called on creature that is not in battle zone" << endl;
 	}
-	if (ActiveDuel->duel.CardList.at(cid)->Type != TYPE_CREATURE)
+	if (ActiveDuel->CardList.at(cid)->Type != TYPE_CREATURE)
 	{
 		cout << "WARNING: destroyCreature called on card that is not a creature" << endl;
 	}
@@ -145,8 +145,8 @@ static int discardCard(lua_State* L)
 	Message msg("carddiscard");
 	msg.addValue("card", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
-	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_HAND)
+	ActiveDuel->MsgMngr.sendMessage(msg);
+	if (ActiveDuel->CardList.at(cid)->Zone != ZONE_HAND)
 	{
 		cout << "WARNING: discardCard called on card that is not in hand" << endl;
 	}
@@ -159,8 +159,8 @@ static int destroyMana(lua_State* L)
 	Message msg("manadestroy");
 	msg.addValue("card", cid);
 	msg.addValue("zoneto", ZONE_GRAVEYARD);
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
-	if (ActiveDuel->duel.CardList.at(cid)->Zone != ZONE_MANA)
+	ActiveDuel->MsgMngr.sendMessage(msg);
+	if (ActiveDuel->CardList.at(cid)->Zone != ZONE_MANA)
 	{
 		cout << "WARNING: destroyMana called on card that is not in mana zone" << endl;
 	}
@@ -171,7 +171,7 @@ static int discardCardAtRandom(lua_State* L)
 {
 	Message msg("carddiscardatrandom");
 	msg.addValue("player", lua_tointeger(L, 1));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -181,7 +181,7 @@ static int moveCard(lua_State* L)
 	Message msg("cardmove");
 	msg.addValue("card", lua_tointeger(L, 1));
 	msg.addValue("to", lua_tointeger(L, 2));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -189,7 +189,7 @@ static int tapCard(lua_State* L)
 {
 	Message msg("cardtap");
 	msg.addValue("card", lua_tointeger(L, 1));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -197,7 +197,7 @@ static int untapCard(lua_State* L)
 {
 	Message msg("carduntap");
 	msg.addValue("card", lua_tointeger(L, 1));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -205,7 +205,7 @@ static int drawCards(lua_State* L)
 {
 	int player = lua_tointeger(L, 1);
 	int count = lua_tointeger(L, 2);
-	ActiveDuel->duel.drawCards(player, count);
+	ActiveDuel->drawCards(player, count);
 	return 0;
 }
 
@@ -215,11 +215,11 @@ static int createModifier(lua_State* L)
 	lua_pushvalue(L, 2);
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 	/*Modifier m(ref);
-	ActiveDuel->duel.CardList.at(uid)->modifiers.push_back(m);*/
+	ActiveDuel->CardList.at(uid)->modifiers.push_back(m);*/
 	Message msg("modifiercreate");
 	msg.addValue("card", uid);
 	msg.addValue("funcref", ref);
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -228,7 +228,7 @@ static int destroyModifier(lua_State* L)
 	Message msg("modifierdestroy");
 	msg.addValue("card", lua_tointeger(L, 1));
 	msg.addValue("modifier", lua_tointeger(L, 2));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -236,19 +236,19 @@ static int shuffleDeck(lua_State* L)
 {
 	Message msg("deckshuffle");
 	msg.addValue("player", lua_tointeger(L, 1));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
 static int openDeck(lua_State* L)
 {
-	ActiveDuel->cardsearch.zone = ActiveDuel->duel.getZone(lua_tointeger(L, 1), ZONE_DECK);
+	//ActiveDuel->cardsearch.zone = ActiveDuel->getZone(lua_tointeger(L, 1), ZONE_DECK);
 	return 0;
 }
 
 static int closeDeck(lua_State* L)
 {
-	ActiveDuel->cardsearch.zone = NULL;
+	//ActiveDuel->cardsearch.zone = NULL;
 	return 0;
 }
 
@@ -268,7 +268,7 @@ static int seperateEvolution(lua_State* L)
 {
 	Message msg("evolutionseperate");
 	msg.addValue("evolution", lua_tointeger(L, 1));
-	ActiveDuel->duel.MsgMngr.sendMessage(msg);
+	ActiveDuel->MsgMngr.sendMessage(msg);
 	return 0;
 }
 
@@ -278,13 +278,13 @@ static int getCardAt(lua_State* L)
 	int z = lua_tointeger(L, 2);
 	int id = lua_tointeger(L, 3);
 	
-	if (id >= ActiveDuel->duel.getZone(p, z)->cards.size())
+	if (id >= ActiveDuel->getZone(p, z)->cards.size())
 	{
 		lua_pushinteger(L, -1);
 	}
 	else
 	{
-		lua_pushinteger(L, ActiveDuel->duel.getZone(p, z)->cards.at(id)->UniqueId);
+		lua_pushinteger(L, ActiveDuel->getZone(p, z)->cards.at(id)->UniqueId);
 	}
 
 	return 1;
@@ -292,7 +292,7 @@ static int getCardAt(lua_State* L)
 
 static int getTotalCardCount(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.nextUniqueId);
+	lua_pushinteger(L, ActiveDuel->nextUniqueId);
 	return 1;
 }
 
@@ -301,110 +301,110 @@ static int getZoneSize(lua_State* L)
 	int p = lua_tointeger(L, 1);
 	int z = lua_tointeger(L, 2);
 	
-	lua_pushinteger(L, ActiveDuel->duel.getZone(p, z)->cards.size());
+	lua_pushinteger(L, ActiveDuel->getZone(p, z)->cards.size());
 
 	return 1;
 }
 
 static int getTurn(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.turn);
+	lua_pushinteger(L, ActiveDuel->turn);
 	return 1;
 }
 
 static int getCardName(lua_State* L)
 {
-	lua_pushstring(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Name.c_str());
+	lua_pushstring(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->Name.c_str());
 	return 1;
 }
 
 static int getCardZone(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Zone);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->Zone);
 	return 1;
 }
 
 static int getCardCiv(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Civilization);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->Civilization);
 	return 1;
 }
 
 static int getCardType(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Type);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->Type);
 	return 1;
 }
 
 static int getCreatureRace(lua_State* L)
 {
-	lua_pushstring(L, ActiveDuel->duel.getCreatureRace(lua_tointeger(L, 1)).c_str());
+	lua_pushstring(L, ActiveDuel->getCreatureRace(lua_tointeger(L, 1)).c_str());
 	return 1;
 }
 
 static int isCreatureOfRace(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.isCreatureOfRace(lua_tointeger(L, 1), lua_tostring(L, 2)));
+	lua_pushinteger(L, ActiveDuel->isCreatureOfRace(lua_tointeger(L, 1), lua_tostring(L, 2)));
 	return 1;
 }
 
 static int getCardOwner(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->Owner);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->Owner);
 	return 1;
 }
 
 static int getCreaturePower(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.getCreaturePower(lua_tointeger(L, 1)));
+	lua_pushinteger(L, ActiveDuel->getCreaturePower(lua_tointeger(L, 1)));
 	return 1;
 }
 
 static int getCreatureCanBlock(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.getCreatureCanBlock(lua_tointeger(L, 1),lua_tointeger(L,2)));
+	lua_pushinteger(L, ActiveDuel->getCreatureCanBlock(lua_tointeger(L, 1),lua_tointeger(L,2)));
 	return 1;
 }
 
 static int getCreatureIsBlocker(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.getCreatureIsBlocker(lua_tointeger(L, 1)));
+	lua_pushinteger(L, ActiveDuel->getCreatureIsBlocker(lua_tointeger(L, 1)));
 	return 1;
 }
 
 static int getCreatureIsEvolution(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.getIsEvolution(lua_tointeger(L, 1)));
+	lua_pushinteger(L, ActiveDuel->getIsEvolution(lua_tointeger(L, 1)));
 	return 1;
 }
 
 static int isCardTapped(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->isTapped);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->isTapped);
 	return 1;
 }
 
 static int getAttacker(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.attacker);
+	lua_pushinteger(L, ActiveDuel->attacker);
 	return 1;
 }
 
 static int getDefender(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.defender);
+	lua_pushinteger(L, ActiveDuel->defender);
 	return 1;
 }
 
 static int getEvoStackSize(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->evostack.size());
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->evostack.size());
 	return 1;
 }
 
 static int getEvoStackAt(lua_State* L)
 {
-	lua_pushinteger(L, ActiveDuel->duel.CardList.at(lua_tointeger(L, 1))->evostack.at(lua_tointeger(L, 2))->UniqueId);
+	lua_pushinteger(L, ActiveDuel->CardList.at(lua_tointeger(L, 1))->evostack.at(lua_tointeger(L, 2))->UniqueId);
 	return 1;
 }
 

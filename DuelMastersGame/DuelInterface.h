@@ -58,8 +58,8 @@ public:
 	void undoSelection();
 	void setMyPlayer(int p);
 
-	void flipCardForPlayer(int cid, int p);
-	void unflipCardForPlayer(int cid, int p);
+	//void flipCardForPlayer(int cid, int p);
+	//void unflipCardForPlayer(int cid, int p);
 };
 
 int mainLoop(sf::RenderWindow& window, int callback);

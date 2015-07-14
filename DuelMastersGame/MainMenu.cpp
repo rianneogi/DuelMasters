@@ -37,7 +37,7 @@ int MainMenu::handleEvent(sf::Event event, int callback)
 			if (play.collision(MouseX, MouseY))
 			{
 				SoundMngr->playSound(SOUND_BUTTONPRESS);
-				currentWindow = (GameWindow*)(ActiveDuel);
+				currentWindow = (GameWindow*)(duelInterface);
 			}
 			else if (deckbuilder.collision(MouseX, MouseY))
 			{

@@ -8,11 +8,11 @@ BattleZone::~BattleZone()
 {
 }
 
-void BattleZone::renderCards(sf::RenderWindow& window)
+void BattleZone::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
-		cards.at(i)->render(window);
+		cards.at(i)->render(window, myPlayer);
 	}
 }
 

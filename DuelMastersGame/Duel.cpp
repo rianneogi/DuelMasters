@@ -1447,6 +1447,16 @@ Zone* Duel::getZone(int player, int zone)
 	return NULL;
 }
 
+void Duel::flipCardForPlayer(int cid, int p)
+{
+	CardList.at(cid)->flipForPlayer(p);
+}
+
+void Duel::unflipCardForPlayer(int cid, int p)
+{
+	CardList.at(cid)->unflipForPlayer(p);
+}
+
 void Duel::destroyCard(Card* c)
 {
 	//moveCard(c, ZONE_GRAVEYARD);

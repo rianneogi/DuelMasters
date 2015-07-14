@@ -2,7 +2,8 @@
 
 Card::Card() : UniqueId(-1), CardId(0), x(0), y(0), Owner(0)
 {
-	isFlipped = false;
+	isFlipped[0] = false;
+	isFlipped[1] = false;
 	isTapped = false;
 	summoningSickness = 1;
 }
@@ -66,7 +67,8 @@ Card::Card(int uid, int cid, int owner) : UniqueId(uid),CardId(cid), Owner(owner
 	lua_pop(LuaCards, 1);
 	lua_pop(LuaCards, 1);
 
-	isFlipped = false;
+	isFlipped[0] = false;
+	isFlipped[1] = false;
 	isTapped = false;
 	Zone = ZONE_DECK;
 	summoningSickness = 1;
@@ -84,9 +86,13 @@ Card::~Card()
 {
 }
 
-void Card::render(sf::RenderWindow& window)
+void Card::render(sf::RenderWindow& window, int myPlayer)
 {
 	//sprite.setPosition(x, y);
+	if (isFlipped[myPlayer]==true)
+		sprite.setTexture(Textures.at(TEXTURE_CARDBACK));
+	else
+		sprite.setTexture(CardTextures.at(CardId));
 	window.draw(sprite);
 	if (Zone == ZONE_BATTLE && Type == TYPE_CREATURE)
 	{
@@ -153,14 +159,30 @@ void Card::updatePower(int pow)
 
 void Card::flip()
 {
-	isFlipped = true;
-	sprite.setTexture(Textures.at(TEXTURE_CARDBACK));
+	isFlipped[0] = true;
+	isFlipped[1] = true;
+	//sprite.setTexture(Textures.at(TEXTURE_CARDBACK));
 }
 
 void Card::unflip()
 {
-	isFlipped = false;
-	sprite.setTexture(CardTextures.at(CardId));
+	isFlipped[0] = false;
+	isFlipped[1] = false;
+	//sprite.setTexture(CardTextures.at(CardId));
+}
+
+void Card::flipForPlayer(int p)
+{
+	isFlipped[p] = true;
+	/*if (p==myPlayer)
+		sprite.setTexture(Textures.at(TEXTURE_CARDBACK));*/
+}
+
+void Card::unflipForPlayer(int p)
+{
+	isFlipped[p] = false;
+	/*if (p == myPlayer)
+		sprite.setTexture(CardTextures.at(CardId));*/
 }
 
 void Card::tap()

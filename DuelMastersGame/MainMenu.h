@@ -24,7 +24,7 @@ public:
 };
 
 extern DeckBuilder* deckBuilder;
-extern DuelInterface* ActiveDuel;
+extern DuelInterface* duelInterface;
 extern MainMenu* mainMenu;
 extern GameWindow* currentWindow;
 

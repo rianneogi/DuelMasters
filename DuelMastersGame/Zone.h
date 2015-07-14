@@ -16,7 +16,7 @@ public:
 	~Zone();
 
 	void render(sf::RenderWindow& window);
-	virtual void renderCards(sf::RenderWindow& window) = 0;
+	virtual void renderCards(sf::RenderWindow& window, int myPlayer) = 0;
 	virtual void addCard(Card* c) = 0;
 	virtual void handleEvent(sf::Event event) = 0;
 	sf::FloatRect getBounds();

@@ -34,14 +34,14 @@ public:
 
 	sf::Sprite sprite;
 	sf::Text powertext;
-	bool isFlipped;
+	bool isFlipped[2];
 	//int displayPower;
 	
 	Card();
 	Card(int uid, int cid, int owner);
 	~Card();
 
-	void render(sf::RenderWindow& window);
+	void render(sf::RenderWindow& window, int myPlayer);
 	void handleEvent(sf::Event event);
 	int handleMessage(Message& msg);
 	void callOnCast();
@@ -50,6 +50,8 @@ public:
 	void updatePower(int pow);
 	void flip();
 	void unflip();
+	void flipForPlayer(int p);
+	void unflipForPlayer(int p);
 	void tap();
 	void untap();
 	sf::FloatRect getBounds();
@@ -58,6 +60,8 @@ public:
 int getCardIdFromName(string s);
 int initCards();
 void cleanupCards();
+
+int getOpponent(int turn);
 
 
 

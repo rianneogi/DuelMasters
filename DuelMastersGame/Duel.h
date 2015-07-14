@@ -120,6 +120,9 @@ public:
 	void battle(int att, int def);
 	Card* getCard(int player, int zone, int id);
 
+	void flipCardForPlayer(int cid, int p);
+	void unflipCardForPlayer(int cid, int p);
+
 	void drawCards(int player, int count);
 
 	int getCreaturePower(int uid);
@@ -146,4 +149,4 @@ public:
 	int getCreatureCanEvolve(int evo, int bait);
 };
 
-int getOpponent(int turn);
+extern Duel* ActiveDuel;

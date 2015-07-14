@@ -8,11 +8,11 @@ Graveyard::~Graveyard()
 {
 }
 
-void Graveyard::renderCards(sf::RenderWindow& window)
+void Graveyard::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	if (cards.size() != 0)
 	{
-		cards.at(cards.size() - 1)->render(window);
+		cards.at(cards.size() - 1)->render(window, myPlayer);
 	}
 }
 

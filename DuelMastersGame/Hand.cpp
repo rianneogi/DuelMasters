@@ -13,11 +13,11 @@ Hand::~Hand()
 {
 }
 
-void Hand::renderCards(sf::RenderWindow& window)
+void Hand::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
-		cards.at(i)->render(window);
+		cards.at(i)->render(window, myPlayer);
 	}
 }
 
@@ -32,14 +32,16 @@ void Hand::handleEvent(sf::Event event)
 void Hand::addCard(Card* c)
 {
 	c->move(x + CARDZONEOFFSET + CARDORIGINOFFSET + cards.size() * CARDSEPERATION, y + CARDZONEOFFSET + CARDORIGINOFFSET);
-	if (c->Owner == myPlayer)
-	{
-		c->unflip();
-	}
-	else
-	{
-		c->flip();
-	}
+	c->unflipForPlayer(c->Owner);
+	c->flipForPlayer(getOpponent(c->Owner));
+	//if (c->Owner == myPlayer)
+	//{
+	//	c->unflip();
+	//}
+	//else
+	//{
+	//	c->flip();
+	//}
 	c->untap();
 	cards.push_back(c);
 }
@@ -64,15 +66,18 @@ void Hand::removeCard(Card* c)
 
 void Hand::flipAllCards()
 {
-	for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
+	for (int j = 0; j < 2; j++)
 	{
-		if ((*i)->isFlipped == true)
+		for (vector<Card*>::iterator i = cards.begin(); i != cards.end(); i++)
 		{
-			(*i)->unflip();
-		}
-		else
-		{
-			(*i)->flip();
+			if ((*i)->isFlipped[j] == true)
+			{
+				(*i)->unflip();
+			}
+			else
+			{
+				(*i)->flip();
+			}
 		}
 	}
 }

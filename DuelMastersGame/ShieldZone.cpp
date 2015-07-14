@@ -9,11 +9,11 @@ ShieldZone::~ShieldZone()
 {
 }
 
-void ShieldZone::renderCards(sf::RenderWindow& window)
+void ShieldZone::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	for (int i = 0; i < cards.size(); i++)
 	{
-		cards.at(i)->render(window);
+		cards.at(i)->render(window, myPlayer);
 	}
 }
 

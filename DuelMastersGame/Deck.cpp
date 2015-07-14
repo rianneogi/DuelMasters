@@ -21,11 +21,11 @@ int Deck::getTopCard()
 	return cards.at(cards.size() - 1)->UniqueId;
 }
 
-void Deck::renderCards(sf::RenderWindow& window)
+void Deck::renderCards(sf::RenderWindow& window, int myPlayer)
 {
 	if (cards.size() != 0)
 	{
-		cards.at(cards.size() - 1)->render(window);
+		cards.at(cards.size() - 1)->render(window, myPlayer);
 	}
 }
 

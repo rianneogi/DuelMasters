@@ -50,12 +50,12 @@ void DuelInterface::render(sf::RenderWindow& window)
 		duel.shields[i].render(window);
 		duel.battlezones[i].render(window);
 
-		duel.decks[i].renderCards(window);
-		duel.hands[i].renderCards(window);
-		duel.manazones[i].renderCards(window);
-		duel.graveyards[i].renderCards(window);
-		duel.shields[i].renderCards(window);
-		duel.battlezones[i].renderCards(window);
+		duel.decks[i].renderCards(window, myPlayer);
+		duel.hands[i].renderCards(window, myPlayer);
+		duel.manazones[i].renderCards(window, myPlayer);
+		duel.graveyards[i].renderCards(window, myPlayer);
+		duel.shields[i].renderCards(window, myPlayer);
+		duel.battlezones[i].renderCards(window, myPlayer);
 	}
 	
 	if (duelstate == DUELSTATE_DUEL)
@@ -1006,17 +1006,17 @@ void DuelInterface::undoSelection()
 	}
 }
 
-void DuelInterface::flipCardForPlayer(int cid, int p)
-{
-	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
-		duel.CardList.at(cid)->flip();
-}
-
-void DuelInterface::unflipCardForPlayer(int cid, int p)
-{
-	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
-		duel.CardList.at(cid)->unflip();
-}
+//void DuelInterface::flipCardForPlayer(int cid, int p)
+//{
+//	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
+//		duel.CardList.at(cid)->flip();
+//}
+//
+//void DuelInterface::unflipCardForPlayer(int cid, int p)
+//{
+//	if (myPlayer == p || dueltype == DUELTYPE_SINGLE)
+//		duel.CardList.at(cid)->unflip();
+//}
 
 void DuelInterface::setDecklist()
 {
@@ -1041,7 +1041,7 @@ void DuelInterface::setMyPlayer(int p)
 	myPlayer = p;
 	duel.hands[0].myPlayer = p;
 	duel.hands[1].myPlayer = p;
-	duel.hands[0].flipAllCards();
-	duel.hands[1].flipAllCards();
+	//duel.hands[0].flipAllCards();
+	//duel.hands[1].flipAllCards();
 }
 
