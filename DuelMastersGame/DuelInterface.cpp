@@ -120,6 +120,29 @@ void DuelInterface::render(sf::RenderWindow& window)
 			window.draw(infotext);
 		}
 
+		if (duel.isChoiceActive && (duel.choicePlayer==myPlayer || dueltype==DUELTYPE_SINGLE))
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				for (vector<Card*>::iterator j = duel.decks[i].cards.begin(); j != duel.decks[i].cards.end(); j++)
+				{
+					if (duel.choice.callvalid(duel.choiceCard, (*j)->UniqueId) == 1) //if choice contains a card in a deck, open the deck
+					{
+						cardsearch.zone = &duel.decks[i];
+					}
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				if (cardsearch.zone == &duel.decks[i])
+				{
+					cardsearch.zone = NULL; //close deck if there is no choice
+				}
+			}
+		}
 		if (cardsearch.zone != NULL)
 		{
 			cardsearch.render(window);
@@ -267,7 +290,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 int DuelInterface::handleEvent(sf::Event event, int callback)
 {
 	if (duel.winner != -1) return RETURN_NOTHING;
-	if (ai.getPlayerToMove(ai.duel) == 1)
+	if (ai.getPlayerToMove(ai.duel) == 2)
 	{
 		duel.dispatchAllMessages(); //AI shouldnt make moves when there are pending messages
 		Message m = ai.makeMove();
