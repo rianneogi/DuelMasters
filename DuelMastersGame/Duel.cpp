@@ -750,12 +750,15 @@ bool Duel::dispatchAllMessages()
 	{
 		Message msg = MsgMngr.peekMessage();
 		MsgMngr.dispatch();
-		std::cout << "dispatching message: ";
-		for (std::map<std::string, std::string>::iterator i = msg.map.begin(); i != msg.map.end(); i++)
+		if (!isSimulation)
 		{
-			std::cout << i->first << " " << i->second << " ";
+			std::cout << "dispatching message: ";
+			for (std::map<std::string, std::string>::iterator i = msg.map.begin(); i != msg.map.end(); i++)
+			{
+				std::cout << i->first << " " << i->second << " ";
+			}
+			std::cout << "\n";
 		}
-		std::cout << "\n";
 		dispatchMessage(msg);
 		worldchanged = true;
 	}

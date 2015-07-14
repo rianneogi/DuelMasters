@@ -78,12 +78,13 @@ Message AIInterface::makeMove()
 		cout << "AI: only 1 legal move" << endl;
 		return m.at(0);
 	}
-	//Duel* oldDuel = ActiveDuel;
+	Duel* oldDuel = ActiveDuel;
 	int max = -10000;
 	Message maxmove("AI: DEFAULT MOVE ERROR");
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
 		Duel* d = new Duel;
+		ActiveDuel = d;
 		d->isSimulation = true;
 		d->RandomGen.SetRandomSeed(duel->RandomGen.GetRandomSeed());
 		d->setDecks(duel->decknames[0], duel->decknames[1]);
@@ -114,6 +115,7 @@ Message AIInterface::makeMove()
 			delete d;
 	}
 	cout << "AI: maxmove value: " << max << endl;
+	ActiveDuel = oldDuel;
 	return maxmove;
 }
 
