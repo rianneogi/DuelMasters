@@ -286,7 +286,7 @@ int Duel::handleMessage(Message& msg)
 		attacker = msg.getInt("attacker");
 		defender = msg.getInt("defender");
 		defendertype = msg.getInt("defendertype");
-		cout << "attack " << attacker << " " << defender << " " << defendertype << endl;
+		//cout << "attack " << attacker << " " << defender << " " << defendertype << endl;
 		//attackphase = PHASE_BLOCK;
 		Message m("changeattackphase");
 		m.addValue("phase", PHASE_BLOCK);
@@ -1285,7 +1285,8 @@ void Duel::loadDeck(string s, int p)
 		getline(file, str);
 		if (str == "")
 			continue;
-		cout << "loading card " << str << endl;
+		if (!isSimulation)
+			cout << "loading card " << str << endl;
 		for (int i = 0; i < str.size(); i++)
 		{
 			if (str.at(i) == ' ')
@@ -1374,7 +1375,7 @@ void Duel::nextTurn()
 
 void Duel::resetAttack()
 {
-	cout << "attackreset" << endl;
+	//cout << "attackreset" << endl;
 	attackphase = PHASE_NONE;
 	attacker = -1;
 	defender = -1;
@@ -1384,7 +1385,7 @@ void Duel::resetAttack()
 
 void Duel::resetCasting()
 {
-	cout << "casting reset" << endl;
+	//cout << "casting reset" << endl;
 	castingcard = -1;
 	castingciv = -1;
 	castingcivtapped = false;
@@ -1414,7 +1415,7 @@ void Duel::resetChoice()
 	choiceCard = -1;
 	choicePlayer = -1;
 	isChoiceActive = false;
-	cout << "choice reset" << endl;
+	//cout << "choice reset" << endl;
 }
 
 Zone* Duel::getZone(int player, int zone)

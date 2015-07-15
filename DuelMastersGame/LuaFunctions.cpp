@@ -51,7 +51,7 @@ static int createChoice(lua_State* L)
 	cout << "ref: " << ref << endl;
 	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
 	ActiveDuel->checkChoiceValid();
-	if (ActiveDuel->isChoiceActive && !ActiveDuel->isSimulation) //if choice is still active
+	if (ActiveDuel->isChoiceActive) //if choice is still active
 	{
 		int r = mainLoop(*Window, 1); //wait for selection made by user
 		lua_pushinteger(L, r);
@@ -272,6 +272,17 @@ static int seperateEvolution(lua_State* L)
 	return 0;
 }
 
+static int creatureBreakShield(lua_State* L)
+{
+	int s = lua_tointeger(L, 2);
+	Message msg("creaturebreakshield");
+	msg.addValue("creature", lua_tointeger(L, 1));
+	msg.addValue("attacker", s);
+	msg.addValue("defender", ActiveDuel->CardList.at(s)->Owner);
+	ActiveDuel->MsgMngr.sendMessage(msg);
+	return 0;
+}
+
 static int getCardAt(lua_State* L)
 {
 	int p = lua_tointeger(L, 1);
@@ -442,6 +453,7 @@ void registerLua(lua_State* L)
 	lua_register(L, "flipCard", flipCard);
 	lua_register(L, "unflipCard", unflipCard);
 	lua_register(L, "seperateEvolution", seperateEvolution);
+	lua_register(L, "creatureBreakShield", creatureBreakShield);
 
 	lua_register(L, "getCardAt", getCardAt);
 	lua_register(L, "getTotalCardCount", getTotalCardCount);
