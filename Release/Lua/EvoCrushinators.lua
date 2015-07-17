@@ -241,7 +241,7 @@ Cards["Burst Shot"] = {
                 destroyCreature(card)
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -330,7 +330,7 @@ Cards["Critical Blade"] = {
         if(ch>=0) then
             destroyCreature(ch)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -376,7 +376,7 @@ Cards["Crystal Paladin"] = {
                     moveCard(sid,ZONE_HAND)
                 end
             end
-            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
+            Functions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -418,8 +418,8 @@ Cards["Diamond Cutter"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
     end
 }
 
@@ -438,7 +438,7 @@ Cards["Dogarn, the Marauder"] = {
 	breaker = 1,
 
     HandleMessage = function(id)
-        local c = Actions.countTappedCreaturesInBattle(getCardOwner(id))-1
+        local c = Functions.countTappedCreaturesInBattle(getCardOwner(id))-1
         Abils.PowerAttacker(id,c*2000)
     end
 }
@@ -567,7 +567,7 @@ Cards["Fighter Dual Fang"] = {
     HandleMessage = function(id)
         Abils.Evolution(id,"Beast Folk")
         local func = function(id)
-            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,2)
+            Functions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,2)
         end
         Abils.onSummon(id,func)
     end
@@ -642,7 +642,7 @@ Cards["Galsaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        if(Actions.countCreaturesInBattle(getCardOwner(id))<=1 and getCardZone(id)==ZONE_BATTLE) then
+        if(Functions.countCreaturesInBattle(getCardOwner(id))<=1 and getCardZone(id)==ZONE_BATTLE) then
             Abils.PowerAttacker(id,4000)
             Abils.Breaker(id,2)
         end
@@ -856,7 +856,7 @@ Cards["Larba Geer, the Immaculate"] = {
                     tapCard(sid)
                 end
             end
-            Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
+            Functions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -877,7 +877,7 @@ Cards["Leaping Tornado Horn"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local c = Actions.countCreaturesInBattle(getCardOwner(id))-1
+        local c = Functions.countCreaturesInBattle(getCardOwner(id))-1
         Abils.PowerAttacker(id,c*1000)
 	end
 }
@@ -900,7 +900,7 @@ Cards["Logic Cube"] = {
             moveCard(ch,ZONE_HAND)
             shuffleDeck(getCardOwner(ch))
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -919,7 +919,7 @@ Cards["Lost Soul"] = {
         for i=0,(size-1) do
             discardCard(getCardAt(owner,ZONE_HAND,i))
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -956,7 +956,7 @@ Cards["Mana Crisis"] = {
         if(ch>=0) then
             destroyMana(ch)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1070,7 +1070,7 @@ Cards["Plasma Chaser"] = {
 
 	HandleMessage = function(id)
         local func = function(id)
-            drawCards(getCardOwner(id),Actions.countCreaturesInBattle(getOpponent(getCardOwner(id))))
+            drawCards(getCardOwner(id),Functions.countCreaturesInBattle(getOpponent(getCardOwner(id))))
         end
         Abils.onAttack(id,func)
 	end
@@ -1125,7 +1125,7 @@ Cards["Rainbow Stone"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_MANA)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1198,8 +1198,8 @@ Cards["Rumble Gate"] = {
             end
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1266,7 +1266,7 @@ Cards["Silver Axe"] = {
 
 	HandleMessage = function(id)
         local func = function(id)
-            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
+            Functions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
         end
         Abils.onAttack(id,func)
 	end
@@ -1351,11 +1351,11 @@ Cards["Thought Probe"] = {
 	shieldtrigger = 1,
 
 	OnCast = function(id)
-        local count = Actions.countCreaturesInBattle(getOpponent(getCardOwner(id)))
+        local count = Functions.countCreaturesInBattle(getOpponent(getCardOwner(id)))
         if(count>=3) then
             drawCards(getCardOwner(id),3)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 

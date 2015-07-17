@@ -175,7 +175,7 @@ Cards["Ballom, Master of Death"] = {
             local func2 = function(cid,sid)
                 destroyCreature(sid)
             end
-            Actions.execute(id,valid,func2)
+            Functions.execute(id,valid,func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -258,7 +258,7 @@ Cards["Chains of Sacrifice"] = {
         if(ch3>=0) then
             destroyCreature(ch3)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -470,8 +470,8 @@ Cards["Full Defensor"] = {
 		local func = function(cid,sid)
             createModifier(sid,mod)
         end
-		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+		Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -501,7 +501,7 @@ Cards["Galklife Dragon"] = {
             local func2 = function(cid,sid)
                 destroyCreature(sid)
             end
-            Actions.execute(id,valid,func2)
+            Functions.execute(id,valid,func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -668,7 +668,7 @@ Cards["Hydro Hurricane"] = {
                 break
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -748,7 +748,7 @@ Cards["King Aquakamui"] = {
                 local func2 = function(cid,sid)
                     moveCard(sid,ZONE_HAND)
                 end
-                Actions.execute(id,valid,func2)
+                Functions.execute(id,valid,func2)
             end
         end
         Abils.onSummon(id,func)
@@ -828,7 +828,7 @@ Cards["Magmarex"] = {
             local func2 = function(cid,sid)
                 destroyCreature(sid)
             end
-            Actions.execute(id,valid,func2)
+            Functions.execute(id,valid,func2)
         end
         Abils.onSummon(id,func)
 	end
@@ -1019,8 +1019,8 @@ Cards["Mystic Inscription"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_SHIELD,1)
-        Actions.EndSpell(id)
+        Functions.moveTopCardsFromDeck(getCardOwner(id),ZONE_SHIELD,1)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1207,7 +1207,7 @@ Cards["Rimuel, Cloudbreak Elemental"] = {
             end
         end
         local func = function(id)
-            local c = Actions.count(id,valid)
+            local c = Functions.count(id,valid)
             for i=1,c do
                 local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
                 if(ch>=0) then
@@ -1257,7 +1257,7 @@ Cards["Screaming Sunburst"] = {
                 tapCard(getCardAt(opp,ZONE_BATTLE,i))
             end
 		end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1361,7 +1361,7 @@ Cards["Soul Gulp"] = {
                 return 0
             end
         end
-        local c = Actions.count(id,valid)
+        local c = Functions.count(id,valid)
         local opp = getOpponent(getCardOwner(id))
         for i=1,c do
             local ch = createChoice("Choose a card to discard",1,id,opp,Checks.InOppHand)
@@ -1416,7 +1416,7 @@ Cards["Sword of Benevolent Life"] = {
         local mod = function(cid,mid)
             if(getMessageType()=="get creaturepower") then
 		        if(getMessageInt("creature")==cid) then
-                    local count = Actions.count(id,valid)
+                    local count = Functions.count(id,valid)
 			        setMessageInt("power",getMessageInt("power")+1000*count)
 		        end
 	        end
@@ -1424,8 +1424,8 @@ Cards["Sword of Benevolent Life"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1449,7 +1449,7 @@ Cards["Sword of Malevolent Death"] = {
         local mod = function(cid,mid)
             if(getMessageType()=="get creaturepower") then
 		        if(getMessageInt("creature")==cid and getAttacker()==cid) then
-                    local count = Actions.count(id,valid)
+                    local count = Functions.count(id,valid)
 			        setMessageInt("power",getMessageInt("power")+1000*count)
 		        end
 	        end
@@ -1457,8 +1457,8 @@ Cards["Sword of Malevolent Death"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1595,7 +1595,7 @@ Cards["Whisking Whirlwind"] = {
 		local func = function(cid,sid)
             createModifier(sid,mod)
         end
-		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+		Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }

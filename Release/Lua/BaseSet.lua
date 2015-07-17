@@ -54,15 +54,14 @@ Cards["Aqua Sniper"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
+        local function action(id,ch)
             if(ch>=0) then   
                 moveCard(ch,ZONE_HAND)
-                local ch2 = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
-                if(ch2>=0) then
-                    moveCard(ch2,ZONE_HAND)
-                end
+                createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle,Actions.moveToHand)
             end
+        end
+        local function summon(id)
+            createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -189,8 +188,8 @@ Cards["Aura Blast"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+		Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -209,14 +208,16 @@ Cards["Black Feather, Shadow of Rage"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            local c = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
-            if(c>=0) then
-                destroyCreature(c)
+        local function action(id,ch)
+            if(ch>=0) then
+                destroyCreature(ch)
             end
-            if(c==RETURN_NOVALID or c==RETURN_SKIP) then
+            if(ch==RETURN_NOVALID or ch==RETURN_SKIP) then
                 destroyCreature(id)
             end
+        end
+        local function summon(id)
+            createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -321,7 +322,7 @@ Cards["Brain Serum"] = {
 
     OnCast = function(id)
         drawCards(getCardOwner(id),2)
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
     end
 }
 
@@ -360,7 +361,7 @@ Cards["Bronze-Arm Tribe"] = {
 
 	HandleMessage = function(id)
         local summon = function(id)
-            Actions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
+            Functions.moveTopCardsFromDeck(getCardOwner(id),ZONE_MANA,1)
         end
         Abils.onSummon(id,summon)
 	end
@@ -393,15 +394,17 @@ Cards["Burning Power"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-        local mod = function(cid,mid)
+        local function mod(cid,mid)
             Abils.PowerAttacker(cid,2000)
 		    Abils.destroyModAtEOT(cid,mid)
         end
-		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
-		if(c>=0) then
-            createModifier(c,mod)
+        local function action(cid,sid)
+            if(sid>=0) then
+                createModifier(sid,mod)
+            end
         end
-        Actions.EndSpell(id)
+		createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -433,7 +436,7 @@ Cards["Chaos Strike"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local mod = function(cid,mid)
+        local function mod(cid,mid)
             if(getMessageType()=="get creaturecanattackcreature") then
 			    if(getMessageInt("defender")==cid) then
 				    setMessageInt("canattack",CANATTACK_UNTAPPED)
@@ -441,11 +444,13 @@ Cards["Chaos Strike"] = {
 		    end
 		    Abils.destroyModAtEOT(cid,mid)
         end
-		local c = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InOppBattle)
-		if(c>=0) then
-            createModifier(c,mod)
+        local function action(cid,sid)
+            if(sid>=0) then
+                createModifier(sid,mod)
+            end
         end
-        Actions.EndSpell(id)
+		createChoice("Choose creature",0,id,getCardOwner(id),Checks.InOppBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -511,8 +516,8 @@ Cards["Creeping Plague"] = {
         local func = function(cid,sid)
             createModifier(sid,mod1)
         end
-		Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+		Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -525,18 +530,20 @@ Cards["Crimson Hammer"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local valid = function(cid,sid)
+        local function valid(cid,sid)
             if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=2000) then
 		        return 1
 	        else
 		        return 0
 	        end
         end
-        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
-	    if(ch>=0) then
-            destroyCreature(ch)
+        local function action(id,ch)
+            if(ch>=0) then
+                destroyCreature(ch)
+            end
         end
-        Actions.EndSpell(id)
+        createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -549,15 +556,17 @@ Cards["Crystal Memory"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local owner = getCardOwner(id)
-        openDeck(owner)
-	    local ch = createChoice("Choose a card in your deck",0,id,owner,Checks.InYourDeck)
-        closeDeck(owner)
-	    if(ch>=0) then
-            moveCard(ch,ZONE_HAND)
-            shuffleDeck(owner)
+        local function action(id,ch)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+            shuffleDeck(getCardOwner(id))
         end
-        Actions.EndSpell(id)
+        local owner = getCardOwner(id)
+        --openDeck(owner)
+	    createChoice("Choose a card in your deck",0,id,owner,Checks.InYourDeck,action)
+        --closeDeck(owner)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -608,11 +617,8 @@ Cards["Dark Reversal"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
-        if(ch>=0) then
-            moveCard(ch,ZONE_HAND)
-        end
-        Actions.EndSpell(id)
+        createChoice("Choose a creature in your graveyard",0,id,getCardOwner(id),Checks.CreatureInYourGraveyard,Actions.moveToHand)
+        Functions.EndSpell(id)
     end
 }
 
@@ -644,11 +650,8 @@ Cards["Death Smoke"] = {
 	shieldtrigger = 0,
 
 	OnCast = function(id)
-	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
-	    if(ch>=0) then
-            destroyCreature(ch)
-        end
-        Actions.EndSpell(id)
+	    createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle,Actions.destroyCreature)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -717,15 +720,17 @@ Cards["Dimension Gate"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local owner = getCardOwner(id)
-        openDeck(owner)
-	    local ch = createChoice("Choose a creature in your deck",0,id,owner,Checks.CreatureInYourDeck)
-        closeDeck(owner)
-	    if(ch>=0) then
-            moveCard(ch,ZONE_HAND)
-            shuffleDeck(owner)
+        local function action(id,ch)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+            end
+            shuffleDeck(getCardOwner(id))
         end
-        Actions.EndSpell(id)
+        local owner = getCardOwner(id)
+        --openDeck(owner)
+	    createChoice("Choose a creature in your deck",0,id,owner,Checks.CreatureInYourDeck,action)
+        --closeDeck(owner)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -801,15 +806,14 @@ Cards["Explosive Fighter Ucarn"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
+        local function action(id,ch)
             if(ch>=0) then   
                 destroyMana(ch)
-                local ch2 = createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana)
-                if(ch2>=0) then
-                    destroyMana(ch2)
-                end
+                createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana,Actions.destroyMana)
             end
+        end
+        local function summon(id)
+            createChoice("Choose 2 cards in the mana zone",0,id,getCardOwner(id),Checks.InYourMana,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -967,7 +971,7 @@ Cards["Ghost Touch"] = {
 
     OnCast = function(id)
         discardCardAtRandom(getOpponent(getCardOwner(id)))
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
     end
 }
 
@@ -986,19 +990,18 @@ Cards["Gigaberos"] = {
 	breaker = 2,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
+        local function action(id,ch)
             if(ch>=0) then
                 if(ch==id) then
                     destroyCreature(id)
                 else
                     destroyCreature(ch)
-                    local ch2 = createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
-                    if(ch2>=0) then
-                        destroyCreature(ch2)
-                    end
+                    createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle,Actions.destroyCreature)
                 end
             end
+        end
+        local function summon(id)
+            createChoice("Choose 2 creatures in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1038,15 +1041,14 @@ Cards["Gigargon"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
+        local function action(id,ch)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
-                local ch2 = createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard)
-                if(ch2>=0) then
-                    moveCard(ch2,ZONE_HAND)
-                end
+                createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard,Actions.moveToHand)
             end
+        end
+        local function summon(id)
+            createChoice("Choose 2 creatures in your graveyard",1,id,getCardOwner(id),Checks.CreatureInYourGraveyard,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1123,7 +1125,7 @@ Cards["Holy Awe"] = {
 		for i=0,size,1 do
 			tapCard(getCardAt(opp,ZONE_BATTLE,i))
 		end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1350,19 +1352,23 @@ Cards["Laser Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local mod = function(cid,mid)
+        local function mod(cid,mid)
             Abils.cantBeBlocked(cid)
 	        Abils.destroyModAtEOT(cid,mid)
         end
-        local ch = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
-        if(ch>=0) then
-            createModifier(ch,mod)
-            local ch2 = createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle)
-            if(ch2>=0) then
-                 createModifier(ch2,mod)
+        local function action2(id,ch)
+            if(ch>=0) then
+                createModifier(ch,mod)
             end
         end
-        Actions.EndSpell(id)
+        local function action(id,ch)
+            if(ch>=0) then
+                createModifier(ch,mod)
+                createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle,action2)
+            end
+        end
+        createChoice("Choose 2 of your creatures",0,id,getCardOwner(id),Checks.InYourBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1393,16 +1399,18 @@ Cards["Magma Gazer"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local mod = function(cid,mid)
+        local function mod(cid,mid)
             Abils.PowerAttacker(cid,4000)
             Abils.Breaker(cid,2)
 		    Abils.destroyModAtEOT(cid,mid)
         end
-		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
-		if(ch>=0) then
-            createModifier(ch,mod)
+        local function action(cid,sid)
+            if(sid>=0) then
+                createModifier(sid,mod)
+            end
         end
-        Actions.EndSpell(id)
+		createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1462,15 +1470,15 @@ Cards["Meteosaur"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            valid = function(cid,sid)
+        local function summon(id)
+            local function valid(cid,sid)
                 if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=2000) then
 		            return 1
 	            else
 		            return 0
 	            end
             end
-            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),valid)
+            createChoice("Choose an opponent's creature",1,id,getCardOwner(id),valid,Actions.destroyCreature)
             if(ch>=0) then
                 destroyCreature(ch)
             end
@@ -1494,16 +1502,8 @@ Cards["Miele, Vizier of Lightning"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local action = function(cid,sid)
-            if(sid>=0) then
-                tapCard(sid)
-            end
-        end
-        local summon = function(id)
-            local ch = createChoice("Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle,action)
-            --if(ch>=0) then
-            --    tapCard(sid)
-            --end
+        local function summon(id)
+            createChoice("Choose an opponent's creature",1,id,getCardOwner(id),Checks.UntappedInOppBattle,Actions.tapCard)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1537,15 +1537,14 @@ Cards["Moonlight Flash"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
-        if(ch>=0) then
-            tapCard(ch)
-            local ch2 = createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle)
-            if(ch2>=0) then
-                tapCard(ch2)
+        local function action(id,ch)
+            if(ch>=0) then
+                tapCard(ch)
+                createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle,Actions.tapCard)
             end
         end
-        Actions.EndSpell(id)
+        createChoice("Choose 2 of your opponent's creatures",0,id,getCardOwner(id),Checks.InOppBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1558,11 +1557,8 @@ Cards["Natural Snare"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
-        if(ch>=0) then
-            moveCard(ch,ZONE_MANA)
-        end
-	    Actions.EndSpell(id)
+        createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle,Actions.moveToMana)
+	    Functions.EndSpell(id)
 	end
 }
 
@@ -1628,11 +1624,8 @@ Cards["Pangaea's Song"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        createChoice("Choose a creature in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle)
-	    if(ch>=0) then
-            moveCard(ch,ZONE_MANA)
-        end
-        Actions.EndSpell(id)
+        createChoice("Choose a creature in your battle zone",0,id,getCardOwner(id),Checks.InYourBattle,Actions.moveToMana)
+        Functions.EndSpell(id)
     end
 }
 
@@ -1689,11 +1682,8 @@ Cards["Poisonous Mushroom"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Choose a card in your hand",1,id,getCardOwner(id),Checks.InYourHand)
-            if(ch>=0) then
-                moveCard(ch,ZONE_MANA)
-            end
+        local function summon(id)
+            createChoice("Choose a card in your hand",1,id,getCardOwner(id),Checks.InYourHand,Actions.moveToMana)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1714,15 +1704,17 @@ Cards["Rayla, Truth Enforcer"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            local owner = getCardOwner(id)
-            openDeck(owner)
-            local ch = createChoice("Choose a spell in your deck",1,id,owner,Checks.SpellInYourDeck)
-            closeDeck(owner)
+        local function action(id,ch)
             if(ch>=0) then
                 moveCard(ch,ZONE_HAND)
             end
-            shuffleDeck(ch,owner)
+            shuffleDeck(ch,getCardOwner(id))
+        end
+        local function summon(id)
+            local owner = getCardOwner(id)
+            --openDeck(owner)
+            createChoice("Choose a spell in your deck",1,id,owner,Checks.SpellInYourDeck,action)
+            --closeDeck(owner)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1818,15 +1810,14 @@ Cards["Rothus, the Traveler"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        local summon = function(id)
-            local ch = createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle)
+        local function action(id,ch)
             if(ch>=0) then
                 destroyCreature(ch)
-                local ch2 = createChoice("Select creature to destroy",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
-                if(ch2>=0) then
-                    destroyCreature(ch2)
-                end
+                createChoice("Select creature to destroy",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle,Actions.destroyCreature)
             end
+        end
+        local function summon(id)
+            createChoice("Select creature to destroy",0,id,getCardOwner(id),Checks.InYourBattle,action)
         end
         Abils.onSummon(id,summon)
 	end
@@ -1990,11 +1981,8 @@ Cards["Solar Ray"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
-        if(ch>=0) then
-            tapCard(ch)
-        end
-	    Actions.EndSpell(id)
+       createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle,Actions.tapCard)
+	    Functions.EndSpell(id)
 	end
 }
 
@@ -2007,15 +1995,17 @@ Cards["Sonic Wing"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local mod = function(cid,mid)
+        local function mod(cid,mid)
             Abils.cantBeBlocked(cid)
 	        Abils.destroyModAtEOT(cid,mid)
         end
-		local ch = createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle)
-		if(ch>=0) then
-            createModifier(ch,mod)
+        local function action(id,ch)
+            if(ch>=0) then
+               createModifier(ch,mod) 
+            end
         end
-        Actions.EndSpell(id)
+		createChoice("Choose creature",0,id,getCardOwner(id),Checks.InYourBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -2028,11 +2018,8 @@ Cards["Spiral Gate"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local ch = createChoice("Choose a creature",0,id,getCardOwner(id),Checks.InBattle)
-	    if(ch>=0) then
-            moveCard(ch,ZONE_HAND)
-        end
-        Actions.EndSpell(id)
+        local ch = createChoice("Choose a creature",0,id,getCardOwner(id),Checks.InBattle,Actions.moveToHand)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -2090,11 +2077,8 @@ Cards["Stinger Worm"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            local ch = createChoice("Destroy a creature",0,id,getCardOwner(id),Checks.InYourBattle)
-            if(ch>=0) then
-                destroyCreature(ch)
-            end
+        local function summon(id)
+            createChoice("Destroy a creature",0,id,getCardOwner(id),Checks.InYourBattle,Actions.destroyCreature)
         end
         Abils.onSummon(id,summon)
 	end
@@ -2134,19 +2118,11 @@ Cards["Storm Shell"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            local ch = createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
-            if(ch>=0) then
-                moveCard(ch,ZONE_MANA)
-            end
+        local function summon(id)
+            createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle,Actions.moveToMana)
         end
         Abils.onSummon(id,summon)
-	end,
-
-    Select = function(cid,sid)
-        moveCard(sid,ZONE_MANA)
-        setChoiceActive(0)
-    end
+	end
 }
 
 Cards["Super Explosive Volcanodon"] = {
@@ -2183,11 +2159,8 @@ Cards["Swamp Worm"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		summon = function(id)
-            local ch = createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle)
-            if(ch>=0) then
-                destroyCreature(ch)
-            end
+		local function summon(id)
+            createChoice("Choose a creature",0,id,getOpponent(getCardOwner(id)),Checks.InOppBattle,Actions.destroyCreature)
         end
         Abils.onSummon(id,summon)
 	end
@@ -2221,15 +2194,14 @@ Cards["Teleportation"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
-	    if(ch>=0) then
-            moveCard(ch,ZONE_HAND)
-            local ch2 = createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle)
-            if(ch2>=0) then
-                moveCard(ch2,ZONE_HAND)
+        local function action(id,ch)
+            if(ch>=0) then
+                moveCard(ch,ZONE_HAND)
+                createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle,Actions.moveToHand)
             end
         end
-        Actions.EndSpell(id)
+        createChoice("Choose 2 creatures",0,id,getCardOwner(id),Checks.InBattle,action)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -2242,11 +2214,8 @@ Cards["Terror Pit"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-	    local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle)
-	    if(ch>=0) then
-            destroyCreature(ch)
-        end
-        Actions.EndSpell(id)
+	    createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.InOppBattle,Actions.destroyCreature)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -2265,19 +2234,8 @@ Cards["Thorny Mandra"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-		if(getMessageType()=="post cardmove") then
-            if(getMessageInt("card")==id) then
-			    createChoice("Thorny Mandra: Select card in graveyard",1,id)
-			    choicePushSelect(3,"Cards","Thorny Mandra","Select")
-                choicePushButton1(2,"Actions","SkipChoice")
-			    choicePushValid(2,"Checks","InYourGraveyard")
-            end
-		end
-        summon = function(id)
-            local ch = createChoice("Select card in graveyard",1,id,getCardOwner(id),Checks.InYourGraveyard)
-            if(ch>=0) then
-                moveCard(ch,ZONE_MANA)
-            end
+        local function summon(id)
+            createChoice("Select card in graveyard",1,id,getCardOwner(id),Checks.InYourGraveyard,Actions.moveToMana)
         end
         Abils.onSummon(id,summon)
 	end
@@ -2298,17 +2256,19 @@ Cards["Toel, Vizier of Hope"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
+        local function action(id,ch)
+            if(ch==RETURN_BUTTON1) then
+                local owner = getCardOwner(cid)
+		        local size = getZoneSize(owner,ZONE_BATTLE)-1
+		        for i=0,size,1 do
+		            local cid = getCardAt(owner,ZONE_BATTLE,i)
+		            untapCard(cid)
+		        end
+            end
+        end
         if(getMessageType()=="pre endturn") then
 		    if(getMessageInt("player")==getCardOwner(id) and getCardZone(id)==ZONE_BATTLE) then
-			    local ch = createChoiceNoCheck("Untap creatures?",2,id,getCardOwner(id),Checks.False)
-			    if(ch==RETURN_BUTTON1) then
-                    local owner = getCardOwner(cid)
-		            local size = getZoneSize(owner,ZONE_BATTLE)-1
-		            for i=0,size,1 do
-		                local cid = getCardAt(owner,ZONE_BATTLE,i)
-		                untapCard(cid)
-		            end
-                end
+			    createChoiceNoCheck("Untap creatures?",2,id,getCardOwner(id),Checks.False,action)
 		    end
 	    end
 	end
@@ -2323,18 +2283,15 @@ Cards["Tornado Flame"] = {
 	shieldtrigger = 1,
 
     OnCast = function(id)
-        local valid = function(cid,sid)
+        local function valid(cid,sid)
             if(getCardOwner(sid)~=getCardOwner(cid) and getCardZone(sid)==ZONE_BATTLE and getCreaturePower(sid)<=4000) then
 		        return 1
 	        else
 		        return 0
 	        end
         end
-        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid)
-	    if(ch>=0) then
-            destroyCreature(ch)
-        end
-        Actions.EndSpell(id)
+        createChoice("Choose an opponent's creature",0,id,getCardOwner(id),valid,Actions.destroyCreature)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -2415,7 +2372,7 @@ Cards["Ultimate Force"] = {
 		moveCard(c,ZONE_MANA)
         c = getCardAt(turn,ZONE_DECK,size-2)
         moveCard(c,ZONE_MANA)
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
     end
 }
 
@@ -2434,11 +2391,8 @@ Cards["Unicorn Fish"] = {
 	breaker = 1,
 
 	HandleMessage = function(id)
-        summon = function(id)
-            local ch = createChoice("Choose a creature",1,id,getCardOwner(id),Checks.InBattle)
-            if(ch>=0) then
-                moveCard(ch,ZONE_HAND)
-            end
+        local function summon(id)
+            createChoice("Choose a creature",1,id,getCardOwner(id),Checks.InBattle,Actions.moveToHand)
         end
         Abils.onSummon(id,summon)
 	end
@@ -2510,11 +2464,8 @@ Cards["Virtual Tripwire"] = {
 	shieldtrigger = 0,
 
     OnCast = function(id)
-        local ch = createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle)
-	    if(ch>=0) then
-            tapCard(ch)
-        end
-        Actions.EndSpell(id)
+        createChoice("Choose an opponent's creature",0,id,getCardOwner(id),Checks.UntappedInOppBattle,Actions.tapCard)
+        Functions.EndSpell(id)
 	end
 }
 

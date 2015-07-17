@@ -25,7 +25,7 @@ Cards["Alek, Solidity Enforcer"] = {
                         return 0
                     end
                 end
-                local c = Actions.count(id,valid)
+                local c = Functions.count(id,valid)
                 Abils.bonusPower(id,c*1000)
             end
         end
@@ -264,8 +264,8 @@ Cards["Blaze Cannon"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
-        Actions.EndSpell(id)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.EndSpell(id)
 	end,
 
     HandleMessage = function(id)
@@ -345,7 +345,7 @@ Cards["Boomerang Comet"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end,
 
     HandleMessage = function(id)
@@ -377,7 +377,7 @@ Cards["Chaos Fish"] = {
                         return 0
                     end
                 end
-                local c = Actions.count(id,valid)
+                local c = Functions.count(id,valid)
                 Abils.bonusPower(id,c*1000)
             end
         end
@@ -389,7 +389,7 @@ Cards["Chaos Fish"] = {
                     return 0
                 end
             end
-            local c = Actions.count(id,valid)
+            local c = Functions.count(id,valid)
             drawCards(getCardOwner(id),c)
         end
         Abils.onAttack(id,func)
@@ -434,7 +434,7 @@ Cards["Earthstomp Giant"] = {
             local func2 = function(cid,sid)
                 moveCard(sid,ZONE_HAND)
             end
-            Actions.execute(id,Checks.CreatureInYourMana,func2)
+            Functions.execute(id,Checks.CreatureInYourMana,func2)
         end
         Abils.onAttack(id,func)
 	end
@@ -465,7 +465,7 @@ Cards["Eldritch Poison"] = {
                 moveCard(ch2,ZONE_HAND)
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -561,7 +561,7 @@ Cards["Flood Valve"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -624,7 +624,7 @@ Cards["Garkago Dragon"] = {
                         return 0
                     end
                 end
-                local c = Actions.count(id,valid)
+                local c = Functions.count(id,valid)
                 Abils.bonusPower(id,c*1000)
             end
         end
@@ -893,10 +893,10 @@ Cards["Liquid Scope"] = {
         local func2 = function(cid,sid)
             flipCard(sid)
         end
-        Actions.execute(id,valid,func)
+        Functions.execute(id,valid,func)
         local ch = createChoiceNoCheck("Look at cards",1,id,getCardOwner(id),Checks.False)
-        Actions.execute(id,valid,func2)
-        Actions.EndSpell(id)
+        Functions.execute(id,valid,func2)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -914,7 +914,7 @@ Cards["Logic Sphere"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_HAND)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -932,7 +932,7 @@ Cards["Mana Nexus"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_SHIELD)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -961,7 +961,7 @@ Cards["Masked Pomegranate"] = {
                         return 0
                     end
                 end
-                local c = Actions.count(id,valid)
+                local c = Functions.count(id,valid)
                 Abils.bonusPower(id,c*1000)
             end
         end
@@ -1288,7 +1288,7 @@ Cards["Scratchclaw"] = {
                         return 0
                     end
                 end
-                local c = Actions.count(id,valid)
+                local c = Functions.count(id,valid)
                 Abils.bonusPower(id,c*1000)
             end
         end
@@ -1310,12 +1310,12 @@ Cards["Searing Wave"] = {
                 destroyCreature(sid)
             end
         end
-        Actions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func)
+        Functions.executeForCreaturesInBattle(id,getOpponent(getCardOwner(id)),func)
         local ch2 = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShields)
         if(ch2>=0) then
             moveCard(ch2,ZONE_GRAVEYARD)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1394,12 +1394,12 @@ Cards["Snake Attack"] = {
         local func = function(cid,sid)
             createModifier(sid,mod)
         end
-        Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+        Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
         local ch2 = createChoice("Choose a shield",0,id,getCardOwner(id),Checks.InYourShields)
         if(ch2>=0) then
             moveCard(ch2,ZONE_GRAVEYARD)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1530,7 +1530,7 @@ Cards["Sundrop Armor"] = {
         if(ch>=0) then
             moveCard(ch,ZONE_SHIELD)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -1640,7 +1640,7 @@ Cards["Volcanic Arrows"] = {
         if(ch2>=0) then
             moveCard(ch2,ZONE_GRAVEYARD)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 

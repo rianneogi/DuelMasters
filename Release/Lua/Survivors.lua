@@ -352,7 +352,7 @@ Cards["Cataclysmic Eruption"] = {
                 break
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -409,7 +409,7 @@ Cards["Cyclone Panic"] = {
             shuffleDeck(i)
             drawCards(i,size)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -434,7 +434,7 @@ Cards["Death Cruzer, the Annihilator"] = {
                     destroyCreature(sid)
                 end
             end
-            Actions.executeForCreaturesInBattle(id,getCardOwner(id),func)
+            Functions.executeForCreaturesInBattle(id,getCardOwner(id),func)
         end
         Abils.onSummon(id)
 	end
@@ -460,8 +460,8 @@ Cards["Divine Riptide"] = {
         local func = function(cid,sid)
             moveCard(sid,ZONE_HAND)
         end
-        Actions.execute(id,valid,func)
-        Actions.EndSpell(id)
+        Functions.execute(id,valid,func)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -483,7 +483,7 @@ Cards["Enchanted Soil"] = {
                 moveCard(ch2,ZONE_MANA)
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -609,9 +609,9 @@ Cards["Glory Snow"] = {
         local c1 = getZoneSize(owner)
         local c2 = getZoneSize(getOpponent(owner))
         if(c2>c1) then
-            Actions.moveTopCardsFromDeck(owner,ZONE_MANA,2)
+            Functions.moveTopCardsFromDeck(owner,ZONE_MANA,2)
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
@@ -717,7 +717,7 @@ Cards["King Tsunami"] = {
             local exec = function(cid,sid)
                 moveCard(sid,ZONE_HAND)
             end
-            Actions.execute(id,valid,exec)
+            Functions.execute(id,valid,exec)
         end
 		Abils.onSummon(id,func)
 	end
@@ -762,7 +762,7 @@ Cards["Kulus, Soulshine Enforcer"] = {
             local c1 = getZoneSize(owner)
             local c2 = getZoneSize(getOpponent(owner))
             if(c2>c1) then
-                Actions.moveTopCardsFromDeck(owner,ZONE_MANA,1)
+                Functions.moveTopCardsFromDeck(owner,ZONE_MANA,1)
             end
         end
         Abils.onSummon(func,id)
@@ -1122,7 +1122,7 @@ Cards["Sinister General Damudo"] = {
             local exec = function(cid,sid)
                 destroyCreature(sid)
             end
-            Actions.execute(id,valid,exec)
+            Functions.execute(id,valid,exec)
         end
         Abils.onDestroy(id,func)
 	end
@@ -1373,7 +1373,7 @@ Cards["Thunder Net"] = {
                 break
             end
         end
-        Actions.EndSpell(id)
+        Functions.EndSpell(id)
 	end
 }
 
