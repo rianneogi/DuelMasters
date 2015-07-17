@@ -45,7 +45,7 @@ public:
 	int castingevobait;
 	bool castingcivtapped;
 
-	Choice choice;
+	Choice* choice;
 	int choiceCard;
 	int choicePlayer;
 	bool isChoiceActive;
@@ -101,7 +101,7 @@ public:
 	//void render(sf::RenderWindow& window);
 	void handleEvent(sf::Event event);
 
-	void addChoice(string info, int skip, int card, int player, int validref);
+	void addChoice(string info, int skip, int card, int player, int validref, int actionref);
 	void checkChoiceValid();
 	int choiceCanBeSelected(int sid);
 

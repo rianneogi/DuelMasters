@@ -694,17 +694,22 @@ int Duel::handleInterfaceInput(Message& msg)
 			}
 		}
 	}
-	/*else if (type == "choiceselect")
+	else if (type == "choiceselect")
 	{
 		int sid = msg.getInt("selection");
-		if (choiceCanBeSelected(sid) == 1)
+		if (sid < 0 || choiceCanBeSelected(sid) == 1)
 		{
 			int chcard = choiceCard;
 			resetChoice();
-			choice.callselect(chcard, sid);
+			choice->callaction(chcard, sid);
+			if (choice != NULL)
+			{
+				delete choice;
+				choice = NULL;
+			}
 		}
 	}
-	else if (type == "choicebutton1")
+	/*else if (type == "choicebutton1")
 	{
 		if (choice.buttoncount >= 1 && isChoiceActive)
 		{
@@ -805,9 +810,14 @@ void Duel::dispatchMessage(Message& msg)
 	//std::cout << "  post\n";
 }
 
-void Duel::addChoice(string info, int skip, int card, int player, int validref)
+void Duel::addChoice(string info, int skip, int card, int player, int validref, int actionref)
 {
-	choice = Choice(info, skip, validref);
+	if (choice != NULL)
+	{
+		delete choice;
+		choice = NULL;
+	}
+	choice = new Choice(info, skip, validref, actionref);
 	choiceCard = card;
 	choicePlayer = player;
 	isChoiceActive = true;
@@ -816,7 +826,7 @@ void Duel::addChoice(string info, int skip, int card, int player, int validref)
 
 int Duel::choiceCanBeSelected(int sid)
 {
-	return choice.callvalid(choiceCard, sid);
+	return choice->callvalid(choiceCard, sid);
 }
 
 void Duel::checkChoiceValid()

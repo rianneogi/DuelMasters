@@ -47,45 +47,51 @@ static int createChoice(lua_State* L)
 	ActiveDuel->dispatchAllMessages(); //first resolve all pending messages
 	//lua_pushvalue(L, -1);
 	lua_pushvalue(L, 5);
-	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	cout << "ref: " << ref << endl;
-	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
+	int vref = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_pushvalue(L, 6);
+	int aref = luaL_ref(L, LUA_REGISTRYINDEX);
+	cout << "ref: " << vref << " " << aref << endl;
+	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), vref, aref);
 	ActiveDuel->checkChoiceValid();
-	if (ActiveDuel->isChoiceActive) //if choice is still active
-	{
-		int r = mainLoop(*Window, 1); //wait for selection made by user
-		lua_pushinteger(L, r);
-		return 1;
-	}
-	else
-	{
-		lua_pushinteger(L, RETURN_NOVALID);
-	}
-	luaL_unref(L, LUA_REGISTRYINDEX, ref);
-	return 1;
+	//if (ActiveDuel->isChoiceActive) //if choice is still active
+	//{
+	//	int r = mainLoop(*Window, 1); //wait for selection made by user
+	//	lua_pushinteger(L, r);
+	//	return 1;
+	//}
+	//else
+	//{
+	//	lua_pushinteger(L, RETURN_NOVALID);
+	//}
+	//luaL_unref(L, LUA_REGISTRYINDEX, ref);
+	//return 1;
+	return 0;
 }
 
 static int createChoiceNoCheck(lua_State* L)
 {
 	ActiveDuel->dispatchAllMessages(); //first resolve all pending messages
 	//lua_pushvalue(L, -1);
-	lua_pushvalue(L, 4);
-	int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-	cout << "ref: " << ref << endl;
-	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), ref);
+	lua_pushvalue(L, 5);
+	int vref = luaL_ref(L, LUA_REGISTRYINDEX);
+	lua_pushvalue(L, 6);
+	int aref = luaL_ref(L, LUA_REGISTRYINDEX);
+	cout << "ref: " << vref << " " << aref << endl;
+	ActiveDuel->addChoice(lua_tostring(L, 1), lua_tointeger(L, 2), lua_tointeger(L, 3), lua_tointeger(L, 4), vref, aref);
 	//ActiveDuel->checkChoiceValid();
-	if (ActiveDuel->isChoiceActive) //if choice is still active
-	{
-		int r = mainLoop(*Window, 1); //wait for selection made by user
-		lua_pushinteger(L, r);
-		return 1;
-	}
-	else
-	{
-		lua_pushinteger(L, RETURN_NOVALID);
-	}
-	luaL_unref(L, LUA_REGISTRYINDEX, ref);
-	return 1;
+	//if (ActiveDuel->isChoiceActive) //if choice is still active
+	//{
+	//	int r = mainLoop(*Window, 1); //wait for selection made by user
+	//	lua_pushinteger(L, r);
+	//	return 1;
+	//}
+	//else
+	//{
+	//	lua_pushinteger(L, RETURN_NOVALID);
+	//}
+	//luaL_unref(L, LUA_REGISTRYINDEX, ref);
+	//return 1;
+	return 0;
 }
 
 static int setChoiceActive(lua_State* L)

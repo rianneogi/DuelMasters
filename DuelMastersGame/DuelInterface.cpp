@@ -75,11 +75,11 @@ void DuelInterface::render(sf::RenderWindow& window)
 		}
 		else if (duel.isChoiceActive)
 		{
-			infotext.setString(duel.CardList.at(duel.choiceCard)->Name + ": " + duel.choice.infotext);
+			infotext.setString(duel.CardList.at(duel.choiceCard)->Name + ": " + duel.choice->infotext);
 			window.draw(infotext);
-			if (duel.choice.buttoncount >= 1)
+			if (duel.choice->buttoncount >= 1)
 			{
-				if (duel.choice.buttoncount >= 2)
+				if (duel.choice->buttoncount >= 2)
 				{
 					cancelbutton.setString("Yes");
 				}
@@ -89,7 +89,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 				}
 				cancelbutton.render(window);
 			}
-			if (duel.choice.buttoncount >= 2)
+			if (duel.choice->buttoncount >= 2)
 			{
 				endturnbutton.setString("No");
 				endturnbutton.render(window);
@@ -126,7 +126,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 			{
 				for (vector<Card*>::iterator j = duel.decks[i].cards.begin(); j != duel.decks[i].cards.end(); j++)
 				{
-					if (duel.choice.callvalid(duel.choiceCard, (*j)->UniqueId) == 1) //if choice contains a card in a deck, open the deck
+					if (duel.choice->callvalid(duel.choiceCard, (*j)->UniqueId) == 1) //if choice contains a card in a deck, open the deck
 					{
 						cardsearch.zone = &duel.decks[i];
 					}
@@ -290,7 +290,7 @@ void DuelInterface::render(sf::RenderWindow& window)
 int DuelInterface::handleEvent(sf::Event event, int callback)
 {
 	if (duel.winner != -1) return RETURN_NOTHING;
-	if (ai.getPlayerToMove(ai.duel) == 1)
+	if (ai.getPlayerToMove(ai.duel) == 2)
 	{
 		duel.dispatchAllMessages(); //AI shouldnt make moves when there are pending messages
 		Message m = ai.makeMove();
@@ -342,6 +342,9 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 					if (cancelbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE)) //button1 press
 					{
 						//choice.callskip(duel.choiceCard);
+						Message msg("choiceselect");
+						msg.addValue("selection", -1);
+						duel.handleInterfaceInput(msg);
 						if (dueltype == DUELTYPE_MULTI)
 						{
 							sf::Packet packet;
@@ -350,17 +353,18 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							packet << ptype << selectedchoice;
 							Socket.send(packet);
 						}
-						duel.resetChoice();
+						/*duel.resetChoice();
 						if (callback != 0)
 						{
 							return RETURN_BUTTON1;
-						}
+						}*/
 					}
 					if (endturnbutton.collision(MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE)) //button2 press
 					{
 						//choice.callskip(duel.choiceCard);
-						/*Message msg("choicebutton2");
-						duel.handleInterfaceInput(msg);*/
+						Message msg("choiceselect");
+						msg.addValue("selection", -2);
+						duel.handleInterfaceInput(msg);
 						if (dueltype == DUELTYPE_MULTI)
 						{
 							sf::Packet packet;
@@ -369,11 +373,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 							packet << ptype << selectedchoice;
 							Socket.send(packet);
 						}
-						duel.resetChoice();
+						/*duel.resetChoice();
 						if (callback != 0)
 						{
 							return RETURN_BUTTON2;
-						}
+						}*/
 					}
 					for (vector<Card*>::iterator i = duel.CardList.begin(); i != duel.CardList.end(); i++)
 					{
@@ -381,12 +385,12 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						{
 							if (checkCollision((*i)->getBounds(), MouseX, MouseY) && (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
-								if (duel.choice.callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
+								if (duel.choice->callvalid(duel.choiceCard, (*i)->UniqueId) == 1)
 								{
 									//choice.callselect(duel.choiceCard, (*i)->UniqueId);
-									/*Message msg("choiceselect");
+									Message msg("choiceselect");
 									msg.addValue("selection", (*i)->UniqueId);
-									duel.handleInterfaceInput(msg);*/
+									duel.handleInterfaceInput(msg);
 									if (dueltype == DUELTYPE_MULTI)
 									{
 										sf::Packet packet;
@@ -395,11 +399,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 										packet << ptype << selectedchoice;
 										Socket.send(packet);
 									}
-									duel.resetChoice();
+									/*duel.resetChoice();
 									if (callback != 0)
 									{
 										return (*i)->UniqueId;
-									}
+									}*/
 									break;
 								}
 							}
@@ -411,13 +415,13 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 						cout << "cs returned " << cs << endl;
 						if (cs != -1)
 						{
-							if (duel.choice.callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1
+							if (duel.choice->callvalid(duel.choiceCard, cardsearch.zone->cards.at(cs)->UniqueId) == 1
 								&& (duel.choicePlayer == myPlayer || dueltype == DUELTYPE_SINGLE))
 							{
 								cout << "true " << endl;
-								/*Message msg("choiceselect");
+								Message msg("choiceselect");
 								msg.addValue("selection", cardsearch.zone->cards.at(cs)->UniqueId);
-								duel.handleInterfaceInput(msg);*/
+								duel.handleInterfaceInput(msg);
 								if (dueltype == DUELTYPE_MULTI)
 								{
 									sf::Packet packet;
@@ -426,11 +430,11 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 									packet << ptype << selectedchoice;
 									Socket.send(packet);
 								}
-								duel.resetChoice();
+								/*duel.resetChoice();
 								if (callback != 0)
 								{
 									return cardsearch.zone->cards.at(cs)->UniqueId;
-								}
+								}*/
 							}
 						}
 					}

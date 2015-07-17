@@ -142,13 +142,13 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 	}
 	else if (d->isChoiceActive && player == d->choicePlayer)
 	{
-		if (d->choice.buttoncount > 0)
+		if (d->choice->buttoncount > 0)
 		{
 			Message msg("choiceselect");
 			msg.addValue("selection", RETURN_BUTTON1);
 			moves.push_back(msg);
 		}
-		if (d->choice.buttoncount > 1)
+		if (d->choice->buttoncount > 1)
 		{
 			Message msg("choiceselect");
 			msg.addValue("selection", RETURN_BUTTON2);
@@ -158,7 +158,7 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 		{
 			if ((*i)->Zone != ZONE_EVOLVED)
 			{
-				if (d->choice.callvalid(d->choiceCard, (*i)->UniqueId) == 1)
+				if (d->choice->callvalid(d->choiceCard, (*i)->UniqueId) == 1)
 				{
 					Message msg("choiceselect");
 					msg.addValue("selection", (*i)->UniqueId);
@@ -288,7 +288,6 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 				((d->CardList.at((*i)->UniqueId)->summoningSickness == 0 || d->getIsSpeedAttacker((*i)->UniqueId) == 1) && (canattack == CANATTACK_TAPPED || canattack == CANATTACK_UNTAPPED)))
 				&& d->CardList.at((*i)->UniqueId)->isTapped == false)
 			{
-
 				Message msg("creatureattack");
 				msg.addValue("attacker", (*i)->UniqueId);
 				msg.addValue("defender", getOpponent(d->turn));
@@ -303,7 +302,6 @@ vector<Message> AIInterface::getValidMoves(Duel* d)
 					&& d->CardList.at((*i)->UniqueId)->summoningSickness == 0
 					&& d->CardList.at((*i)->UniqueId)->isTapped == false)
 				{
-
 					Message msg("creatureattack");
 					msg.addValue("attacker", (*i)->UniqueId);
 					msg.addValue("defender", (*j)->UniqueId);
