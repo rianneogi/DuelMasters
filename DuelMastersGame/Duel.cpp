@@ -96,8 +96,11 @@ Duel::~Duel()
 {
 	for (int i = 0; i < CardList.size(); i++)
 	{
-		delete CardList.at(i);
+		if (CardList.at(i) != NULL)
+			delete CardList.at(i);
 	}
+	if (choice != NULL)
+		delete choice;
 }
 
 void Duel::copyFrom(Duel* duel) //incomplete, not used
@@ -701,11 +704,14 @@ int Duel::handleInterfaceInput(Message& msg)
 		{
 			int chcard = choiceCard;
 			resetChoice();
-			choice->callaction(chcard, sid);
-			if (choice != NULL)
+			Choice* c = choice;
+			c->callaction(chcard, sid);
+			if (c != NULL)
 			{
-				delete choice;
-				choice = NULL;
+				if (choice == c)
+					choice = NULL;
+				delete c;
+				c = NULL;
 			}
 		}
 	}
@@ -812,11 +818,11 @@ void Duel::dispatchMessage(Message& msg)
 
 void Duel::addChoice(string info, int skip, int card, int player, int validref, int actionref)
 {
-	if (choice != NULL)
+	/*if (choice != NULL)
 	{
 		delete choice;
 		choice = NULL;
-	}
+	}*/
 	choice = new Choice(info, skip, validref, actionref);
 	choiceCard = card;
 	choicePlayer = player;
