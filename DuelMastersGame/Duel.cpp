@@ -1431,7 +1431,7 @@ void Duel::resetChoice()
 	choiceCard = -1;
 	choicePlayer = -1;
 	isChoiceActive = false;
-	//cout << "choice reset" << endl;
+	cout << "choice reset" << endl;
 }
 
 Zone* Duel::getZone(int player, int zone)

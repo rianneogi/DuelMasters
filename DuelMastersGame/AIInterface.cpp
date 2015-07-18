@@ -1,6 +1,5 @@
 #include "AIInterface.h"
 
-
 AIInterface::AIInterface()
 {
 }
@@ -27,6 +26,7 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 	{
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
+		ActiveDuel = d;
 		d->isSimulation = true;
 		d->RandomGen.SetRandomSeed(pos->RandomGen.GetRandomSeed());
 		d->setDecks(pos->decknames[0], pos->decknames[1]);
@@ -35,12 +35,14 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 		cout << "AI: move size: " << pos->MoveHistory.size() << endl;
 		for (vector<Message>::iterator i = pos->MoveHistory.begin(); i != pos->MoveHistory.end(); i++)
 		{
+			//cout << "AI sim move: " << (*i).getType() << endl;
 			d->handleInterfaceInput(*i);
 			d->dispatchAllMessages();
 		}
 		if (d->hands[0].cards.size() != pos->hands[0].cards.size())
 		{
 			cout << "AI: ERROR check not valid NON-ROOT " << d->hands[0].cards.size() << " " << pos->hands[0].cards.size() << endl;
+			cout << d->MoveHistory.size() << " " << pos->MoveHistory.size() << endl;
 		}
 	
 		for (int i = 0; i < depth; i++)
@@ -93,6 +95,7 @@ Message AIInterface::makeMove()
 		cout << "AI: move size: " << duel->MoveHistory.size() << endl;
 		for (vector<Message>::iterator j = duel->MoveHistory.begin(); j != duel->MoveHistory.end(); j++)
 		{
+			//cout << "AI sim move: " << (*j).getType() << endl;
 			d->handleInterfaceInput(*j);
 			d->dispatchAllMessages();
 		}
