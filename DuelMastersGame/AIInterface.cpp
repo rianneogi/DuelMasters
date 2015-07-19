@@ -12,17 +12,22 @@ AIInterface::~AIInterface()
 {
 }
 
+int AIInterface::Evaluate(Duel* pos, int player)
+{
+	return (5 * pos->shields[player].cards.size() + 4 * pos->battlezones[player].cards.size() + 2 * pos->manazones[player].cards.size() + pos->hands[player].cards.size()
+		- 5 * pos->shields[getOpponent(player)].cards.size() - 4 * pos->battlezones[getOpponent(player)].cards.size() - 2 * pos->manazones[getOpponent(player)].cards.size()
+		- pos->hands[getOpponent(player)].cards.size());
+}
+
 int AIInterface::Search(Duel* pos, int depth, int player)
 {
 	//Duel* lastpos
 	if (depth == 0)
 	{
-		return (5*pos->shields[player].cards.size() + 4 * pos->battlezones[player].cards.size() + 2 * pos->manazones[player].cards.size() + pos->hands[player].cards.size()
-			- 5*pos->shields[getOpponent(player)].cards.size() - 4 * pos->battlezones[getOpponent(player)].cards.size() - 2 * pos->manazones[getOpponent(player)].cards.size()
-			- pos->hands[getOpponent(player)].cards.size());
+		return Evaluate(pos, player);
 	}
 	int value = 0;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
@@ -57,9 +62,7 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 			d->dispatchAllMessages();
 			cout << "AI: move made: " << mov.getType() << endl;
 		}
-		value += (5 * pos->shields[player].cards.size() + 4 * pos->battlezones[player].cards.size() + 2 * pos->manazones[player].cards.size() + pos->hands[player].cards.size()
-			- 5 * pos->shields[getOpponent(player)].cards.size() - 4 * pos->battlezones[getOpponent(player)].cards.size() - 2 * pos->manazones[getOpponent(player)].cards.size()
-			- pos->hands[getOpponent(player)].cards.size());
+		value += Evaluate(d, player);
 		
 		if (d!=NULL)
 			delete d;
