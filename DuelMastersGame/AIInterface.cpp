@@ -83,6 +83,10 @@ Message AIInterface::makeMove()
 		cout << "AI: only 1 legal move" << endl;
 		return m.at(0);
 	}
+	if (duel->castingcard != -1) //auto-tap
+	{
+		return m.at(0);
+	}
 	Duel* oldDuel = ActiveDuel;
 	int max = -10000;
 	Message maxmove("AI: DEFAULT MOVE ERROR");
