@@ -27,7 +27,8 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 		return Evaluate(pos, player);
 	}
 	int value = 0;
-	for (int i = 0; i < 10; i++)
+	vector<Message> moves = getValidMoves(pos);
+	for (int i = 0; i < min(10, int(moves.size())); i++)
 	{
 		//Duel* d = new Duel(*pos);
 		Duel* d = new Duel;
@@ -55,6 +56,7 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 			vector<Message> m = getValidMoves(d);
 			if (m.size() == 0)
 			{
+				cout << "AI: out of moves" << endl;
 				break;
 			}
 			Message mov = m.at(rand() % m.size());
@@ -113,7 +115,7 @@ Message AIInterface::makeMove()
 		d->handleInterfaceInput(*i);
 		d->dispatchAllMessages();
 		//positions.push_back(d);
-		int x = Search(d, 2, duel->turn);
+		int x = Search(d, 10, duel->turn);
 		cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
 		//positions.pop_back();
 		if (x > max)
@@ -143,7 +145,7 @@ Message AIInterface::makeMove()
 vector<Message> AIInterface::getValidMoves(Duel* d)
 {
 	vector<Message> moves(0);
-	int player = getPlayerToMove();
+	int player = getPlayerToMove(d);
 	if (d->turn == player && d->attackphase == PHASE_NONE && !(d->isChoiceActive) && d->castingcard == -1)
 	{
 		Message m("endturn");
