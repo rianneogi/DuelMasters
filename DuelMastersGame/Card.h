@@ -41,6 +41,8 @@ public:
 	Card(int uid, int cid, int owner);
 	~Card();
 
+	void copyFrom(Card* c);
+
 	void render(sf::RenderWindow& window, int myPlayer);
 	void handleEvent(sf::Event event);
 	int handleMessage(Message& msg);

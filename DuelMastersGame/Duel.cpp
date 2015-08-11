@@ -125,6 +125,13 @@ void Duel::copyFrom(Duel* duel) //incomplete, not used
 
 	winner = duel->winner;
 
+	nextUniqueId = duel->nextUniqueId;
+
+	for (vector<int>::iterator i = duel->shieldtargets.begin(); i != duel->shieldtargets.end(); i++)
+	{
+		shieldtargets.push_back(*i);
+	}
+
 	for (vector<Card*>::iterator i = duel->CardList.begin(); i != duel->CardList.end(); i++)
 	{
 		Card* c = new Card(**i);
@@ -132,8 +139,22 @@ void Duel::copyFrom(Duel* duel) //incomplete, not used
 	}
 	for (int i = 0; i < 2; i++)
 	{
-
+		for (int z = 0; z < 6; z++)
+		{
+			for (vector<Card*>::iterator j = duel->getZone(i, z)->cards.begin(); j != duel->getZone(i, z)->cards.end(); j++)
+			{
+				for (vector<Card*>::iterator k = CardList.begin(); k != CardList.end(); k++)
+				{
+					if ((*k)->UniqueId == (*j)->UniqueId)
+					{
+						getZone(i, z)->cards.push_back(*k);
+						break;
+					}
+				}
+			}
+		}
 	}
+	choice->copyFrom(duel->choice);
 }
 
 int Duel::handleMessage(Message& msg)

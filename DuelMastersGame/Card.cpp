@@ -100,6 +100,15 @@ void Card::render(sf::RenderWindow& window, int myPlayer)
 	}
 }
 
+void Card::copyFrom(Card* c)
+{
+	UniqueId = c->UniqueId;
+	CardId = c->CardId;
+	x = c->x;
+	y = c->y;
+
+}
+
 void Card::handleEvent(sf::Event event)
 {
 

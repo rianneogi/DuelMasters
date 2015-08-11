@@ -4,15 +4,18 @@ Choice::Choice() : infotext(""), buttoncount(0)
 {
 }
 
-Choice::Choice(string info, int bcount, int vr, int ar) : infotext(info), buttoncount(bcount), validref(vr), actionref(ar)
+Choice::Choice(string info, int bcount, int vr, int ar) : infotext(info), buttoncount(bcount), validref(vr), actionref(ar), isCopy(false)
 {
 }
 
 Choice::~Choice()
 {
-	luaL_unref(LuaCards, LUA_REGISTRYINDEX, validref);
-	luaL_unref(LuaCards, LUA_REGISTRYINDEX, actionref);
-	cout << "unref " << validref << " " << actionref << endl;
+	if (!isCopy)
+	{
+		luaL_unref(LuaCards, LUA_REGISTRYINDEX, validref);
+		luaL_unref(LuaCards, LUA_REGISTRYINDEX, actionref);
+		cout << "unref " << validref << " " << actionref << endl;
+	}
 }
 
 int Choice::callvalid(int cid, int sid)
@@ -37,5 +40,14 @@ void Choice::callaction(int cid, int sid)
 	lua_pushinteger(LuaCards, cid);
 	lua_pushinteger(LuaCards, sid);
 	lua_pcall(LuaCards, 2, 0, 0);
+}
+
+void Choice::copyFrom(Choice* c)
+{
+	infotext = c->infotext;
+	buttoncount = c->buttoncount;
+	validref = c->validref;
+	actionref = c->actionref;
+	isCopy = true;
 }
 
