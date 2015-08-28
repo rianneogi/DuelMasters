@@ -26,7 +26,6 @@ void Zone::removeCard(Card* c)
 			break;
 		}
 	}
-
 }
 
 void Zone::render(sf::RenderWindow& window)

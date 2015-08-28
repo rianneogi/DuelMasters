@@ -13,6 +13,7 @@ public:
 
 	vector<Message> getValidMoves(Duel* d);
 	int Search(Duel* positions, int depth, int player);
+	int AlphaBeta(Duel* positions, int depth, int player);
 	Message makeMove();
 	int Evaluate(Duel* pos, int player);
 	int getPlayerToMove();

@@ -73,6 +73,36 @@ int AIInterface::Search(Duel* pos, int depth, int player)
 	return value;
 }
 
+int AIInterface::AlphaBeta(Duel* pos, int depth, int player)
+{
+	if (depth == 0)
+	{
+		return Evaluate(pos, pos->turn);
+	}
+	//cout << "depth : " << depth << endl;
+	vector<Message> m = getValidMoves(duel);
+	int max = -10000;
+	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
+	{
+		duel->handleInterfaceInput(*i);
+		duel->dispatchAllMessages();
+		//positions.push_back(d);
+		int x = -AlphaBeta(duel, depth-1, duel->turn);
+		duel->undoLastMove();
+		//cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
+		/*if (duel->hands[0].cards.size() != duel->hands[0].cards.size())
+		{
+		cout << "AI: undo failed " << i->getType() << duel->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+		}*/
+		//positions.pop_back();
+		if (x > max)
+		{
+			max = x;
+		}
+	}
+	return max;
+}
+
 Message AIInterface::makeMove()
 {
 	vector<Message> m = getValidMoves(duel);
@@ -89,47 +119,95 @@ Message AIInterface::makeMove()
 	{
 		return m.at(0);
 	}
-	Duel* oldDuel = ActiveDuel;
 	int max = -10000;
 	Message maxmove("AI: DEFAULT MOVE ERROR");
+	duel->isSimulation = 1;
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
-		Duel* d = new Duel;
-		ActiveDuel = d;
-		d->isSimulation = true;
-		d->RandomGen.SetRandomSeed(duel->RandomGen.GetRandomSeed());
-		d->setDecks(duel->decknames[0], duel->decknames[1]);
-		d->startDuel();
-		d->dispatchAllMessages();
-		cout << "AI: move size: " << duel->MoveHistory.size() << endl;
-		for (vector<Message>::iterator j = duel->MoveHistory.begin(); j != duel->MoveHistory.end(); j++)
-		{
-			//cout << "AI sim move: " << (*j).getType() << endl;
-			d->handleInterfaceInput(*j);
-			d->dispatchAllMessages();
-		}
-		if (d->hands[0].cards.size() != duel->hands[0].cards.size())
-		{
-			cout << "AI: ERROR check not valid ROOT " << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
-		}
-		d->handleInterfaceInput(*i);
-		d->dispatchAllMessages();
+		duel->handleInterfaceInput(*i);
+		duel->dispatchAllMessages();
 		//positions.push_back(d);
-		int x = Search(d, 10, duel->turn);
+		int x = AlphaBeta(duel, 4, duel->turn);
+		duel->undoLastMove();
 		cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
+		/*if (duel->hands[0].cards.size() != duel->hands[0].cards.size())
+		{
+			cout << "AI: undo failed " << i->getType() << duel->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+		}*/
 		//positions.pop_back();
 		if (x > max)
 		{
 			maxmove = *i;
 			max = x;
 		}
-		if (d!=NULL)
-			delete d;
 	}
 	cout << "AI: maxmove value: " << max << endl;
-	ActiveDuel = oldDuel;
+	duel->isSimulation = 0;
 	return maxmove;
 }
+
+//Message AIInterface::makeMove()
+//{
+//	vector<Message> m = getValidMoves(duel);
+//	if (m.size() == 0)
+//	{
+//		return Message("AI: NO VALID MOVES ERROR");
+//	}
+//	if (m.size() == 1) //only 1 valid move
+//	{
+//		cout << "AI: only 1 legal move" << endl;
+//		return m.at(0);
+//	}
+//	if (duel->castingcard != -1) //auto-tap
+//	{
+//		return m.at(0);
+//	}
+//	Duel* oldDuel = ActiveDuel;
+//	int max = -10000;
+//	Message maxmove("AI: DEFAULT MOVE ERROR");
+//	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
+//	{
+//		Duel* d = new Duel;
+//		ActiveDuel = d;
+//		d->isSimulation = true;
+//		d->RandomGen.SetRandomSeed(duel->RandomGen.GetRandomSeed());
+//		d->setDecks(duel->decknames[0], duel->decknames[1]);
+//		d->startDuel();
+//		d->dispatchAllMessages();
+//		cout << "AI: move size: " << duel->MoveHistory.size() << endl;
+//		for (vector<Message>::iterator j = duel->MoveHistory.begin(); j != duel->MoveHistory.end(); j++)
+//		{
+//			//cout << "AI sim move: " << (*j).getType() << endl;
+//			d->handleInterfaceInput(*j);
+//			d->dispatchAllMessages();
+//		}
+//		if (d->hands[0].cards.size() != duel->hands[0].cards.size())
+//		{
+//			cout << "AI: ERROR check not valid ROOT " << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+//		}
+//		d->handleInterfaceInput(*i);
+//		d->dispatchAllMessages();
+//		//positions.push_back(d);
+//		int x = Search(d, 10, duel->turn);
+//		d->undoLastMove();
+//		cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
+//		if (d->hands[0].cards.size() != duel->hands[0].cards.size())
+//		{
+//			cout << "AI: undo failed " << i->getType() << d->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
+//		}
+//		//positions.pop_back();
+//		if (x > max)
+//		{
+//			maxmove = *i;
+//			max = x;
+//		}
+//		if (d!=NULL)
+//			delete d;
+//	}
+//	cout << "AI: maxmove value: " << max << endl;
+//	ActiveDuel = oldDuel;
+//	return maxmove;
+//}
 
 //Message AIInterface::makeMove()
 //{

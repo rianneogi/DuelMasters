@@ -314,6 +314,7 @@ int Duel::handleMessage(Message& msg)
 		//attackphase = PHASE_BLOCK;
 		Message m("changeattackphase");
 		m.addValue("phase", PHASE_BLOCK);
+		m.addValue("oldphase", attackphase);
 		MsgMngr.sendMessage(m);
 	}
 	else if (msg.getType() == "creatureblock")
@@ -459,8 +460,15 @@ void Duel::undoLastMove()
 	for (int i = MessageHistory.size() - 1; i >= 0; i--)
 	{
 		MsgHistoryItem m = MessageHistory.at(i);
-		MessageHistory.pop_back();
-		undoMessage(m.msg);
+		if (m.move == currentMoveCount)
+		{
+			MessageHistory.pop_back();
+			undoMessage(m.msg);
+		}
+		else
+		{
+			break;
+		}
 	}
 	MoveHistory.pop_back();
 	currentMoveCount--;
@@ -494,7 +502,7 @@ void Duel::undoMessage(Message& msg)
 		{
 			getZone(owner, tozone)->removeCard(c);
 		}
-		c->Zone = tozone;
+		c->Zone = fromzone;
 		winner = -1;
 	}
 	else if (msg.getType() == "cardtap")
@@ -506,6 +514,31 @@ void Duel::undoMessage(Message& msg)
 	{
 		CardList.at(msg.getInt("card"))->tap();
 		//SoundMngr->playSound(SOUND_UNTAP);
+	}
+	else if (msg.getType() == "endturn")
+	{
+		turn = (turn + 1) % 2;
+		for (vector<Message>::reverse_iterator i = MoveHistory.rbegin(); i != MoveHistory.rend(); i++)
+		{
+			if ((*i).getType() == "endturn")
+			{
+				manaUsed = 0;
+				break;
+			}
+			if ((*i).getType() == "cardmana")
+			{
+				manaUsed = 1;
+				break;
+			}
+		}
+	}
+	else if (msg.getType() == "cardmana")
+	{
+		manaUsed = 0;
+	}
+	else if (msg.getType() == "changeattackphase")
+	{
+		attackphase = msg.getInt("oldphase");
 	}
 }
 
@@ -626,6 +659,7 @@ int Duel::handleInterfaceInput(Message& msg)
 					//attackphase = PHASE_TARGET;
 					Message m("changeattackphase");
 					m.addValue("phase", PHASE_TARGET);
+					m.addValue("oldphase", attackphase);
 					MsgMngr.sendMessage(m);
 					breakcount = getCreatureBreaker(attacker);
 				}
@@ -643,6 +677,7 @@ int Duel::handleInterfaceInput(Message& msg)
 			{
 				Message m("changeattackphase");
 				m.addValue("phase", PHASE_TRIGGER);
+				m.addValue("oldphase", attackphase);
 				MsgMngr.sendMessage(m);
 			}
 
@@ -1284,6 +1319,7 @@ bool Duel::isThereUntappedManaOfCiv(int player,int civ)
 
 void Duel::drawCards(int player, int count)
 {
+	count = count < decks[player].cards.size() ? count : decks[player].cards.size();
 	for (int i = 0; i < count; i++)
 	{
 		Message msg("cardmove");
@@ -1441,7 +1477,7 @@ void Duel::clearCards()
 		shields[i].cards.clear();
 		battlezones[i].cards.clear();
 
-		shields[i].totalcards = 0;
+		shields[i].slotsUsed = 0;
 	}
 	CardList.clear();
 	nextUniqueId = 0;

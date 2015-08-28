@@ -297,6 +297,7 @@ int DuelInterface::handleEvent(sf::Event event, int callback)
 		cout << "AI make move " << m.getType() << endl;
 		duel.handleInterfaceInput(m);
 		duel.dispatchAllMessages();
+		
 		/*if (m.getType() == "choiceselect")
 		{
 			duel.resetChoice();
