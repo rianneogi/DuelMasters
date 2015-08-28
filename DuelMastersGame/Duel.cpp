@@ -389,7 +389,7 @@ int Duel::handleMessage(Message& msg)
 	{
 		int plyr = msg.getInt("player");
 		vector<Card*>::iterator i;
-		for (i = battlezones[plyr].cards.begin(); i != battlezones[plyr].cards.end(); i++) //untap creature
+		for (i = battlezones[plyr].cards.begin(); i != battlezones[plyr].cards.end(); i++) //untap creatures
 		{
 			Message m("carduntap");
 			m.addValue("card", (*i)->UniqueId);
@@ -464,6 +464,7 @@ void Duel::undoLastMove()
 		{
 			MessageHistory.pop_back();
 			undoMessage(m.msg);
+			cout << "undoing " << m.msg.getType() << " for " << MoveHistory.at(MoveHistory.size() - 1).getType() << endl;
 		}
 		else
 		{
@@ -528,15 +529,15 @@ void Duel::undoMessage(Message& msg)
 		turn = (turn + 1) % 2;
 
 		int flag = 0;
-		for (vector<Message>::reverse_iterator i = MoveHistory.rbegin(); i != MoveHistory.rend(); i++)
+		for (vector<MsgHistoryItem>::reverse_iterator i = MessageHistory.rbegin(); i != MessageHistory.rend(); i++)
 		{
-			if ((*i).getType() == "endturn")
+			if ((*i).msg.getType() == "endturn")
 			{
 				manaUsed = 0;
 				flag = 1;
 				break;
 			}
-			if ((*i).getType() == "cardmana")
+			if ((*i).msg.getType() == "cardmana")
 			{
 				manaUsed = 1;
 				flag = 1;

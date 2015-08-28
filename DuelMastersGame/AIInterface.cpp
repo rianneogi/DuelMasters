@@ -87,6 +87,9 @@ int AIInterface::AlphaBeta(Duel* pos, int depth, int player)
 
 	bool autotap = duel->castingcard == -1 ? false : true;
 
+	int pmana = duel->manazones[duel->turn].getUntappedMana();
+	int puntap = duel->isThereUntappedManaOfCiv(duel->turn, CIV_FIRE);
+
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
 		duel->handleInterfaceInput(*i);
@@ -105,6 +108,8 @@ int AIInterface::AlphaBeta(Duel* pos, int depth, int player)
 			{
 				cout << m2.at(k).getType() << endl;
 			}
+			cout << "mana: " << duel->manazones[duel->turn].getUntappedMana() << " " << pmana << " untap: " << duel->isThereUntappedManaOfCiv(duel->turn, CIV_FIRE) << " " << puntap << endl;
+			cout << " ";
 		}
 		//cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
 		/*if (duel->hands[0].cards.size() != duel->hands[0].cards.size())
