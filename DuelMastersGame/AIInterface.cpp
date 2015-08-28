@@ -77,28 +77,46 @@ int AIInterface::AlphaBeta(Duel* pos, int depth, int player)
 {
 	if (depth == 0)
 	{
-		return Evaluate(pos, pos->turn);
+		int r = Evaluate(pos, pos->turn);
+		//cout << "eval : " << r << endl;
+		return r;
 	}
 	//cout << "depth : " << depth << endl;
 	vector<Message> m = getValidMoves(duel);
 	int max = -10000;
+
+	bool autotap = duel->castingcard == -1 ? false : true;
+
 	for (vector<Message>::iterator i = m.begin(); i != m.end(); i++)
 	{
 		duel->handleInterfaceInput(*i);
 		duel->dispatchAllMessages();
-		//positions.push_back(d);
 		int x = -AlphaBeta(duel, depth-1, duel->turn);
 		duel->undoLastMove();
+		vector<Message> m2 = getValidMoves(duel);
+		if (m2.size() != m.size())
+		{
+			cout << "AI: ERROR: moves size mismatch, move: " << (*i).getType() << endl;
+			for (int k = 0; k < m.size(); k++)
+			{
+				cout << m.at(k).getType() << endl;
+			}
+			for (int k = 0; k < m2.size(); k++)
+			{
+				cout << m2.at(k).getType() << endl;
+			}
+		}
 		//cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
 		/*if (duel->hands[0].cards.size() != duel->hands[0].cards.size())
 		{
 		cout << "AI: undo failed " << i->getType() << duel->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
 		}*/
-		//positions.pop_back();
 		if (x > max)
 		{
 			max = x;
 		}
+		if (autotap) //auto-tap
+			break;
 	}
 	return max;
 }
@@ -126,15 +144,18 @@ Message AIInterface::makeMove()
 	{
 		duel->handleInterfaceInput(*i);
 		duel->dispatchAllMessages();
-		//positions.push_back(d);
-		int x = AlphaBeta(duel, 4, duel->turn);
+		int x = -AlphaBeta(duel, 4, duel->turn);
 		duel->undoLastMove();
+		vector<Message> m2 = getValidMoves(duel);
+		if (m2.size() != m.size())
+		{
+			cout << "AI: ERROR: moves size mismatch" << endl;
+		}
 		cout << "AI: value " << x << " for move: " << (*i).getType() << endl;
 		/*if (duel->hands[0].cards.size() != duel->hands[0].cards.size())
 		{
 			cout << "AI: undo failed " << i->getType() << duel->hands[0].cards.size() << " " << duel->hands[0].cards.size() << endl;
 		}*/
-		//positions.pop_back();
 		if (x > max)
 		{
 			maxmove = *i;

@@ -470,6 +470,16 @@ void Duel::undoLastMove()
 			break;
 		}
 	}
+
+	Message m = MoveHistory.at(MoveHistory.size() - 1);
+	if (m.getType() == "cardplay")
+	{
+		resetCasting();
+	}
+	else if (m.getType() == "manatap")
+	{
+
+	}
 	MoveHistory.pop_back();
 	currentMoveCount--;
 }
@@ -508,28 +518,34 @@ void Duel::undoMessage(Message& msg)
 	else if (msg.getType() == "cardtap")
 	{
 		CardList.at(msg.getInt("card"))->untap();
-		//SoundMngr->playSound(SOUND_TAP);
 	}
 	else if (msg.getType() == "carduntap")
 	{
 		CardList.at(msg.getInt("card"))->tap();
-		//SoundMngr->playSound(SOUND_UNTAP);
 	}
 	else if (msg.getType() == "endturn")
 	{
 		turn = (turn + 1) % 2;
+
+		int flag = 0;
 		for (vector<Message>::reverse_iterator i = MoveHistory.rbegin(); i != MoveHistory.rend(); i++)
 		{
 			if ((*i).getType() == "endturn")
 			{
 				manaUsed = 0;
+				flag = 1;
 				break;
 			}
 			if ((*i).getType() == "cardmana")
 			{
 				manaUsed = 1;
+				flag = 1;
 				break;
 			}
+		}
+		if (flag == 0)
+		{
+			manaUsed = 0;
 		}
 	}
 	else if (msg.getType() == "cardmana")
