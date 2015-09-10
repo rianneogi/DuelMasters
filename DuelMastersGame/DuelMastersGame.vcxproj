@@ -24,7 +24,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -43,8 +43,8 @@
     <LibraryPath>C:\Program Files %28x86%29\Lua\5.1\lib;C:\Program Files %28x86%29\Libraries\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\Libraries\SFML-2.1\include;C:\Program Files %28x86%29\Lua\5.1\include;C:\Program Files %28x86%29\Libraries\luabind-0.9.1\luabind;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Lua\5.1\lib;C:\Program Files %28x86%29\Libraries\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files %28x86%29\Code\Libraries\SFML-2.1\include;C:\Program Files %28x86%29\Lua\5.1\include;C:\Program Files %28x86%29\Code\Libraries\luabind-0.9.1\luabind;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Lua\5.1\lib;C:\Program Files %28x86%29\Code\Libraries\SFML-2.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
