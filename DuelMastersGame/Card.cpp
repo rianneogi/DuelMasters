@@ -79,7 +79,7 @@ Card::Card(int uid, int cid, int owner) : UniqueId(uid),CardId(cid), Owner(owner
 	sprite.setOrigin(v.width / 2, v.height / 2);
 	powertext = sf::Text(std::to_string(Power), DefaultFont, 12);
 	powertext.setStyle(sf::Text::Style::Bold);
-	powertext.setColor(sf::Color::Black);
+	powertext.setFillColor(sf::Color::Black);
 }
 
 Card::~Card()

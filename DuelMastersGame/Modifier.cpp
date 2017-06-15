@@ -14,7 +14,7 @@ Modifier::Modifier(int ref) : funcref(ref)
 Modifier::~Modifier()
 {
 	cout << "unref mod: " << funcref << endl;
-	lua_unref(LuaCards, funcref);
+	luaL_unref(LuaCards, LUA_REGISTRYINDEX, funcref);
 }
 
 void Modifier::setfunc(int ref)

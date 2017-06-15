@@ -13,7 +13,7 @@ Button::Button(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Colo
 	rect.setOutlineThickness(bordersize);
 	rect.setOutlineColor(bordercolor);
 	text = sf::Text(textstr, DefaultFont, textsize);
-	text.setColor(textcolor);
+	text.setFillColor(textcolor);
 	text.setPosition(pos.x + CARDZONEOFFSET, pos.y + CARDZONEOFFSET);
 }
 

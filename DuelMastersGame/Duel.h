@@ -56,27 +56,6 @@ public:
 
 	MessageManager MsgMngr;
 	Message currentMessage;
-	
-
-	/*int MouseX;
-	int MouseY;
-	int selectedcard;
-	int selectedcardzone;
-
-	sf::RectangleShape endturnbutton;
-	sf::Text endturntext;
-	sf::Sound endturnsound;
-
-	sf::RectangleShape cancelbutton;
-	sf::Text canceltext;
-	sf::Text infotext;
-
-	vector<Arrow> arrows;
-	int mousearrow;
-
-	sf::Sprite hovercard;
-
-	ZoneList cardsearch;*/
 
 	int turn;
 	int manaUsed;

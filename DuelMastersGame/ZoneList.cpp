@@ -23,7 +23,7 @@ void ZoneList::render(sf::RenderWindow& window)
 		r.setFillColor(sf::Color::White);
 		window.draw(r);
 		sf::Text t((*i)->Name, DefaultFont, 14);
-		t.setColor(sf::Color::Black);
+		t.setFillColor(sf::Color::Black);
 		t.setPosition(CARDSEARCHX + CARDZONEOFFSET, CARDSEARCHY + CARDSEARCHSEPERATION*count + CARDZONEOFFSET);
 		window.draw(t);
 		count++;

@@ -108,7 +108,7 @@ void DeckBuilder::render(sf::RenderWindow& window)
 				r.setFillColor(sf::Color::White);
 				window.draw(r);
 				sf::Text t(s, DefaultFont, 14);
-				t.setColor(sf::Color::Black);
+				t.setFillColor(sf::Color::Black);
 				t.setPosition(DECKLISTX + CARDZONEOFFSET, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
 				window.draw(t);
 			}
@@ -136,7 +136,7 @@ void DeckBuilder::render(sf::RenderWindow& window)
 				r.setFillColor(sf::Color::White);
 				window.draw(r);
 				sf::Text t(s, DefaultFont, 14);
-				t.setColor(sf::Color::Black);
+				t.setFillColor(sf::Color::Black);
 				t.setPosition(DECKLISTX + CARDZONEOFFSET, DECKLISTY + DECKLISTSEPERATION*(count - decklistpos) + CARDZONEOFFSET);
 				window.draw(t);
 			}

@@ -16,7 +16,7 @@ DuelInterface::DuelInterface()
 
 	infotext = sf::Text("Choose Blocker", DefaultFont, 16);
 	infotext.setPosition(INFOTEXTX, INFOTEXTY);
-	infotext.setColor(sf::Color::White);
+	infotext.setFillColor(sf::Color::White);
 
 	hovercard = sf::Sprite();
 	hovercard.setPosition(HOVERCARDX, HOVERCARDY);

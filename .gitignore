@@ -187,3 +187,9 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+*.db
+*.opendb
+/DuelMastersGame/Graphics/
+/DuelMastersGame/Decks
+
