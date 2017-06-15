@@ -81,8 +81,8 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Documents\Code\Libraries\SFML-2.4.2\include;C:\Documents\Code\Libraries\lua-5.3.3_Win32_dll14_lib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Documents\Code\Libraries\lua-5.3.3_Win32_dll14_lib;C:\Documents\Code\Libraries\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Documents\Code\Libraries\SFML-2.4.2\include;C:\Documents\Code\Libraries\lua-5.3.3_Win64_dll14_lib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Documents\Code\Libraries\lua-5.3.3_Win64_dll14_lib;C:\Documents\Code\Libraries\SFML-2.4.2\lib;$(LibraryPath)</LibraryPath>
     <CodeAnalysisRuleSet>MixedRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
