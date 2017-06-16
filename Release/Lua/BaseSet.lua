@@ -2258,7 +2258,7 @@ Cards["Toel, Vizier of Hope"] = {
 	HandleMessage = function(id)
         local function action(id,ch)
             if(ch==RETURN_BUTTON1) then
-                local owner = getCardOwner(cid)
+                local owner = getCardOwner(id)
 		        local size = getZoneSize(owner,ZONE_BATTLE)-1
 		        for i=0,size,1 do
 		            local cid = getCardAt(owner,ZONE_BATTLE,i)
